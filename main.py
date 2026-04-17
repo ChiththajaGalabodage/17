@@ -1,4 +1,5 @@
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -20,15 +21,23 @@ def normalize_test_code(test_code: str, source_path: Path) -> str:
         cleaned = cleaned[:-3].strip()
 
     module_name = source_path.stem
-    has_direct_import = f"from {module_name} import" in cleaned
-    has_module_import = f"import {module_name}" in cleaned
-    if not has_direct_import and not has_module_import:
-        cleaned = f"from {module_name} import *\n\n" + cleaned
+    body_lines: list[str] = []
 
-    if "import pytest" not in cleaned:
-        cleaned = "import pytest\n" + cleaned
+    for raw_line in cleaned.splitlines():
+        line = raw_line.rstrip()
 
-    return cleaned.rstrip() + "\n"
+        # Remove known import fragments even when the model glued them onto code.
+        line = re.sub(r"import\s+pytest\b.*", "", line)
+        line = re.sub(rf"from\s+{re.escape(module_name)}\s+import\b.*", "", line)
+        line = re.sub(rf"import\s+{re.escape(module_name)}\b.*", "", line)
+
+        if line.strip():
+            body_lines.append(line.rstrip())
+
+    normalized_lines = ["import pytest", f"from {module_name} import *", ""]
+    normalized_lines.extend(body_lines)
+
+    return "\n".join(normalized_lines).rstrip() + "\n"
 
 
 def parse_args() -> argparse.Namespace:

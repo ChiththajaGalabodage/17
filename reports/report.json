@@ -1,9 +1,9 @@
 {
-  "timestamp_utc": "2026-04-17T19:01:07.724989+00:00",
+  "timestamp_utc": "2026-04-17T20:49:52.809229+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 2,
-    "function_count": 1,
+    "line_count": 11,
+    "function_count": 3,
     "class_count": 0,
     "imports": [],
     "functions": [
@@ -15,6 +15,24 @@
         ],
         "has_docstring": false,
         "line": 1
+      },
+      {
+        "name": "multiply_numbers",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 5
+      },
+      {
+        "name": "divide_numbers",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 8
       }
     ],
     "classes": []
@@ -25,10 +43,10 @@
     "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": ".                                                                        [100%]\n1 passed in 0.02s"
+    "output": "...                                                                      [100%]\n3 passed in 0.03s"
   },
   "metrics": {
-    "functions": 1,
+    "functions": 3,
     "classes": 0,
     "passed": true
   }
