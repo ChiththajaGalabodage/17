@@ -1,0 +1,35 @@
+{
+  "timestamp_utc": "2026-04-17T18:28:17.318331+00:00",
+  "analysis": {
+    "file": "target_code.py",
+    "line_count": 2,
+    "function_count": 1,
+    "class_count": 0,
+    "imports": [],
+    "functions": [
+      {
+        "name": "add_numbers",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 1
+      }
+    ],
+    "classes": []
+  },
+  "test_file": "tests\\test_generated.py",
+  "heal_attempts": 0,
+  "test_run": {
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
+    "return_code": 0,
+    "passed": true,
+    "output": ".                                                                        [100%]\n1 passed in 0.01s"
+  },
+  "metrics": {
+    "functions": 1,
+    "classes": 0,
+    "passed": true
+  }
+}
