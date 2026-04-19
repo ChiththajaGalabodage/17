@@ -1,9 +1,9 @@
 {
-  "timestamp_utc": "2026-04-17T20:49:52.809229+00:00",
+  "timestamp_utc": "2026-04-19T18:35:16.640232+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 11,
-    "function_count": 3,
+    "line_count": 14,
+    "function_count": 4,
     "class_count": 0,
     "imports": [],
     "functions": [
@@ -33,20 +33,29 @@
         ],
         "has_docstring": false,
         "line": 8
+      },
+      {
+        "name": "subtract_numbers",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 13
       }
     ],
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 0,
+  "heal_attempts": 1,
   "test_run": {
     "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": "...                                                                      [100%]\n3 passed in 0.03s"
+    "output": "...............................                                          [100%]\n31 passed in 0.06s"
   },
   "metrics": {
-    "functions": 3,
+    "functions": 4,
     "classes": 0,
     "passed": true
   }
