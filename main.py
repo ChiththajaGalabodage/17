@@ -6,6 +6,7 @@ from pathlib import Path
 from src.analyzer import analyze_code
 from src.generator import GeminiTestGenerator
 from src.healer import heal_test_code
+from src.pipeline_tracker import PipelineTracker
 from src.reporter import build_report, write_report
 from src.runner import run_pytest, run_pytest_targets
 from src.test_select_agent import TestSelectAgent
@@ -62,15 +63,28 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_pipeline(args: argparse.Namespace) -> int:
+    tracker = PipelineTracker()
+    tracker.record("pipeline", "started", "Pipeline run started", source=args.source)
+
     source_path = Path(args.source)
     if not source_path.exists():
+        tracker.record("pipeline", "failed", "Source file not found", source=args.source)
         print(f"Source file not found: {source_path}")
         return 1
 
     print("[1/5] Analyzing source code...")
+    tracker.record("analysis", "running", "Analyzing source code")
     analysis = analyze_code(str(source_path))
+    tracker.record(
+        "analysis",
+        "completed",
+        "Source analysis completed",
+        function_count=analysis.get("function_count", 0),
+        class_count=analysis.get("class_count", 0),
+    )
 
     print("[2/5] Generating tests...")
+    tracker.record("generation", "running", "Generating tests")
     generator = GeminiTestGenerator(model=args.model)
     test_code = generator.generate(str(source_path), analysis)
     test_code = normalize_test_code(test_code, source_path)
@@ -78,9 +92,25 @@ def run_pipeline(args: argparse.Namespace) -> int:
     test_output_path = Path(args.test_output)
     test_output_path.parent.mkdir(parents=True, exist_ok=True)
     test_output_path.write_text(test_code, encoding="utf-8")
+    tracker.record("generation", "completed", "Test file written", test_file=str(test_output_path))
 
     print("[3/5] Running tests...")
+    tracker.record("test_run", "running", "Executing initial test run", test_file=str(test_output_path))
     test_result = run_pytest(str(test_output_path))
+    tracker.record(
+        "test_run",
+        "completed",
+        "Initial test run completed",
+        passed=test_result["passed"],
+        return_code=test_result["return_code"],
+    )
+
+    predictive_selection: dict[str, object] = {
+        "enabled": args.predictive_test_selection,
+        "base_ref": args.base_ref,
+        "changed_files": [],
+        "selected_tests": [str(test_output_path).replace("\\", "/")],
+    }
 
     if args.predictive_test_selection:
         selector = TestSelectAgent(repo_root=".")
@@ -92,15 +122,34 @@ def run_pipeline(args: argparse.Namespace) -> int:
             selected_tests.append(generated_test)
 
         selected_tests = sorted(set(selected_tests))
+        predictive_selection["changed_files"] = changed_files
+        predictive_selection["selected_tests"] = selected_tests
         print(f"Predictive selection picked {len(selected_tests)} test file(s).")
         for selected in selected_tests:
             print(f" - {selected}")
+        tracker.record(
+            "selection",
+            "completed",
+            "Predictive selection completed",
+            changed_files=changed_files,
+            selected_tests=selected_tests,
+        )
+        tracker.record("test_run", "running", "Executing selected tests", selected_tests=selected_tests)
         test_result = run_pytest_targets(selected_tests)
+        tracker.record(
+            "test_run",
+            "completed",
+            "Selected test run completed",
+            passed=test_result["passed"],
+            return_code=test_result["return_code"],
+        )
 
     heal_attempts = 0
+    heal_history: list[dict[str, object]] = []
     while not test_result["passed"] and heal_attempts < args.max_heal_attempts:
         heal_attempts += 1
         print(f"[4/5] Self-heal attempt {heal_attempts}/{args.max_heal_attempts}...")
+        tracker.record("healing", "running", "Self-heal attempt started", attempt=heal_attempts)
         test_code = heal_test_code(
             current_test_code=test_code,
             test_output=test_result["output"],
@@ -109,18 +158,36 @@ def run_pipeline(args: argparse.Namespace) -> int:
         )
         test_code = normalize_test_code(test_code, source_path)
         test_output_path.write_text(test_code, encoding="utf-8")
+        heal_history.append({
+            "attempt": heal_attempts,
+            "test_output": test_result["output"],
+            "result": "retry",
+        })
         test_result = run_pytest(str(test_output_path))
+        tracker.record(
+            "healing",
+            "completed",
+            "Self-heal attempt completed",
+            attempt=heal_attempts,
+            passed=test_result["passed"],
+            return_code=test_result["return_code"],
+        )
 
     print("[5/5] Writing report...")
+    tracker.record("report", "running", "Writing report")
+    status = "PASSED" if test_result["passed"] else "FAILED"
+    tracker.record("pipeline", status.lower(), f"Pipeline finished: {status}")
     report = build_report(
         analysis=analysis,
         test_run=test_result,
         heal_attempts=heal_attempts,
         test_file=str(test_output_path),
+        pipeline_events=tracker.snapshot(),
+        predictive_selection=predictive_selection,
+        heal_history=heal_history,
     )
     write_report(report, args.report_output)
 
-    status = "PASSED" if test_result["passed"] else "FAILED"
     print(f"Pipeline finished: {status}")
     print(f"Generated tests: {test_output_path}")
     print(f"Report: {args.report_output}")

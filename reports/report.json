@@ -1,61 +1,302 @@
 {
-  "timestamp_utc": "2026-04-21T19:32:38.925303+00:00",
+  "timestamp_utc": "2026-04-21T20:47:54.217958+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 14,
-    "function_count": 4,
+    "line_count": 305,
+    "function_count": 14,
     "class_count": 0,
-    "imports": [],
+    "imports": [
+      "__future__",
+      "copy",
+      "datetime",
+      "typing"
+    ],
     "functions": [
       {
-        "name": "add_numbers",
+        "name": "_to_int",
         "args": [
-          "a",
-          "b"
+          "value",
+          "default"
         ],
         "has_docstring": false,
-        "line": 1
+        "line": 39
       },
       {
-        "name": "multiply_numbers",
+        "name": "_to_price",
         "args": [
-          "a",
-          "b"
+          "value",
+          "default"
         ],
         "has_docstring": false,
-        "line": 5
+        "line": 46
       },
       {
-        "name": "divide_numbers",
+        "name": "_to_text",
         "args": [
-          "a",
-          "b"
+          "value",
+          "default"
         ],
         "has_docstring": false,
-        "line": 8
+        "line": 56
       },
       {
-        "name": "subtract_numbers",
-        "args": [
-          "a",
-          "b"
-        ],
+        "name": "_utc_now",
+        "args": [],
         "has_docstring": false,
-        "line": 13
+        "line": 61
+      },
+      {
+        "name": "reset_demo_state",
+        "args": [],
+        "has_docstring": true,
+        "line": 65
+      },
+      {
+        "name": "initialize_store",
+        "args": [
+          "seed"
+        ],
+        "has_docstring": true,
+        "line": 81
+      },
+      {
+        "name": "register_customer",
+        "args": [
+          "customer_id",
+          "name"
+        ],
+        "has_docstring": true,
+        "line": 108
+      },
+      {
+        "name": "upsert_inventory",
+        "args": [
+          "product_id",
+          "quantity"
+        ],
+        "has_docstring": true,
+        "line": 125
+      },
+      {
+        "name": "add_to_cart",
+        "args": [
+          "customer_id",
+          "product_id",
+          "quantity"
+        ],
+        "has_docstring": true,
+        "line": 148
+      },
+      {
+        "name": "create_order",
+        "args": [
+          "customer_id",
+          "shipping_fee"
+        ],
+        "has_docstring": true,
+        "line": 172
+      },
+      {
+        "name": "calculate_order_total",
+        "args": [
+          "order_id",
+          "include_tax"
+        ],
+        "has_docstring": true,
+        "line": 229
+      },
+      {
+        "name": "cancel_order",
+        "args": [
+          "order_id",
+          "reason"
+        ],
+        "has_docstring": true,
+        "line": 243
+      },
+      {
+        "name": "get_customer_history",
+        "args": [
+          "customer_id"
+        ],
+        "has_docstring": true,
+        "line": 273
+      },
+      {
+        "name": "generate_sales_report",
+        "args": [
+          "start_order_id",
+          "end_order_id"
+        ],
+        "has_docstring": true,
+        "line": 281
       }
     ],
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 1,
+  "heal_attempts": 0,
   "test_run": {
     "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": "....................                                                     [100%]\n20 passed in 0.07s"
+    "output": "..............                                                           [100%]\n14 passed in 0.07s"
   },
+  "pipeline_events": [
+    {
+      "stage": "pipeline",
+      "status": "started",
+      "message": "Pipeline run started",
+      "timestamp_utc": "2026-04-21T20:47:36.831347+00:00",
+      "details": {
+        "source": "target_code.py"
+      }
+    },
+    {
+      "stage": "analysis",
+      "status": "running",
+      "message": "Analyzing source code",
+      "timestamp_utc": "2026-04-21T20:47:36.831347+00:00"
+    },
+    {
+      "stage": "analysis",
+      "status": "completed",
+      "message": "Source analysis completed",
+      "timestamp_utc": "2026-04-21T20:47:36.858571+00:00",
+      "details": {
+        "function_count": 14,
+        "class_count": 0
+      }
+    },
+    {
+      "stage": "generation",
+      "status": "running",
+      "message": "Generating tests",
+      "timestamp_utc": "2026-04-21T20:47:36.858571+00:00"
+    },
+    {
+      "stage": "generation",
+      "status": "completed",
+      "message": "Test file written",
+      "timestamp_utc": "2026-04-21T20:47:50.802934+00:00",
+      "details": {
+        "test_file": "tests\\test_generated.py"
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "running",
+      "message": "Executing initial test run",
+      "timestamp_utc": "2026-04-21T20:47:50.802934+00:00",
+      "details": {
+        "test_file": "tests\\test_generated.py"
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "completed",
+      "message": "Initial test run completed",
+      "timestamp_utc": "2026-04-21T20:47:52.492972+00:00",
+      "details": {
+        "passed": true,
+        "return_code": 0
+      }
+    },
+    {
+      "stage": "selection",
+      "status": "completed",
+      "message": "Predictive selection completed",
+      "timestamp_utc": "2026-04-21T20:47:52.818011+00:00",
+      "details": {
+        "changed_files": [
+          "__pycache__/target_code.cpython-312.pyc",
+          "main.py",
+          "reports/report.json",
+          "src/__init__.py",
+          "src/__pycache__/__init__.cpython-312.pyc",
+          "src/__pycache__/generator.cpython-312.pyc",
+          "src/__pycache__/healer.cpython-312.pyc",
+          "src/__pycache__/reporter.cpython-312.pyc",
+          "src/__pycache__/runner.cpython-312.pyc",
+          "src/__pycache__/test_select_agent.cpython-312.pyc",
+          "src/generator.py",
+          "src/healer.py",
+          "src/reporter.py",
+          "src/runner.py",
+          "src/test_select_agent.py",
+          "target_code.py",
+          "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc",
+          "tests/test_generated.py"
+        ],
+        "selected_tests": [
+          "tests/test_generated.py"
+        ]
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "running",
+      "message": "Executing selected tests",
+      "timestamp_utc": "2026-04-21T20:47:52.818011+00:00",
+      "details": {
+        "selected_tests": [
+          "tests/test_generated.py"
+        ]
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "completed",
+      "message": "Selected test run completed",
+      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00",
+      "details": {
+        "passed": true,
+        "return_code": 0
+      }
+    },
+    {
+      "stage": "report",
+      "status": "running",
+      "message": "Writing report",
+      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00"
+    },
+    {
+      "stage": "pipeline",
+      "status": "passed",
+      "message": "Pipeline finished: PASSED",
+      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00"
+    }
+  ],
+  "predictive_selection": {
+    "enabled": true,
+    "base_ref": "HEAD~1",
+    "changed_files": [
+      "__pycache__/target_code.cpython-312.pyc",
+      "main.py",
+      "reports/report.json",
+      "src/__init__.py",
+      "src/__pycache__/__init__.cpython-312.pyc",
+      "src/__pycache__/generator.cpython-312.pyc",
+      "src/__pycache__/healer.cpython-312.pyc",
+      "src/__pycache__/reporter.cpython-312.pyc",
+      "src/__pycache__/runner.cpython-312.pyc",
+      "src/__pycache__/test_select_agent.cpython-312.pyc",
+      "src/generator.py",
+      "src/healer.py",
+      "src/reporter.py",
+      "src/runner.py",
+      "src/test_select_agent.py",
+      "target_code.py",
+      "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc",
+      "tests/test_generated.py"
+    ],
+    "selected_tests": [
+      "tests/test_generated.py"
+    ]
+  },
+  "heal_history": [],
   "metrics": {
-    "functions": 4,
+    "functions": 14,
     "classes": 0,
     "passed": true
   }
