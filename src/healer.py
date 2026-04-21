@@ -1,3 +1,4 @@
+import time
 from typing import Any
 
 
@@ -20,11 +21,26 @@ def heal_test_code(
             f"Code analysis:\n{analysis}\n\n"
             f"Current tests:\n{current_test_code}"
         )
-        response = ai_generator._client.models.generate_content(
-            model=ai_generator.model,
-            contents=prompt,
-        )
-        return response.text.strip()
+        max_retries = 3
+        retry_delay_seconds = 5
+        for attempt in range(1, max_retries + 1):
+            try:
+                response = ai_generator._client.models.generate_content(
+                    model=ai_generator.model,
+                    contents=prompt,
+                )
+                healed = (response.text or "").strip()
+                if healed:
+                    return healed
+                raise ValueError("Empty healing response from API")
+            except Exception as error:
+                print(f"Healer API Error (Attempt {attempt}/{max_retries}): {error}")
+                if attempt < max_retries:
+                    print(f"Retrying healer in {retry_delay_seconds} seconds...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print("Healer retries exhausted. Using local deterministic heal.")
+                    break
 
     healed = current_test_code
     # Fallback healer: relax exact assertions that commonly break in generated tests.

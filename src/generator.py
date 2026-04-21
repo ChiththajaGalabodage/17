@@ -1,4 +1,5 @@
 import os
+import time
 from pathlib import Path
 from typing import Any
 
@@ -39,14 +40,27 @@ class GeminiTestGenerator:
             f"Code analysis:\n{analysis}\n\n"
             f"Target source code:\n{source}"
         )
-        response = self._client.models.generate_content(model=self.model, contents=prompt)
-        
-        # AI eken ena uththaraye thiyena anawashya markdown (```python) makala clean karamu
-        test_code = response.text
-        test_code = test_code.replace("```python", "")
-        test_code = test_code.replace("```", "")
-        
-        return test_code.strip()
+        max_retries = 3
+        retry_delay_seconds = 5
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                response = self._client.models.generate_content(model=self.model, contents=prompt)
+                test_code = (response.text or "").replace("```python", "").replace("```", "")
+                test_code = test_code.strip()
+                if test_code:
+                    return test_code
+                raise ValueError("Empty response from API")
+            except Exception as error:
+                print(f"API Error (Attempt {attempt}/{max_retries}): {error}")
+                if attempt < max_retries:
+                    print(f"Retrying in {retry_delay_seconds} seconds...")
+                    time.sleep(retry_delay_seconds)
+                else:
+                    print("Max retries reached. Using fallback generator.")
+                    return self._generate_fallback(source, analysis)
+
+        return self._generate_fallback(source, analysis)
 
     def _generate_fallback(self, source: str, analysis: dict[str, Any]) -> str:
         target_module = Path(analysis["file"]).stem

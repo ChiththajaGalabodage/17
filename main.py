@@ -7,7 +7,8 @@ from src.analyzer import analyze_code
 from src.generator import GeminiTestGenerator
 from src.healer import heal_test_code
 from src.reporter import build_report, write_report
-from src.runner import run_pytest
+from src.runner import run_pytest, run_pytest_targets
+from src.test_select_agent import TestSelectAgent
 
 
 def normalize_test_code(test_code: str, source_path: Path) -> str:
@@ -47,6 +48,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report-output", default="reports/report.json", help="JSON report path")
     parser.add_argument("--max-heal-attempts", type=int, default=2, help="Max self-heal retries")
     parser.add_argument("--model", default="gemini-2.5-flash", help="Gemini model name")
+    parser.add_argument(
+        "--predictive-test-selection",
+        action="store_true",
+        help="Select impacted tests from git changes and run only those tests",
+    )
+    parser.add_argument(
+        "--base-ref",
+        default="HEAD~1",
+        help="Base git ref used to detect changed files for predictive selection",
+    )
     return parser.parse_args()
 
 
@@ -70,6 +81,21 @@ def run_pipeline(args: argparse.Namespace) -> int:
 
     print("[3/5] Running tests...")
     test_result = run_pytest(str(test_output_path))
+
+    if args.predictive_test_selection:
+        selector = TestSelectAgent(repo_root=".")
+        changed_files = selector.get_changed_files(base_ref=args.base_ref)
+        selected_tests = selector.select_tests(changed_files)
+
+        generated_test = test_output_path.as_posix()
+        if generated_test not in selected_tests:
+            selected_tests.append(generated_test)
+
+        selected_tests = sorted(set(selected_tests))
+        print(f"Predictive selection picked {len(selected_tests)} test file(s).")
+        for selected in selected_tests:
+            print(f" - {selected}")
+        test_result = run_pytest_targets(selected_tests)
 
     heal_attempts = 0
     while not test_result["passed"] and heal_attempts < args.max_heal_attempts:
