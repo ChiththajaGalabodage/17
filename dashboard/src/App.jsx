@@ -65,20 +65,29 @@ export default function App() {
       try {
         const [input, init] = args;
         const url = typeof input === "string" ? input : input?.url;
-        const method = (init && init.method) || (typeof input === "object" && input?.method) || "GET";
+        const method =
+          (init && init.method) ||
+          (typeof input === "object" && input?.method) ||
+          "GET";
         const safeBody = init && init.body ? init.body : undefined;
-        console.info(`[API] Request → ${method} ${url}`, safeBody ? { body: safeBody } : undefined);
+        console.info(`[API] Request → ${method} ${url}`);
+        if (safeBody !== undefined) {
+          console.info("[API] Request body:", safeBody);
+        }
 
         const res = await originalFetch(...args);
         // Clone response for reading body without consuming original stream
         const clone = res.clone();
-        let text = undefined;
+        let text = "";
         try {
           text = await clone.text();
         } catch (e) {
-          text = undefined;
+          text = "";
         }
-        console.info(`[API] Response ← ${res.status} ${res.statusText} ${url}`, text ? { body: text } : undefined);
+        console.info(`[API] Response ← ${res.status} ${res.statusText} ${url}`);
+        if (text.trim()) {
+          console.info("[API] Response body:", text);
+        }
         return res;
       } catch (err) {
         console.error("[API] Fetch error", err);
@@ -97,23 +106,18 @@ export default function App() {
           fetch("/api/report"),
           fetch("/api/test-code"),
         ]);
-        const runStatusResponse = await fetch("/api/run-status");
-
         if (!reportResponse.ok) throw new Error("Unable to load report.json");
         if (!testCodeResponse.ok)
           throw new Error("Unable to load generated test code");
-        if (!runStatusResponse.ok) throw new Error("Unable to load run status");
 
         const [reportJson, testCodeText] = await Promise.all([
           reportResponse.json(),
           testCodeResponse.text(),
         ]);
-        const runStatusJson = await runStatusResponse.json();
 
         if (!active) return;
         setReport(reportJson);
         setTestCode(testCodeText);
-        setRunState(runStatusJson);
         setError("");
       } catch (exception) {
         if (!active) return;
@@ -126,30 +130,60 @@ export default function App() {
     }
 
     loadData();
-    const intervalId = window.setInterval(loadData, 5000);
+    // Lower non-critical refresh frequency to reduce backend load
+    const intervalId = window.setInterval(loadData, 15000);
     return () => {
       active = false;
       window.clearInterval(intervalId);
     };
   }, []);
 
+  // Fetch run-status once on mount to initialize runState. Ongoing polling
+  // is handled by the run-state polling effect below to avoid duplicate
+  // requests from the general refresh loop.
   useEffect(() => {
+    let active = true;
+    (async function initRunState() {
+      try {
+        const res = await fetch("/api/run-status");
+        if (!active || !res.ok) return;
+        setRunState(await res.json());
+      } catch (e) {
+        // ignore - UI remains functional
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // Poll run-status while the pipeline is running. Use a polling loop
+    // with a short delay to avoid overlapping requests and to make the
+    // cadence easy to control. Poll less aggressively to reduce load.
     if (!runState?.running) return undefined;
 
     let active = true;
-    const intervalId = window.setInterval(async () => {
-      try {
-        const response = await fetch("/api/run-status");
-        if (!response.ok || !active) return;
-        setRunState(await response.json());
-      } catch {
-        // Keep UI usable even if one poll fails.
+
+    (async function pollRunStatus() {
+      while (active && runState?.running) {
+        try {
+          const response = await fetch("/api/run-status");
+          if (response.ok) {
+            const json = await response.json();
+            if (!active) break;
+            setRunState(json);
+          }
+        } catch (e) {
+          // ignore transient errors
+        }
+        // wait 2 seconds before next poll
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-    }, 1200);
+    })();
 
     return () => {
       active = false;
-      window.clearInterval(intervalId);
     };
   }, [runState?.running]);
 
