@@ -147,6 +147,7 @@ export default function App() {
   const metrics = report?.metrics ?? {};
   const testRun = report?.test_run ?? {};
   const predictiveSelection = report?.predictive_selection ?? {};
+  const generationExplanation = report?.generation_explanation ?? [];
   const pipelineEvents = useMemo(() => report?.pipeline_events ?? [], [report]);
   const durationLabel = formatDuration(
     runState?.startedAt,
@@ -309,6 +310,21 @@ export default function App() {
           subtitle="Current contents of tests/test_generated.py."
         >
           <pre className="code-block code-large">{testCode}</pre>
+        </Section>
+
+        <Section
+          title="Test Explanation"
+          subtitle="Structured explanation that matches the generated pytest file."
+        >
+          {generationExplanation.length ? (
+            <ul className="explanation-list">
+              {generationExplanation.map((item, index) => (
+                <li key={`${index}-${item}`}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="empty-state">No explanation was captured.</p>
+          )}
         </Section>
 
         <Section

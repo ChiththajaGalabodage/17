@@ -12,6 +12,7 @@ def build_report(
     pipeline_events: list[dict[str, Any]] | None = None,
     predictive_selection: dict[str, Any] | None = None,
     heal_history: list[dict[str, Any]] | None = None,
+    generation_explanation: list[str] | None = None,
 ) -> dict[str, Any]:
     """Build a JSON-serializable pipeline report."""
     return {
@@ -27,6 +28,7 @@ def build_report(
             "selected_tests": [],
         },
         "heal_history": heal_history or [],
+        "generation_explanation": generation_explanation or [],
         "metrics": {
             "functions": analysis.get("function_count", 0),
             "classes": analysis.get("class_count", 0),

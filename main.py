@@ -1,45 +1,15 @@
 import argparse
-import re
 import sys
 from pathlib import Path
 
 from src.analyzer import analyze_code
 from src.generator import GeminiTestGenerator
-from src.healer import heal_test_code
+from src.healer import heal_test_bundle
+from src.output_format import normalize_test_code
 from src.pipeline_tracker import PipelineTracker
 from src.reporter import build_report, write_report
 from src.runner import run_pytest, run_pytest_targets
 from src.test_select_agent import TestSelectAgent
-
-
-def normalize_test_code(test_code: str, source_path: Path) -> str:
-    """Normalize model output into executable pytest code."""
-    cleaned = test_code.strip()
-    if cleaned.startswith("```python"):
-        cleaned = cleaned[len("```python") :].strip()
-    elif cleaned.startswith("```"):
-        cleaned = cleaned[len("```") :].strip()
-    if cleaned.endswith("```"):
-        cleaned = cleaned[:-3].strip()
-
-    module_name = source_path.stem
-    body_lines: list[str] = []
-
-    for raw_line in cleaned.splitlines():
-        line = raw_line.rstrip()
-
-        # Remove known import fragments even when the model glued them onto code.
-        line = re.sub(r"import\s+pytest\b.*", "", line)
-        line = re.sub(rf"from\s+{re.escape(module_name)}\s+import\b.*", "", line)
-        line = re.sub(rf"import\s+{re.escape(module_name)}\b.*", "", line)
-
-        if line.strip():
-            body_lines.append(line.rstrip())
-
-    normalized_lines = ["import pytest", f"from {module_name} import *", ""]
-    normalized_lines.extend(body_lines)
-
-    return "\n".join(normalized_lines).rstrip() + "\n"
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,13 +56,20 @@ def run_pipeline(args: argparse.Namespace) -> int:
     print("[2/5] Generating tests...")
     tracker.record("generation", "running", "Generating tests")
     generator = GeminiTestGenerator(model=args.model)
-    test_code = generator.generate(str(source_path), analysis)
-    test_code = normalize_test_code(test_code, source_path)
+    generation_bundle = generator.generate(str(source_path), analysis)
+    test_code = normalize_test_code(generation_bundle["test_code"], source_path)
+    generation_explanation = generation_bundle.get("explanation", [])
 
     test_output_path = Path(args.test_output)
     test_output_path.parent.mkdir(parents=True, exist_ok=True)
     test_output_path.write_text(test_code, encoding="utf-8")
-    tracker.record("generation", "completed", "Test file written", test_file=str(test_output_path))
+    tracker.record(
+        "generation",
+        "completed",
+        "Test file written",
+        test_file=str(test_output_path),
+        explanation_lines=len(generation_explanation),
+    )
 
     print("[3/5] Running tests...")
     tracker.record("test_run", "running", "Executing initial test run", test_file=str(test_output_path))
@@ -150,13 +127,15 @@ def run_pipeline(args: argparse.Namespace) -> int:
         heal_attempts += 1
         print(f"[4/5] Self-heal attempt {heal_attempts}/{args.max_heal_attempts}...")
         tracker.record("healing", "running", "Self-heal attempt started", attempt=heal_attempts)
-        test_code = heal_test_code(
+        heal_bundle = heal_test_bundle(
             current_test_code=test_code,
             test_output=test_result["output"],
             analysis=analysis,
             ai_generator=generator,
         )
-        test_code = normalize_test_code(test_code, source_path)
+        test_code = normalize_test_code(heal_bundle["test_code"], source_path)
+        if heal_bundle.get("explanation"):
+            generation_explanation = heal_bundle["explanation"]
         test_output_path.write_text(test_code, encoding="utf-8")
         heal_history.append({
             "attempt": heal_attempts,
@@ -185,6 +164,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         pipeline_events=tracker.snapshot(),
         predictive_selection=predictive_selection,
         heal_history=heal_history,
+        generation_explanation=generation_explanation,
     )
     write_report(report, args.report_output)
 
