@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-04-21T20:47:54.217958+00:00",
+  "timestamp_utc": "2026-04-29T12:31:12.329669+00:00",
   "analysis": {
     "file": "target_code.py",
     "line_count": 305,
@@ -137,17 +137,17 @@
   "test_file": "tests\\test_generated.py",
   "heal_attempts": 0,
   "test_run": {
-    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py tests\\test_output_format.py -q",
     "return_code": 0,
     "passed": true,
-    "output": "..............                                                           [100%]\n14 passed in 0.07s"
+    "output": ".................                                                        [100%]\n17 passed in 2.52s"
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-04-21T20:47:36.831347+00:00",
+      "timestamp_utc": "2026-04-29T12:30:48.570900+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -156,13 +156,13 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-04-21T20:47:36.831347+00:00"
+      "timestamp_utc": "2026-04-29T12:30:48.570900+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-04-21T20:47:36.858571+00:00",
+      "timestamp_utc": "2026-04-29T12:30:48.577542+00:00",
       "details": {
         "function_count": 14,
         "class_count": 0
@@ -172,22 +172,23 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-04-21T20:47:36.858571+00:00"
+      "timestamp_utc": "2026-04-29T12:30:48.577542+00:00"
     },
     {
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-04-21T20:47:50.802934+00:00",
+      "timestamp_utc": "2026-04-29T12:31:07.809173+00:00",
       "details": {
-        "test_file": "tests\\test_generated.py"
+        "test_file": "tests\\test_generated.py",
+        "explanation_lines": 2
       }
     },
     {
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-04-21T20:47:50.802934+00:00",
+      "timestamp_utc": "2026-04-29T12:31:07.809173+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -196,7 +197,7 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-04-21T20:47:52.492972+00:00",
+      "timestamp_utc": "2026-04-29T12:31:08.555731+00:00",
       "details": {
         "passed": true,
         "return_code": 0
@@ -206,30 +207,30 @@
       "stage": "selection",
       "status": "completed",
       "message": "Predictive selection completed",
-      "timestamp_utc": "2026-04-21T20:47:52.818011+00:00",
+      "timestamp_utc": "2026-04-29T12:31:08.720277+00:00",
       "details": {
         "changed_files": [
           "__pycache__/target_code.cpython-312.pyc",
+          "dashboard/dist/assets/index-BiyaTnEl.js",
+          "dashboard/dist/index.html",
+          "dashboard/src/App.jsx",
           "main.py",
           "reports/report.json",
-          "src/__init__.py",
           "src/__pycache__/__init__.cpython-312.pyc",
           "src/__pycache__/generator.cpython-312.pyc",
           "src/__pycache__/healer.cpython-312.pyc",
+          "src/__pycache__/pipeline_tracker.cpython-312.pyc",
           "src/__pycache__/reporter.cpython-312.pyc",
-          "src/__pycache__/runner.cpython-312.pyc",
-          "src/__pycache__/test_select_agent.cpython-312.pyc",
           "src/generator.py",
           "src/healer.py",
+          "src/output_format.py",
           "src/reporter.py",
-          "src/runner.py",
-          "src/test_select_agent.py",
-          "target_code.py",
           "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc",
-          "tests/test_generated.py"
+          "tests/test_output_format.py"
         ],
         "selected_tests": [
-          "tests/test_generated.py"
+          "tests/test_generated.py",
+          "tests/test_output_format.py"
         ]
       }
     },
@@ -237,10 +238,11 @@
       "stage": "test_run",
       "status": "running",
       "message": "Executing selected tests",
-      "timestamp_utc": "2026-04-21T20:47:52.818011+00:00",
+      "timestamp_utc": "2026-04-29T12:31:08.720277+00:00",
       "details": {
         "selected_tests": [
-          "tests/test_generated.py"
+          "tests/test_generated.py",
+          "tests/test_output_format.py"
         ]
       }
     },
@@ -248,7 +250,7 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Selected test run completed",
-      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00",
+      "timestamp_utc": "2026-04-29T12:31:12.329669+00:00",
       "details": {
         "passed": true,
         "return_code": 0
@@ -258,13 +260,13 @@
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00"
+      "timestamp_utc": "2026-04-29T12:31:12.329669+00:00"
     },
     {
       "stage": "pipeline",
       "status": "passed",
       "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-04-21T20:47:54.217958+00:00"
+      "timestamp_utc": "2026-04-29T12:31:12.329669+00:00"
     }
   ],
   "predictive_selection": {
@@ -272,29 +274,33 @@
     "base_ref": "HEAD~1",
     "changed_files": [
       "__pycache__/target_code.cpython-312.pyc",
+      "dashboard/dist/assets/index-BiyaTnEl.js",
+      "dashboard/dist/index.html",
+      "dashboard/src/App.jsx",
       "main.py",
       "reports/report.json",
-      "src/__init__.py",
       "src/__pycache__/__init__.cpython-312.pyc",
       "src/__pycache__/generator.cpython-312.pyc",
       "src/__pycache__/healer.cpython-312.pyc",
+      "src/__pycache__/pipeline_tracker.cpython-312.pyc",
       "src/__pycache__/reporter.cpython-312.pyc",
-      "src/__pycache__/runner.cpython-312.pyc",
-      "src/__pycache__/test_select_agent.cpython-312.pyc",
       "src/generator.py",
       "src/healer.py",
+      "src/output_format.py",
       "src/reporter.py",
-      "src/runner.py",
-      "src/test_select_agent.py",
-      "target_code.py",
       "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc",
-      "tests/test_generated.py"
+      "tests/test_output_format.py"
     ],
     "selected_tests": [
-      "tests/test_generated.py"
+      "tests/test_generated.py",
+      "tests/test_output_format.py"
     ]
   },
   "heal_history": [],
+  "generation_explanation": [
+    "Covers 14 function(s) and 0 class(es) discovered in the target module.",
+    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  ],
   "metrics": {
     "functions": 14,
     "classes": 0,
