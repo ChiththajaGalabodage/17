@@ -57,6 +57,37 @@ export default function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Global fetch wrapper to log all outgoing requests and responses.
+  useEffect(() => {
+    if (typeof window === "undefined" || window.__fetch_logged) return;
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = async (...args) => {
+      try {
+        const [input, init] = args;
+        const url = typeof input === "string" ? input : input?.url;
+        const method = (init && init.method) || (typeof input === "object" && input?.method) || "GET";
+        const safeBody = init && init.body ? init.body : undefined;
+        console.info(`[API] Request → ${method} ${url}`, safeBody ? { body: safeBody } : undefined);
+
+        const res = await originalFetch(...args);
+        // Clone response for reading body without consuming original stream
+        const clone = res.clone();
+        let text = undefined;
+        try {
+          text = await clone.text();
+        } catch (e) {
+          text = undefined;
+        }
+        console.info(`[API] Response ← ${res.status} ${res.statusText} ${url}`, text ? { body: text } : undefined);
+        return res;
+      } catch (err) {
+        console.error("[API] Fetch error", err);
+        throw err;
+      }
+    };
+    window.__fetch_logged = true;
+  }, []);
+
   useEffect(() => {
     let active = true;
 
