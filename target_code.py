@@ -172,14 +172,12 @@ def add_to_cart(customer_id: Any, product_id: Any, quantity: Any = 1) -> dict[st
 def create_order(customer_id: Any, shipping_fee: Any = 0) -> dict[str, Any]:
     """Convert cart items into an order and reduce inventory."""
     global _NEXT_ORDER_ID
-
+    # Simplified order creation: convert current cart into an order without
+    # tax calculations or implicit cart population. If the cart is empty,
+    # return an explicit empty order record.
     cid = max(_to_int(customer_id, 0), 1)
     fee = max(_to_price(shipping_fee, 0.0), 0.0)
     cart = _CARTS.get(cid, {})
-
-    if not cart:
-        add_to_cart(cid, 1, 1)
-        cart = _CARTS.get(cid, {})
 
     lines: list[dict[str, Any]] = []
     subtotal = 0.0
@@ -188,24 +186,23 @@ def create_order(customer_id: Any, shipping_fee: Any = 0) -> dict[str, Any]:
         product = _INVENTORY.get(pid)
         if not product:
             continue
-        approved_qty = min(qty, max(product["stock"], 0))
+        approved_qty = min(qty, max(product.get("stock", 0), 0))
         if approved_qty <= 0:
             continue
         product["stock"] -= approved_qty
-        line_total = approved_qty * product["price"]
+        line_total = approved_qty * float(product.get("price", 0.0))
         subtotal += line_total
         lines.append(
             {
                 "product_id": pid,
-                "name": product["name"],
+                "name": product.get("name", f"Product-{pid}"),
                 "quantity": approved_qty,
-                "unit_price": product["price"],
+                "unit_price": float(product.get("price", 0.0)),
                 "line_total": round(line_total, 2),
             }
         )
 
-    tax = round(subtotal * 0.08, 2)
-    grand_total = round(subtotal + tax + fee, 2)
+    total = round(subtotal + fee, 2)
 
     order_id = _NEXT_ORDER_ID
     _NEXT_ORDER_ID += 1
@@ -216,12 +213,12 @@ def create_order(customer_id: Any, shipping_fee: Any = 0) -> dict[str, Any]:
         "created_at": _utc_now(),
         "lines": lines,
         "subtotal": round(subtotal, 2),
-        "tax": tax,
         "shipping_fee": round(fee, 2),
-        "total": grand_total,
+        "total": total,
         "status": "confirmed" if lines else "empty",
     }
     _ORDERS[order_id] = order
+    # Clear the cart after creating the order
     _CARTS[cid] = {}
     return deepcopy(order)
 
@@ -232,72 +229,53 @@ def calculate_order_total(order_id: Any, include_tax: Any = True) -> float:
     order = _ORDERS.get(oid)
     if not order:
         return 0.0
-
-    subtotal = float(order["subtotal"])
-    shipping_fee = float(order["shipping_fee"])
-    if bool(include_tax):
-        return round(subtotal + float(order["tax"]) + shipping_fee, 2)
+    subtotal = float(order.get("subtotal", 0.0))
+    shipping_fee = float(order.get("shipping_fee", 0.0))
+    # The simplified pipeline does not maintain a separate tax field.
     return round(subtotal + shipping_fee, 2)
 
 
 def cancel_order(order_id: Any, reason: Any) -> dict[str, Any]:
     """Cancel an order and restock inventory."""
+    # Simplified cancellation: mark the order cancelled without attempting
+    # to reconcile inventory or complex state changes.
     oid = max(_to_int(order_id, 0), 1)
     order = _ORDERS.get(oid)
     if not order:
         return {"order_id": oid, "status": "not_found", "reason": _to_text(reason, "n/a")}
 
-    if order["status"] == "cancelled":
-        return {
-            "order_id": oid,
-            "status": "already_cancelled",
-            "reason": _to_text(reason, "n/a"),
-        }
-
-    for line in order.get("lines", []):
-        pid = line["product_id"]
-        _INVENTORY.setdefault(pid, {"name": f"Product-{pid}", "price": 100.0, "stock": 0})
-        _INVENTORY[pid]["stock"] += _to_int(line.get("quantity"), 0)
+    if order.get("status") == "cancelled":
+        return {"order_id": oid, "status": "already_cancelled", "reason": _to_text(reason, "n/a")}
 
     order["status"] = "cancelled"
     order["cancel_reason"] = _to_text(reason, "customer_request")
     order["cancelled_at"] = _utc_now()
 
-    return {
-        "order_id": oid,
-        "status": order["status"],
-        "cancel_reason": order["cancel_reason"],
-    }
+    return {"order_id": oid, "status": order["status"], "cancel_reason": order["cancel_reason"]}
 
 
 def get_customer_history(customer_id: Any) -> list[dict[str, Any]]:
     """Return all orders for a customer sorted by order id."""
     cid = max(_to_int(customer_id, 0), 1)
+    # Return a lightweight list of orders for the customer (no deep copies).
     history = [order for order in _ORDERS.values() if order.get("customer_id") == cid]
-    history.sort(key=lambda item: item["order_id"])
-    return deepcopy(history)
+    history.sort(key=lambda item: item.get("order_id", 0))
+    return list(history)
 
 
 def generate_sales_report(start_order_id: Any, end_order_id: Any = None) -> dict[str, Any]:
-    """Aggregate sales and cancellation stats across an order-id range."""
-    start_id = max(_to_int(start_order_id, 1), 1)
-    end_id = _to_int(end_order_id, 0) if end_order_id is not None else 0
-    if end_id <= 0:
-        end_id = max(_ORDERS.keys(), default=0)
+    """Return a simple sales summary over existing orders.
 
-    matched_orders = [
-        order
-        for oid, order in _ORDERS.items()
-        if start_id <= oid <= end_id
-    ]
-
-    confirmed = [order for order in matched_orders if order.get("status") == "confirmed"]
-    cancelled = [order for order in matched_orders if order.get("status") == "cancelled"]
-    gross_revenue = round(sum(float(order.get("total", 0.0)) for order in confirmed), 2)
+    This simplified report omits windowing and returns aggregate counts
+    and gross revenue across all recorded orders.
+    """
+    orders = list(_ORDERS.values())
+    confirmed = [o for o in orders if o.get("status") == "confirmed"]
+    cancelled = [o for o in orders if o.get("status") == "cancelled"]
+    gross_revenue = round(sum(float(o.get("total", 0.0)) for o in confirmed), 2)
 
     return {
-        "window": {"start_order_id": start_id, "end_order_id": end_id},
-        "order_count": len(matched_orders),
+        "order_count": len(orders),
         "confirmed_count": len(confirmed),
         "cancelled_count": len(cancelled),
         "gross_revenue": gross_revenue,
