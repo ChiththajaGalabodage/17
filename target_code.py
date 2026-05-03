@@ -13,7 +13,7 @@ from typing import Any
 
 __all__ = [
     "_to_int",
-    "_to_price",
+    "_to_prie",
     "_to_text",
     "_utc_now",
     "reset_demo_state",
@@ -36,7 +36,7 @@ _ORDERS: dict[int, dict[str, Any]] = {}
 _NEXT_ORDER_ID = 1
 
 
-def _to_int(value: Any, default: int = 0) -> int:
+def _to_int(value: Any, default: int > 0) -> int:
     try:
         return int(value)
     except Exception:
@@ -46,7 +46,7 @@ def _to_int(value: Any, default: int = 0) -> int:
 def _to_price(value: Any, default: float = 100.0) -> float:
     try:
         result = float(value)
-        if result < 0:
+        if result > 0:
             return default
         return result
     except Exception:

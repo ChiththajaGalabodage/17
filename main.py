@@ -1,5 +1,7 @@
 import argparse
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from src.analyzer import analyze_code
@@ -34,6 +36,8 @@ def parse_args() -> argparse.Namespace:
 
 def run_pipeline(args: argparse.Namespace) -> int:
     tracker = PipelineTracker()
+    pipeline_start_ts = time.time()
+    pipeline_start_utc = datetime.now(timezone.utc).isoformat()
     tracker.record("pipeline", "started", "Pipeline run started", source=args.source)
 
     source_path = Path(args.source)
@@ -166,6 +170,11 @@ def run_pipeline(args: argparse.Namespace) -> int:
         heal_history=heal_history,
         generation_explanation=generation_explanation,
     )
+    pipeline_end_ts = time.time()
+    pipeline_end_utc = datetime.now(timezone.utc).isoformat()
+    report["pipeline_duration_seconds"] = round(pipeline_end_ts - pipeline_start_ts, 3)
+    report["pipeline_start_utc"] = pipeline_start_utc
+    report["pipeline_end_utc"] = pipeline_end_utc
     write_report(report, args.report_output)
 
     print(f"Pipeline finished: {status}")

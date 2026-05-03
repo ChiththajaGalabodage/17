@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-04-29T15:30:11.250155+00:00",
+  "timestamp_utc": "2026-05-02T20:54:04.842668+00:00",
   "analysis": {
     "file": "target_code.py",
     "line_count": 283,
@@ -135,19 +135,22 @@
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 0,
+  "heal_attempts": 2,
   "test_run": {
-    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py tests\\test_output_format.py -q",
-    "return_code": 0,
-    "passed": true,
-    "output": ".................                                                        [100%]\n17 passed in 2.03s"
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
+    "return_code": 2,
+    "passed": false,
+    "output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\ntests\\test_generated.py:2: in <module>\n    from target_code import *\nE   AttributeError: module 'target_code' has no attribute '_to_prie'. Did you mean: '_to_price'?\n=========================== short test summary info ===========================\nERROR tests/test_generated.py - AttributeError: module 'target_code' has no a...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.25s",
+    "start_time_utc": "2026-05-02T20:54:03.452062+00:00",
+    "end_time_utc": "2026-05-02T20:54:04.842668+00:00",
+    "duration_seconds": 1.391
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-04-29T15:29:43.733882+00:00",
+      "timestamp_utc": "2026-05-02T20:50:05.980194+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -156,13 +159,13 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-04-29T15:29:43.733882+00:00"
+      "timestamp_utc": "2026-05-02T20:50:05.980194+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-04-29T15:29:43.741190+00:00",
+      "timestamp_utc": "2026-05-02T20:50:06.008840+00:00",
       "details": {
         "function_count": 14,
         "class_count": 0
@@ -172,23 +175,23 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-04-29T15:29:43.741190+00:00"
+      "timestamp_utc": "2026-05-02T20:50:06.008840+00:00"
     },
     {
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-04-29T15:30:07.191522+00:00",
+      "timestamp_utc": "2026-05-02T20:52:05.432616+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
-        "explanation_lines": 2
+        "explanation_lines": 0
       }
     },
     {
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-04-29T15:30:07.191522+00:00",
+      "timestamp_utc": "2026-05-02T20:52:05.432616+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -197,87 +200,92 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-04-29T15:30:07.933393+00:00",
+      "timestamp_utc": "2026-05-02T20:52:07.722602+00:00",
       "details": {
-        "passed": true,
-        "return_code": 0
+        "passed": false,
+        "return_code": 2
       }
     },
     {
-      "stage": "selection",
-      "status": "completed",
-      "message": "Predictive selection completed",
-      "timestamp_utc": "2026-04-29T15:30:08.096869+00:00",
-      "details": {
-        "changed_files": [
-          "__pycache__/target_code.cpython-312.pyc",
-          "dashboard/src/App.jsx",
-          "reports/report.json",
-          "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc"
-        ],
-        "selected_tests": [
-          "tests/test_generated.py",
-          "tests/test_output_format.py"
-        ]
-      }
-    },
-    {
-      "stage": "test_run",
+      "stage": "healing",
       "status": "running",
-      "message": "Executing selected tests",
-      "timestamp_utc": "2026-04-29T15:30:08.096869+00:00",
+      "message": "Self-heal attempt started",
+      "timestamp_utc": "2026-05-02T20:52:07.722602+00:00",
       "details": {
-        "selected_tests": [
-          "tests/test_generated.py",
-          "tests/test_output_format.py"
-        ]
+        "attempt": 1
       }
     },
     {
-      "stage": "test_run",
+      "stage": "healing",
       "status": "completed",
-      "message": "Selected test run completed",
-      "timestamp_utc": "2026-04-29T15:30:11.250155+00:00",
+      "message": "Self-heal attempt completed",
+      "timestamp_utc": "2026-05-02T20:52:47.292430+00:00",
       "details": {
-        "passed": true,
-        "return_code": 0
+        "attempt": 1,
+        "passed": false,
+        "return_code": 2
+      }
+    },
+    {
+      "stage": "healing",
+      "status": "running",
+      "message": "Self-heal attempt started",
+      "timestamp_utc": "2026-05-02T20:52:47.292430+00:00",
+      "details": {
+        "attempt": 2
+      }
+    },
+    {
+      "stage": "healing",
+      "status": "completed",
+      "message": "Self-heal attempt completed",
+      "timestamp_utc": "2026-05-02T20:54:04.842668+00:00",
+      "details": {
+        "attempt": 2,
+        "passed": false,
+        "return_code": 2
       }
     },
     {
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-04-29T15:30:11.250155+00:00"
+      "timestamp_utc": "2026-05-02T20:54:04.842668+00:00"
     },
     {
       "stage": "pipeline",
-      "status": "passed",
-      "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-04-29T15:30:11.250155+00:00"
+      "status": "failed",
+      "message": "Pipeline finished: FAILED",
+      "timestamp_utc": "2026-05-02T20:54:04.842668+00:00"
     }
   ],
   "predictive_selection": {
-    "enabled": true,
+    "enabled": false,
     "base_ref": "HEAD~1",
-    "changed_files": [
-      "__pycache__/target_code.cpython-312.pyc",
-      "dashboard/src/App.jsx",
-      "reports/report.json",
-      "tests/__pycache__/test_generated.cpython-312-pytest-9.0.3.pyc"
-    ],
+    "changed_files": [],
     "selected_tests": [
-      "tests/test_generated.py",
-      "tests/test_output_format.py"
+      "tests/test_generated.py"
     ]
   },
-  "heal_history": [],
-  "generation_explanation": [
-    "Covers 14 function(s) and 0 class(es) discovered in the target module.",
-    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  "heal_history": [
+    {
+      "attempt": 1,
+      "test_output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\ntests\\test_generated.py:2: in <module>\n    from target_code import *\nE   AttributeError: module 'target_code' has no attribute '_to_prie'. Did you mean: '_to_price'?\n=========================== short test summary info ===========================\nERROR tests/test_generated.py - AttributeError: module 'target_code' has no a...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.66s",
+      "result": "retry"
+    },
+    {
+      "attempt": 2,
+      "test_output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\n.venv\\Lib\\site-packages\\_pytest\\python.py:507: in importtestmodule\n    mod = import_path(\n.venv\\Lib\\site-packages\\_pytest\\pathlib.py:587: in import_path\n    importlib.import_module(module_name)\nC:\\Python312\\Lib\\importlib\\__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1387: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n.venv\\Lib\\site-packages\\_pytest\\assertion\\rewrite.py:188: in exec_module\n    source_stat, co = _rewrite_test(fn, self.config)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n.venv\\Lib\\site-packages\\_pytest\\assertion\\rewrite.py:357: in _rewrite_test\n    tree = ast.parse(source, filename=strfn)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\ast.py:52: in parse\n    return compile(source, filename, mode, flags,\nE     File \"D:\\17\\tests\\test_generated.py\", line 7\nE       \"\nE       ^\nE   SyntaxError: unterminated string literal (detected at line 7)\n=========================== short test summary info ===========================\nERROR tests/test_generated.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.59s",
+      "result": "retry"
+    }
   ],
+  "generation_explanation": [],
   "metrics": {
     "functions": 14,
     "classes": 0,
-    "passed": true
-  }
+    "passed": false
+  },
+  "pipeline_duration_seconds": 238.862,
+  "pipeline_start_utc": "2026-05-02T20:50:05.980194+00:00",
+  "pipeline_end_utc": "2026-05-02T20:54:04.842668+00:00"
 }

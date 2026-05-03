@@ -1,5 +1,7 @@
 import subprocess
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -12,10 +14,16 @@ def run_pytest_targets(test_targets: list[str]) -> dict[str, Any]:
             "return_code": 0,
             "passed": True,
             "output": "No test targets were selected.",
+            "start_time_utc": None,
+            "end_time_utc": None,
+            "duration_seconds": 0.0,
         }
 
     normalized_targets = [str(Path(target)) for target in test_targets]
     command = [sys.executable, "-m", "pytest", *normalized_targets, "-q"]
+
+    start_time_iso = datetime.now(timezone.utc).isoformat()
+    start_ts = time.time()
 
     completed = subprocess.run(
         command,
@@ -23,6 +31,10 @@ def run_pytest_targets(test_targets: list[str]) -> dict[str, Any]:
         capture_output=True,
         cwd=str(Path(normalized_targets[0]).parent.parent),
     )
+
+    end_ts = time.time()
+    end_time_iso = datetime.now(timezone.utc).isoformat()
+    duration = round(end_ts - start_ts, 3)
 
     output = "\n".join(
         chunk for chunk in [completed.stdout.strip(), completed.stderr.strip()] if chunk
@@ -33,6 +45,9 @@ def run_pytest_targets(test_targets: list[str]) -> dict[str, Any]:
         "return_code": completed.returncode,
         "passed": completed.returncode == 0,
         "output": output,
+        "start_time_utc": start_time_iso,
+        "end_time_utc": end_time_iso,
+        "duration_seconds": duration,
     }
 
 
