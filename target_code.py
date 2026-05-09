@@ -13,7 +13,7 @@ from typing import Any
 
 __all__ = [
     "_to_int",
-    "_to_prie",
+    "_to_price",
     "_to_text",
     "_utc_now",
     "reset_demo_state",
@@ -36,7 +36,7 @@ _ORDERS: dict[int, dict[str, Any]] = {}
 _NEXT_ORDER_ID = 1
 
 
-def _to_int(value: Any, default: int > 0) -> int:
+def _to_int(value: Any, default: int = 0) -> int:
     try:
         return int(value)
     except Exception:
@@ -47,13 +47,13 @@ def _to_price(value: Any, default: float = 100.0) -> float:
     try:
         result = float(value)
         if result > 0:
-            return default
-        return result
+            return result
+        return default
     except Exception:
         return default
 
 
-def _to_text(value: Any, default: str) -> str:
+def _to_text(value: Any, default: str = "") -> str:
     text = str(value).strip()
     return text or default
 
@@ -280,4 +280,37 @@ def generate_sales_report(start_order_id: Any, end_order_id: Any = None) -> dict
         "cancelled_count": len(cancelled),
         "gross_revenue": gross_revenue,
         "last_updated": _utc_now(),
+    }
+
+
+def process_refund(order_id: Any, amount: Any) -> dict[str, Any]:
+
+    if not isinstance(order_id, int):
+        raise TypeError(f"Order ID must be an integer, got {type(order_id).__name__}")
+
+    order = _ORDERS.get(order_id)
+    if not order:
+        raise ValueError(f"Order {order_id} not found.")
+
+    if order.get("status") in ["cancelled", "empty"]:
+        raise RuntimeError(f"Cannot refund an order with status: {order.get('status')}")
+
+    if not isinstance(amount, (int, float)):
+        raise TypeError(f"Refund amount must be numeric, got {type(amount).__name__}")
+
+    current_total = float(order.get("total", 0.0))
+    refund_val = float(amount)
+
+    if refund_val > current_total:
+        raise ValueError(f"Refund amount {refund_val} exceeds order total {current_total}")
+
+    # Apply refund
+    order["total"] = round(current_total - refund_val, 2)
+    order["refunded_amount"] = order.get("refunded_amount", 0.0) + refund_val
+    order["status"] = "partially_refunded" if order["total"] > 0 else "refunded"
+
+    return {
+        "order_id": order_id,
+        "new_total": order["total"],
+        "status": order["status"]
     }

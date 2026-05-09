@@ -27,7 +27,16 @@ jobs:
       - name: Run AI test generation pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python main.py --source target_code.py --max-heal-attempts 2
+        run: python main.py --source target_code.py --max-heal-attempts 2 --predictive-test-selection
+
+      - name: Validate generated tests
+        run: |
+          python scripts/validate_generated_tests.py
+
+      - name: Run agentic vs traditional comparison
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/compare_methods.py --source target_code.py --runs 1
 
       - name: Upload generated artifacts
         if: always()
@@ -37,3 +46,6 @@ jobs:
           path: |
             tests/test_generated.py
             reports/report.json
+            reports/comparison_report.json
+            reports/comparison_report.csv
+            reports/comparison_report.md
