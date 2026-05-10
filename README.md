@@ -85,12 +85,22 @@ If no key is set, generation and healing still execute with deterministic local 
 python main.py --source target_code.py --max-heal-attempts 2 --predictive-test-selection
 ```
 
+### Continuous Regeneration (Watch Mode)
+
+```bash
+python main.py --source target_code.py --watch
+```
+
+This mode runs the pipeline once, then re-runs automatically whenever the source file changes.
+
 Useful flags:
 
 - `--test-output tests/test_generated.py`
 - `--report-output reports/report.json`
 - `--model gemini-2.5-flash`
 - `--base-ref HEAD~1`
+- `--watch`
+- `--watch-interval 1.0`
 
 ### Agentic vs Traditional Benchmark
 

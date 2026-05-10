@@ -67,6 +67,7 @@ def test_fallback_generation_includes_explanation() -> None:
                 {"name": "cancel_order", "args": ["order_id", "reason"], "has_docstring": True, "line": 1},
                 {"name": "get_customer_history", "args": ["customer_id"], "has_docstring": True, "line": 1},
                 {"name": "generate_sales_report", "args": ["start_order_id", "end_order_id"], "has_docstring": True, "line": 1},
+                {"name": "process_refund", "args": ["order_id", "amount"], "has_docstring": True, "line": 1},
             ],
             "classes": [],
         },
@@ -75,4 +76,5 @@ def test_fallback_generation_includes_explanation() -> None:
     assert "assert result is not None" not in bundle["test_code"]
     assert "pytest.raises" in bundle["test_code"]
     assert "assert order['status'] == 'confirmed'" in bundle["test_code"]
+    assert "def test_process_refund_behaves_consistently():" in bundle["test_code"]
     assert bundle["explanation"]

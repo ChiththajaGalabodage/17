@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import sys
 import time
 from datetime import datetime, timezone
@@ -12,6 +13,7 @@ from src.pipeline_tracker import PipelineTracker
 from src.reporter import build_report, write_report
 from src.runner import run_pytest, run_pytest_targets
 from src.test_select_agent import TestSelectAgent
+from src.validator import build_smoke_test_code, validate_generated_test_code
 
 
 def parse_args() -> argparse.Namespace:
@@ -21,6 +23,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report-output", default="reports/report.json", help="JSON report path")
     parser.add_argument("--max-heal-attempts", type=int, default=2, help="Max self-heal retries")
     parser.add_argument("--model", default="gemini-2.5-flash", help="Gemini model name")
+    parser.add_argument(
+        "--watch",
+        action="store_true",
+        help="Watch source file for changes and rerun the pipeline automatically",
+    )
+    parser.add_argument(
+        "--watch-interval",
+        type=float,
+        default=1.0,
+        help="Polling interval in seconds when --watch is enabled",
+    )
     parser.add_argument(
         "--predictive-test-selection",
         action="store_true",
@@ -63,6 +76,40 @@ def run_pipeline(args: argparse.Namespace) -> int:
     generation_bundle = generator.generate(str(source_path), analysis)
     test_code = normalize_test_code(generation_bundle["test_code"], source_path)
     generation_explanation = generation_bundle.get("explanation", [])
+
+    tracker.record("validation", "running", "Validating generated tests")
+    validation_result = validate_generated_test_code(test_code, source_path, analysis)
+    if not validation_result["passed"]:
+        tracker.record(
+            "validation",
+            "failed",
+            "Generated tests failed validation",
+            issues=validation_result["issues"],
+        )
+        print("Generated tests failed validation:")
+        for issue in validation_result["issues"]:
+            print(f" - {issue}")
+
+        if generator.can_use_ai:
+            heal_bundle = heal_test_bundle(
+                current_test_code=test_code,
+                test_output="\n".join(validation_result["issues"]),
+                analysis=analysis,
+                ai_generator=generator,
+            )
+            test_code = normalize_test_code(heal_bundle["test_code"], source_path)
+        else:
+            test_code = build_smoke_test_code(source_path)
+
+        validation_result = validate_generated_test_code(test_code, source_path, analysis)
+
+    tracker.record(
+        "validation",
+        "completed",
+        "Generated tests validated",
+        passed=validation_result["passed"],
+        issues=validation_result["issues"],
+    )
 
     test_output_path = Path(args.test_output)
     test_output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -187,6 +234,40 @@ def run_pipeline(args: argparse.Namespace) -> int:
     return 0 if test_result["passed"] else 1
 
 
+def _file_fingerprint(path: Path) -> str:
+    hasher = hashlib.sha256()
+    hasher.update(path.read_bytes())
+    return hasher.hexdigest()
+
+
+def run_watch_mode(args: argparse.Namespace) -> int:
+    source_path = Path(args.source)
+    if not source_path.exists():
+        print(f"Source file not found: {source_path}")
+        return 1
+
+    interval = max(args.watch_interval, 0.2)
+    last_exit_code = run_pipeline(args)
+    last_fingerprint = _file_fingerprint(source_path)
+    print(f"Watching {source_path} for changes (interval: {interval:.1f}s). Press Ctrl+C to stop.")
+
+    try:
+        while True:
+            time.sleep(interval)
+            current_fingerprint = _file_fingerprint(source_path)
+            if current_fingerprint == last_fingerprint:
+                continue
+
+            print("\nChange detected in source file. Rerunning pipeline...")
+            last_fingerprint = current_fingerprint
+            last_exit_code = run_pipeline(args)
+    except KeyboardInterrupt:
+        print("\nStopped watch mode.")
+        return last_exit_code
+
+
 if __name__ == "__main__":
     cli_args = parse_args()
+    if cli_args.watch:
+        sys.exit(run_watch_mode(cli_args))
     sys.exit(run_pipeline(cli_args))

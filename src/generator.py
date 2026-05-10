@@ -105,9 +105,7 @@ class GeminiTestGenerator:
         }
 
     def _build_behavior_tests(self, analysis: dict[str, Any]) -> list[str]:
-        function_names = {fn.get("name") for fn in analysis.get("functions", [])}
-
-        if {
+        target_function_set = {
             "_to_int",
             "_to_price",
             "_to_text",
@@ -122,13 +120,19 @@ class GeminiTestGenerator:
             "cancel_order",
             "get_customer_history",
             "generate_sales_report",
-        }.issubset(function_names):
-            return self._build_target_code_tests()
+        }
+        function_names = {fn.get("name") for fn in analysis.get("functions", [])}
+        use_target_template = target_function_set.issubset(function_names)
 
         tests: list[str] = []
+        if use_target_template:
+            tests.extend(self._build_target_code_tests())
+
         for fn in analysis.get("functions", []):
             fn_name = fn["name"]
             args = fn.get("args", [])
+            if use_target_template and fn_name in target_function_set:
+                continue
             if fn_name == "_to_int":
                 tests.extend(
                     [

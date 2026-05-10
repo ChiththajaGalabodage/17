@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-05-09T07:15:21.468942+00:00",
+  "timestamp_utc": "2026-05-09T11:18:51.515519+00:00",
   "analysis": {
     "file": "target_code.py",
     "line_count": 316,
@@ -144,22 +144,22 @@
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 0,
+  "heal_attempts": 1,
   "test_run": {
-    "command": "C:\\Python312\\python.exe -m pytest tests\\test_generated.py -q",
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": ".......                                                                  [100%]\n7 passed in 0.04s",
-    "start_time_utc": "2026-05-09T07:15:20.622107+00:00",
-    "end_time_utc": "2026-05-09T07:15:21.468942+00:00",
-    "duration_seconds": 0.847
+    "output": ".                                                                        [100%]\n1 passed in 0.01s",
+    "start_time_utc": "2026-05-09T11:18:50.868553+00:00",
+    "end_time_utc": "2026-05-09T11:18:51.515005+00:00",
+    "duration_seconds": 0.646
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-09T07:15:20.594430+00:00",
+      "timestamp_utc": "2026-05-09T11:16:46.057097+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -168,13 +168,13 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-09T07:15:20.594961+00:00"
+      "timestamp_utc": "2026-05-09T11:16:46.057097+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-09T07:15:20.617792+00:00",
+      "timestamp_utc": "2026-05-09T11:16:46.063185+00:00",
       "details": {
         "function_count": 15,
         "class_count": 0
@@ -184,23 +184,39 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-09T07:15:20.618318+00:00"
+      "timestamp_utc": "2026-05-09T11:16:46.063185+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "running",
+      "message": "Validating generated tests",
+      "timestamp_utc": "2026-05-09T11:17:33.631589+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "completed",
+      "message": "Generated tests validated",
+      "timestamp_utc": "2026-05-09T11:17:33.652703+00:00",
+      "details": {
+        "passed": true,
+        "issues": []
+      }
     },
     {
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-09T07:15:20.621568+00:00",
+      "timestamp_utc": "2026-05-09T11:17:33.653704+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
-        "explanation_lines": 2
+        "explanation_lines": 0
       }
     },
     {
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-09T07:15:20.621568+00:00",
+      "timestamp_utc": "2026-05-09T11:17:33.653704+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -209,8 +225,28 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-09T07:15:21.468942+00:00",
+      "timestamp_utc": "2026-05-09T11:17:35.310046+00:00",
       "details": {
+        "passed": false,
+        "return_code": 1
+      }
+    },
+    {
+      "stage": "healing",
+      "status": "running",
+      "message": "Self-heal attempt started",
+      "timestamp_utc": "2026-05-09T11:17:35.310046+00:00",
+      "details": {
+        "attempt": 1
+      }
+    },
+    {
+      "stage": "healing",
+      "status": "completed",
+      "message": "Self-heal attempt completed",
+      "timestamp_utc": "2026-05-09T11:18:51.515005+00:00",
+      "details": {
+        "attempt": 1,
         "passed": true,
         "return_code": 0
       }
@@ -219,13 +255,13 @@
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-09T07:15:21.468942+00:00"
+      "timestamp_utc": "2026-05-09T11:18:51.515519+00:00"
     },
     {
       "stage": "pipeline",
       "status": "passed",
       "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-05-09T07:15:21.468942+00:00"
+      "timestamp_utc": "2026-05-09T11:18:51.515519+00:00"
     }
   ],
   "predictive_selection": {
@@ -236,23 +272,28 @@
       "tests/test_generated.py"
     ]
   },
-  "heal_history": [],
-  "generation_explanation": [
-    "Covers 15 function(s) and 0 class(es) discovered in the target module.",
-    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  "heal_history": [
+    {
+      "attempt": 1,
+      "test_output": ".......FFEEEEE...FF.FEEEE......FEEEEEE.EEEEE.E...E...FFEE..EEE.EEEE..EEE [ 98%]\nE                                                                        [100%]\n=================================== ERRORS ====================================\n_________________ ERROR at setup of test_utc_now_normal_case __________________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n__________________ ERROR at setup of test_utc_now_edge_case ___________________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_______________ ERROR at setup of test_utc_now_no_failure_case ________________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_____________ ERROR at setup of test_reset_demo_state_normal_case _____________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n________ ERROR at setup of test_reset_demo_state_edge_case_empty_state ________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n______ ERROR at setup of test_register_customer_normal_case_new_customer ______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_register_customer_edge_case_update_existing_customer _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_register_customer_edge_case_invalid_id_generates_new_id _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_register_customer_edge_case_invalid_name_uses_default _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n____ ERROR at setup of test_add_to_cart_normal_case_new_item_new_customer _____\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n__ ERROR at setup of test_add_to_cart_normal_case_add_more_to_existing_item ___\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_add_to_cart_edge_case_new_customer_and_product_created _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_____ ERROR at setup of test_add_to_cart_edge_case_quantity_exceeds_stock _____\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_add_to_cart_edge_case_invalid_quantity_default_to_one _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_______ ERROR at setup of test_add_to_cart_edge_case_zero_stock_product _______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n___ ERROR at setup of test_create_order_normal_case_with_items_and_shipping ___\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_________ ERROR at setup of test_create_order_normal_case_no_shipping _________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n__________ ERROR at setup of test_create_order_edge_case_empty_cart ___________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_create_order_edge_case_partial_fulfillment_due_to_stock _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_____ ERROR at setup of test_create_order_edge_case_invalid_shipping_fee ______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n__________ ERROR at setup of test_calculate_order_total_normal_case ___________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_______________ ERROR at setup of test_cancel_order_normal_case _______________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n___________ ERROR at setup of test_get_customer_history_normal_case ___________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_get_customer_history_edge_case_no_orders_for_customer _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n__________ ERROR at setup of test_generate_sales_report_normal_case ___________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n______ ERROR at setup of test_generate_sales_report_edge_case_no_orders _______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_generate_sales_report_edge_case_only_cancelled_orders _\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n______ ERROR at setup of test_process_refund_normal_case_partial_refund _______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n________ ERROR at setup of test_process_refund_normal_case_full_refund ________\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_process_refund_normal_case_multiple_partial_refunds __\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_____ ERROR at setup of test_process_refund_edge_case_refund_zero_amount ______\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n_ ERROR at setup of test_process_refund_failure_case_order_already_cancelled __\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n____ ERROR at setup of test_process_refund_failure_case_order_empty_status ____\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n___ ERROR at setup of test_process_refund_failure_case_invalid_amount_type ____\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n___ ERROR at setup of test_process_refund_failure_case_amount_exceeds_total ___\n\n    @pytest.fixture\n    def mock_utc_now():\n        fixed_time = datetime(2023, 1, 1, 12, 0, 0, tzinfo=timezone.utc)\n        with patch('target_code.datetime') as mock_dt:\n            mock_dt.now.return_value = fixed_time\n>           mock_dt.now.return_value.isoformat.return_value = fixed_time.isoformat()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AttributeError: 'builtin_function_or_method' object has no attribute 'return_value'\n\ntests\\test_generated.py:18: AttributeError\n================================== FAILURES ===================================\n___________________________ test_to_text_edge_cases ___________________________\n\n    def test_to_text_edge_cases():\n>       assert tc._to_text(None) == \"\"\nE       AssertionError: assert 'None' == ''\nE         \nE         + None\n\ntests\\test_generated.py:69: AssertionError\n________________________ test_to_text_no_failure_case _________________________\n\n    def test_to_text_no_failure_case():\n        # _to_text is designed to not fail, always returning a string.\n>       assert tc._to_text(object()) == str(object())\nE       AssertionError: assert '<object obje...01F5E04EA160>' == '<object obje...01F5E04EA120>'\nE         \nE         - <object object at 0x000001F5E04EA120>\nE         ?                                   ^\nE         + <object object at 0x000001F5E04EA160>\nE         ?                                   ^\n\ntests\\test_generated.py:77: AssertionError\n_______________ test_initialize_store_edge_case_empty_seed_list _______________\n\n    def test_initialize_store_edge_case_empty_seed_list():\n        result = tc.initialize_store([])\n        assert result[\"products\"] == 3\n        assert sorted(result[\"product_ids\"]) == [1, 2, 3]\n>       assert result[\"seeded\"] is True  # An empty list is still a 'seed'\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert False is True\n\ntests\\test_generated.py:144: AssertionError\n_____________ test_initialize_store_edge_case_invalid_seed_items ______________\n\n    def test_initialize_store_edge_case_invalid_seed_items():\n        seed_data = [\n            {\"product_id\": 10, \"name\": \"Valid\", \"price\": 50.0, \"stock\": 10},\n            \"not_a_dict\",\n            {\"product_id\": 0, \"name\": \"InvalidID\"},  # product_id 0 is skipped\n            {\"product_id\": 12, \"price\": -5.0, \"stock\": \"abc\"},  # Invalid price, stock\n        ]\n        result = tc.initialize_store(seed_data)\n>       assert result[\"products\"] == 4  # 3 default + 1 valid seeded\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert 5 == 4\n\ntests\\test_generated.py:153: AssertionError\n____________________ test_initialize_store_no_failure_case ____________________\n\n    def test_initialize_store_no_failure_case():\n        # The function is designed to handle various invalid seed inputs gracefully.\n        result = tc.initialize_store(\"invalid_seed_type\")\n        assert result[\"products\"] == 3\n>       assert result[\"seeded\"] is False  # 'seed' is bool(\"invalid_seed_type\") which is True, but code only processes if isinstance(seed, list)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert True is False\n\ntests\\test_generated.py:172: AssertionError\n____________________ test_upsert_inventory_no_failure_case ____________________\n\n    def test_upsert_inventory_no_failure_case():\n        # The function is designed to handle invalid inputs gracefully.\n        result = tc.upsert_inventory(None, None)\n        assert isinstance(result, dict)\n        assert result[\"product_id\"] == 1\n>       assert result[\"stock\"] == 50\nE       assert 0 == 50\n\ntests\\test_generated.py:255: AssertionError\n__________________ test_cancel_order_edge_case_empty_reason ___________________\n\n    def test_cancel_order_edge_case_empty_reason():\n        order = tc.create_order(1)\n        result = tc.cancel_order(order[\"order_id\"], \"\")\n        assert result[\"status\"] == \"cancelled\"\n        assert result[\"cancel_reason\"] == \"customer_request\" # Defaults to \"customer_request\" for empty string\n        order2 = tc.create_order(2)\n        result2 = tc.cancel_order(order2[\"order_id\"], None)\n        assert result2[\"status\"] == \"cancelled\"\n>       assert result2[\"cancel_reason\"] == \"customer_request\" # Defaults for None too\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       AssertionError: assert 'None' == 'customer_request'\nE         \nE         - customer_request\nE         + None\n\ntests\\test_generated.py:431: AssertionError\n______________________ test_cancel_order_no_failure_case ______________________\n\n    def test_cancel_order_no_failure_case():\n        # The function is designed to return specific status codes for invalid cases.\n        result = tc.cancel_order(None, None)\n        assert isinstance(result, dict)\n        assert result[\"order_id\"] == 1\n        assert result[\"status\"] == \"not_found\"\n>       assert result[\"reason\"] == \"n/a\"\nE       AssertionError: assert 'None' == 'n/a'\nE         \nE         - n/a\nE         + None\n\ntests\\test_generated.py:438: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_to_text_edge_cases - AssertionError: ass...\nFAILED tests/test_generated.py::test_to_text_no_failure_case - AssertionError...\nFAILED tests/test_generated.py::test_initialize_store_edge_case_empty_seed_list\nFAILED tests/test_generated.py::test_initialize_store_edge_case_invalid_seed_items\nFAILED tests/test_generated.py::test_initialize_store_no_failure_case - asser...\nFAILED tests/test_generated.py::test_upsert_inventory_no_failure_case - asser...\nFAILED tests/test_generated.py::test_cancel_order_edge_case_empty_reason - As...\nFAILED tests/test_generated.py::test_cancel_order_no_failure_case - Assertion...\nERROR tests/test_generated.py::test_utc_now_normal_case - AttributeError: 'bu...\nERROR tests/test_generated.py::test_utc_now_edge_case - AttributeError: 'buil...\nERROR tests/test_generated.py::test_utc_now_no_failure_case - AttributeError:...\nERROR tests/test_generated.py::test_reset_demo_state_normal_case - AttributeE...\nERROR tests/test_generated.py::test_reset_demo_state_edge_case_empty_state - ...\nERROR tests/test_generated.py::test_register_customer_normal_case_new_customer\nERROR tests/test_generated.py::test_register_customer_edge_case_update_existing_customer\nERROR tests/test_generated.py::test_register_customer_edge_case_invalid_id_generates_new_id\nERROR tests/test_generated.py::test_register_customer_edge_case_invalid_name_uses_default\nERROR tests/test_generated.py::test_add_to_cart_normal_case_new_item_new_customer\nERROR tests/test_generated.py::test_add_to_cart_normal_case_add_more_to_existing_item\nERROR tests/test_generated.py::test_add_to_cart_edge_case_new_customer_and_product_created\nERROR tests/test_generated.py::test_add_to_cart_edge_case_quantity_exceeds_stock\nERROR tests/test_generated.py::test_add_to_cart_edge_case_invalid_quantity_default_to_one\nERROR tests/test_generated.py::test_add_to_cart_edge_case_zero_stock_product\nERROR tests/test_generated.py::test_create_order_normal_case_with_items_and_shipping\nERROR tests/test_generated.py::test_create_order_normal_case_no_shipping - At...\nERROR tests/test_generated.py::test_create_order_edge_case_empty_cart - Attri...\nERROR tests/test_generated.py::test_create_order_edge_case_partial_fulfillment_due_to_stock\nERROR tests/test_generated.py::test_create_order_edge_case_invalid_shipping_fee\nERROR tests/test_generated.py::test_calculate_order_total_normal_case - Attri...\nERROR tests/test_generated.py::test_cancel_order_normal_case - AttributeError...\nERROR tests/test_generated.py::test_get_customer_history_normal_case - Attrib...\nERROR tests/test_generated.py::test_get_customer_history_edge_case_no_orders_for_customer\nERROR tests/test_generated.py::test_generate_sales_report_normal_case - Attri...\nERROR tests/test_generated.py::test_generate_sales_report_edge_case_no_orders\nERROR tests/test_generated.py::test_generate_sales_report_edge_case_only_cancelled_orders\nERROR tests/test_generated.py::test_process_refund_normal_case_partial_refund\nERROR tests/test_generated.py::test_process_refund_normal_case_full_refund - ...\nERROR tests/test_generated.py::test_process_refund_normal_case_multiple_partial_refunds\nERROR tests/test_generated.py::test_process_refund_edge_case_refund_zero_amount\nERROR tests/test_generated.py::test_process_refund_failure_case_order_already_cancelled\nERROR tests/test_generated.py::test_process_refund_failure_case_order_empty_status\nERROR tests/test_generated.py::test_process_refund_failure_case_invalid_amount_type\nERROR tests/test_generated.py::test_process_refund_failure_case_amount_exceeds_total\n8 failed, 30 passed, 35 errors in 0.99s",
+      "result": "retry"
+    }
   ],
+  "generation_explanation": [],
   "metrics": {
     "functions": 15,
     "classes": 0,
     "passed": true,
     "durations_seconds": {
-      "analysis": 0.023,
-      "generation": 0.003,
-      "test_run": 0.847
+      "analysis": 0.006,
+      "generation": 47.591,
+      "validation": 0.021,
+      "test_run": 1.656,
+      "healing": 76.205
     },
-    "pipeline_total_seconds": 0.875
+    "pipeline_total_seconds": 125.458
   },
-  "pipeline_duration_seconds": 0.875,
-  "pipeline_start_utc": "2026-05-09T07:15:20.594430+00:00",
-  "pipeline_end_utc": "2026-05-09T07:15:21.468942+00:00"
+  "pipeline_duration_seconds": 125.458,
+  "pipeline_start_utc": "2026-05-09T11:16:46.057097+00:00",
+  "pipeline_end_utc": "2026-05-09T11:18:51.515519+00:00"
 }

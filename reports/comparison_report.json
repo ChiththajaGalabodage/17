@@ -1,0 +1,317 @@
+{
+  "generated_at_utc": "2026-05-09T11:37:08.362906+00:00",
+  "source": "target_code.py",
+  "runs_per_strategy": 3,
+  "traditional_test_targets": [
+    "tests/test_output_format.py",
+    "tests/test_validator.py"
+  ],
+  "runs": [
+    {
+      "strategy": "agentic",
+      "run": 1,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 2.575,
+      "tests_total": 7,
+      "tests_passed": 7,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 3,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": 2.421,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.05,
+          "start_time_utc": "2026-05-09T11:37:02.223165+00:00",
+          "end_time_utc": "2026-05-09T11:37:02.273231+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_1.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.049,
+          "start_time_utc": "2026-05-09T11:37:02.273231+00:00",
+          "end_time_utc": "2026-05-09T11:37:02.322610+00:00"
+        }
+      },
+      "report_path": "reports/agentic_run_1.json",
+      "execution": {
+        "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_1.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
+        "return_code": 0,
+        "passed": true,
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_1.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.06s",
+        "duration_seconds": 2.575,
+        "start_time_utc": "2026-05-09T11:36:59.605570+00:00",
+        "end_time_utc": "2026-05-09T11:37:02.180913+00:00"
+      }
+    },
+    {
+      "strategy": "agentic",
+      "run": 2,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 1.85,
+      "tests_total": 7,
+      "tests_passed": 7,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 3,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": 1.688,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.042,
+          "start_time_utc": "2026-05-09T11:37:04.186897+00:00",
+          "end_time_utc": "2026-05-09T11:37:04.229293+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_2.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.044,
+          "start_time_utc": "2026-05-09T11:37:04.229293+00:00",
+          "end_time_utc": "2026-05-09T11:37:04.272911+00:00"
+        }
+      },
+      "report_path": "reports/agentic_run_2.json",
+      "execution": {
+        "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_2.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
+        "return_code": 0,
+        "passed": true,
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_2.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.05s",
+        "duration_seconds": 1.85,
+        "start_time_utc": "2026-05-09T11:37:02.322610+00:00",
+        "end_time_utc": "2026-05-09T11:37:04.172762+00:00"
+      }
+    },
+    {
+      "strategy": "agentic",
+      "run": 3,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 1.7,
+      "tests_total": 7,
+      "tests_passed": 7,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 3,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": 1.565,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.047,
+          "start_time_utc": "2026-05-09T11:37:05.982918+00:00",
+          "end_time_utc": "2026-05-09T11:37:06.030116+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_3.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.052,
+          "start_time_utc": "2026-05-09T11:37:06.030116+00:00",
+          "end_time_utc": "2026-05-09T11:37:06.081812+00:00"
+        }
+      },
+      "report_path": "reports/agentic_run_3.json",
+      "execution": {
+        "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_3.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
+        "return_code": 0,
+        "passed": true,
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_3.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.04s",
+        "duration_seconds": 1.7,
+        "start_time_utc": "2026-05-09T11:37:04.272911+00:00",
+        "end_time_utc": "2026-05-09T11:37:05.973088+00:00"
+      }
+    },
+    {
+      "strategy": "traditional",
+      "run": 1,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 0.698,
+      "tests_total": 6,
+      "tests_passed": 6,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 2,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": null,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.05,
+          "start_time_utc": "2026-05-09T11:37:06.779339+00:00",
+          "end_time_utc": "2026-05-09T11:37:06.829074+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_1.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.05,
+          "start_time_utc": "2026-05-09T11:37:06.829074+00:00",
+          "end_time_utc": "2026-05-09T11:37:06.879202+00:00"
+        }
+      },
+      "report_path": null,
+      "execution": {
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
+        "return_code": 0,
+        "passed": true,
+        "output": "......                                                                   [100%]\n6 passed in 0.05s",
+        "duration_seconds": 0.698,
+        "start_time_utc": "2026-05-09T11:37:06.081812+00:00",
+        "end_time_utc": "2026-05-09T11:37:06.779339+00:00"
+      }
+    },
+    {
+      "strategy": "traditional",
+      "run": 2,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 0.634,
+      "tests_total": 6,
+      "tests_passed": 6,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 2,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": null,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.036,
+          "start_time_utc": "2026-05-09T11:37:07.512886+00:00",
+          "end_time_utc": "2026-05-09T11:37:07.548551+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_2.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.051,
+          "start_time_utc": "2026-05-09T11:37:07.548551+00:00",
+          "end_time_utc": "2026-05-09T11:37:07.599778+00:00"
+        }
+      },
+      "report_path": null,
+      "execution": {
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
+        "return_code": 0,
+        "passed": true,
+        "output": "......                                                                   [100%]\n6 passed in 0.04s",
+        "duration_seconds": 0.634,
+        "start_time_utc": "2026-05-09T11:37:06.879202+00:00",
+        "end_time_utc": "2026-05-09T11:37:07.512886+00:00"
+      }
+    },
+    {
+      "strategy": "traditional",
+      "run": 3,
+      "passed": true,
+      "return_code": 0,
+      "duration_seconds": 0.679,
+      "tests_total": 6,
+      "tests_passed": 6,
+      "tests_failed": 0,
+      "defects_detected": 0,
+      "selected_tests_count": 2,
+      "heal_attempts": 0,
+      "pipeline_duration_seconds": null,
+      "coverage": {
+        "ran": false,
+        "reason": "coverage-json-failed",
+        "run": {
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.044,
+          "start_time_utc": "2026-05-09T11:37:08.279023+00:00",
+          "end_time_utc": "2026-05-09T11:37:08.322845+00:00"
+        },
+        "json": {
+          "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_3.json",
+          "return_code": 1,
+          "passed": false,
+          "output": "C:\\Python312\\python.exe: No module named coverage",
+          "duration_seconds": 0.04,
+          "start_time_utc": "2026-05-09T11:37:08.322845+00:00",
+          "end_time_utc": "2026-05-09T11:37:08.362906+00:00"
+        }
+      },
+      "report_path": null,
+      "execution": {
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
+        "return_code": 0,
+        "passed": true,
+        "output": "......                                                                   [100%]\n6 passed in 0.05s",
+        "duration_seconds": 0.679,
+        "start_time_utc": "2026-05-09T11:37:07.599778+00:00",
+        "end_time_utc": "2026-05-09T11:37:08.279023+00:00"
+      }
+    }
+  ],
+  "summary": {
+    "agentic": {
+      "runs": 3,
+      "pass_rate_percent": 100.0,
+      "avg_duration_seconds": 2.042,
+      "avg_tests_total": 7.0,
+      "avg_tests_failed": 0.0,
+      "avg_defects_detected": 0.0,
+      "avg_selected_tests": 3.0,
+      "avg_heal_attempts": 0.0,
+      "avg_coverage_percent": 0.0
+    },
+    "traditional": {
+      "runs": 3,
+      "pass_rate_percent": 100.0,
+      "avg_duration_seconds": 0.67,
+      "avg_tests_total": 6.0,
+      "avg_tests_failed": 0.0,
+      "avg_defects_detected": 0.0,
+      "avg_selected_tests": 2.0,
+      "avg_heal_attempts": 0.0,
+      "avg_coverage_percent": 0.0
+    },
+    "delta_agentic_minus_traditional": {
+      "duration_seconds": 1.372,
+      "coverage_percent": 0.0,
+      "defects_detected": 0.0,
+      "selected_tests": 1.0
+    }
+  }
+}
