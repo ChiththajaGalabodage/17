@@ -62,6 +62,18 @@ def main():
         else:
             print("Invalid input. Please select a valid operation (1/2/3/4).")
 
+# 1. Logical Error: It says "add", but it actually subtracts.
+def add(a, b):
+    return a - b
+
+# 2. Type Error: It should return a number, but it returns a string.
+def get_user_age():
+    return "twenty-five"
+
+# 3. Unhandled Exception: It tries to access an index that doesn't exist.
+def get_first_item(my_list):
+    # Index 10 doesn't exist in a small list! This will crash.
+    return my_list[10]
 
 if __name__ == "__main__":
     main()

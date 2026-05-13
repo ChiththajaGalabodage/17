@@ -1,9 +1,9 @@
 {
-  "timestamp_utc": "2026-05-13T17:16:22.786213+00:00",
+  "timestamp_utc": "2026-05-13T17:24:41.797615+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 67,
-    "function_count": 6,
+    "line_count": 79,
+    "function_count": 9,
     "class_count": 0,
     "imports": [],
     "functions": [
@@ -54,6 +54,29 @@
         "args": [],
         "has_docstring": false,
         "line": 25
+      },
+      {
+        "name": "add",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 66
+      },
+      {
+        "name": "get_user_age",
+        "args": [],
+        "has_docstring": false,
+        "line": 70
+      },
+      {
+        "name": "get_first_item",
+        "args": [
+          "my_list"
+        ],
+        "has_docstring": false,
+        "line": 74
       }
     ],
     "classes": []
@@ -65,16 +88,16 @@
     "return_code": 0,
     "passed": true,
     "output": ".                                                                        [100%]\n1 passed in 0.02s",
-    "start_time_utc": "2026-05-13T17:16:21.571564+00:00",
-    "end_time_utc": "2026-05-13T17:16:22.786213+00:00",
-    "duration_seconds": 1.215
+    "start_time_utc": "2026-05-13T17:24:40.779872+00:00",
+    "end_time_utc": "2026-05-13T17:24:41.797615+00:00",
+    "duration_seconds": 1.018
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-13T17:16:21.531210+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.749462+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -83,15 +106,15 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-13T17:16:21.531210+00:00"
+      "timestamp_utc": "2026-05-13T17:24:40.749462+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.773140+00:00",
       "details": {
-        "function_count": 6,
+        "function_count": 9,
         "class_count": 0
       }
     },
@@ -99,19 +122,19 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00"
+      "timestamp_utc": "2026-05-13T17:24:40.774153+00:00"
     },
     {
       "stage": "validation",
       "status": "running",
       "message": "Validating generated tests",
-      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00"
+      "timestamp_utc": "2026-05-13T17:24:40.775711+00:00"
     },
     {
       "stage": "validation",
       "status": "failed",
       "message": "Generated tests failed validation",
-      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.777217+00:00",
       "details": {
         "issues": [
           "Unresolved test references: initialize_store, register_customer"
@@ -122,7 +145,7 @@
       "stage": "validation",
       "status": "completed",
       "message": "Generated tests validated",
-      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.778974+00:00",
       "details": {
         "passed": true,
         "issues": []
@@ -132,7 +155,7 @@
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.778974+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
         "explanation_lines": 2
@@ -142,7 +165,7 @@
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
+      "timestamp_utc": "2026-05-13T17:24:40.779872+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -151,7 +174,7 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00",
+      "timestamp_utc": "2026-05-13T17:24:41.797615+00:00",
       "details": {
         "passed": true,
         "return_code": 0
@@ -161,13 +184,13 @@
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00"
+      "timestamp_utc": "2026-05-13T17:24:41.797615+00:00"
     },
     {
       "stage": "pipeline",
       "status": "passed",
       "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00"
+      "timestamp_utc": "2026-05-13T17:24:41.797615+00:00"
     }
   ],
   "predictive_selection": {
@@ -180,22 +203,22 @@
   },
   "heal_history": [],
   "generation_explanation": [
-    "Covers 6 function(s) and 0 class(es) discovered in the target module.",
+    "Covers 9 function(s) and 0 class(es) discovered in the target module.",
     "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
   ],
   "metrics": {
-    "functions": 6,
+    "functions": 9,
     "classes": 0,
     "passed": true,
     "durations_seconds": {
-      "analysis": 0.038,
-      "generation": 0.003,
+      "analysis": 0.024,
+      "generation": 0.005,
       "validation": 0.003,
-      "test_run": 1.215
+      "test_run": 1.018
     },
-    "pipeline_total_seconds": 1.255
+    "pipeline_total_seconds": 1.048
   },
-  "pipeline_duration_seconds": 1.255,
-  "pipeline_start_utc": "2026-05-13T17:16:21.531210+00:00",
-  "pipeline_end_utc": "2026-05-13T17:16:22.786213+00:00"
+  "pipeline_duration_seconds": 1.048,
+  "pipeline_start_utc": "2026-05-13T17:24:40.749462+00:00",
+  "pipeline_end_utc": "2026-05-13T17:24:41.797615+00:00"
 }
