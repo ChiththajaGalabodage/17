@@ -14,7 +14,7 @@ def multiply(x, y):
 def divide(x, y):
     # Handle division by zero to prevent crashes
     if y == 0:
-        return "Error: Cannot divide by zero!"
+        return x / y
     return x / y
 
 

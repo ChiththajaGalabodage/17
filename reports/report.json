@@ -1,9 +1,9 @@
 {
-  "timestamp_utc": "2026-05-13T15:21:14.875171+00:00",
+  "timestamp_utc": "2026-05-13T17:16:22.786213+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 54,
-    "function_count": 4,
+    "line_count": 67,
+    "function_count": 6,
     "class_count": 0,
     "imports": [],
     "functions": [
@@ -23,7 +23,7 @@
           "y"
         ],
         "has_docstring": false,
-        "line": 5
+        "line": 6
       },
       {
         "name": "multiply",
@@ -32,7 +32,7 @@
           "y"
         ],
         "has_docstring": false,
-        "line": 8
+        "line": 10
       },
       {
         "name": "divide",
@@ -41,28 +41,40 @@
           "y"
         ],
         "has_docstring": false,
-        "line": 11
+        "line": 14
+      },
+      {
+        "name": "reset_demo_state",
+        "args": [],
+        "has_docstring": false,
+        "line": 21
+      },
+      {
+        "name": "main",
+        "args": [],
+        "has_docstring": false,
+        "line": 25
       }
     ],
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 2,
+  "heal_attempts": 0,
   "test_run": {
     "command": "C:\\Python312\\python.exe -m pytest tests\\test_generated.py -q",
-    "return_code": 2,
-    "passed": false,
-    "output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\ntests\\test_generated.py:2: in <module>\n    from target_code import *\ntarget_code.py:25: in <module>\n    choice = input(\"\\nEnter choice (1/2/3/4): \")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\site-packages\\_pytest\\capture.py:229: in read\n    raise OSError(\nE   OSError: pytest: reading from stdin while output is captured!  Consider using `-s`.\n------------------------------- Captured stdout -------------------------------\nSelect an operation:\n1. Add (+)\n2. Subtract (-)\n3. Multiply (*)\n4. Divide (/)\n\nEnter choice (1/2/3/4): \n=========================== short test summary info ===========================\nERROR tests/test_generated.py - OSError: pytest: reading from stdin while out...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.19s",
-    "start_time_utc": "2026-05-13T15:21:13.930508+00:00",
-    "end_time_utc": "2026-05-13T15:21:14.875171+00:00",
-    "duration_seconds": 0.945
+    "return_code": 0,
+    "passed": true,
+    "output": ".                                                                        [100%]\n1 passed in 0.02s",
+    "start_time_utc": "2026-05-13T17:16:21.571564+00:00",
+    "end_time_utc": "2026-05-13T17:16:22.786213+00:00",
+    "duration_seconds": 1.215
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-13T15:21:11.284397+00:00",
+      "timestamp_utc": "2026-05-13T17:16:21.531210+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -71,15 +83,15 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-13T15:21:11.284397+00:00"
+      "timestamp_utc": "2026-05-13T17:16:21.531210+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-13T15:21:11.341768+00:00",
+      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00",
       "details": {
-        "function_count": 4,
+        "function_count": 6,
         "class_count": 0
       }
     },
@@ -87,19 +99,30 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-13T15:21:11.343272+00:00"
+      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00"
     },
     {
       "stage": "validation",
       "status": "running",
       "message": "Validating generated tests",
-      "timestamp_utc": "2026-05-13T15:21:11.344284+00:00"
+      "timestamp_utc": "2026-05-13T17:16:21.569037+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "failed",
+      "message": "Generated tests failed validation",
+      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
+      "details": {
+        "issues": [
+          "Unresolved test references: initialize_store, register_customer"
+        ]
+      }
     },
     {
       "stage": "validation",
       "status": "completed",
       "message": "Generated tests validated",
-      "timestamp_utc": "2026-05-13T15:21:11.345390+00:00",
+      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
       "details": {
         "passed": true,
         "issues": []
@@ -109,7 +132,7 @@
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-13T15:21:11.346403+00:00",
+      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
         "explanation_lines": 2
@@ -119,7 +142,7 @@
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-13T15:21:11.346403+00:00",
+      "timestamp_utc": "2026-05-13T17:16:21.571564+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -128,63 +151,23 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-13T15:21:12.851379+00:00",
+      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00",
       "details": {
-        "passed": false,
-        "return_code": 2
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "running",
-      "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-13T15:21:12.851379+00:00",
-      "details": {
-        "attempt": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "completed",
-      "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-13T15:21:13.929493+00:00",
-      "details": {
-        "attempt": 1,
-        "passed": false,
-        "return_code": 2
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "running",
-      "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-13T15:21:13.929493+00:00",
-      "details": {
-        "attempt": 2
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "completed",
-      "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-13T15:21:14.875171+00:00",
-      "details": {
-        "attempt": 2,
-        "passed": false,
-        "return_code": 2
+        "passed": true,
+        "return_code": 0
       }
     },
     {
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-13T15:21:14.875171+00:00"
+      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00"
     },
     {
       "stage": "pipeline",
-      "status": "failed",
-      "message": "Pipeline finished: FAILED",
-      "timestamp_utc": "2026-05-13T15:21:14.875171+00:00"
+      "status": "passed",
+      "message": "Pipeline finished: PASSED",
+      "timestamp_utc": "2026-05-13T17:16:22.786213+00:00"
     }
   ],
   "predictive_selection": {
@@ -195,36 +178,24 @@
       "tests/test_generated.py"
     ]
   },
-  "heal_history": [
-    {
-      "attempt": 1,
-      "test_output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\ntests\\test_generated.py:2: in <module>\n    from target_code import *\ntarget_code.py:25: in <module>\n    choice = input(\"\\nEnter choice (1/2/3/4): \")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\site-packages\\_pytest\\capture.py:229: in read\n    raise OSError(\nE   OSError: pytest: reading from stdin while output is captured!  Consider using `-s`.\n------------------------------- Captured stdout -------------------------------\nSelect an operation:\n1. Add (+)\n2. Subtract (-)\n3. Multiply (*)\n4. Divide (/)\n\nEnter choice (1/2/3/4): \n=========================== short test summary info ===========================\nERROR tests/test_generated.py - OSError: pytest: reading from stdin while out...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.51s",
-      "result": "retry"
-    },
-    {
-      "attempt": 2,
-      "test_output": "=================================== ERRORS ====================================\n__________________ ERROR collecting tests/test_generated.py ___________________\ntests\\test_generated.py:2: in <module>\n    from target_code import *\ntarget_code.py:25: in <module>\n    choice = input(\"\\nEnter choice (1/2/3/4): \")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\site-packages\\_pytest\\capture.py:229: in read\n    raise OSError(\nE   OSError: pytest: reading from stdin while output is captured!  Consider using `-s`.\n------------------------------- Captured stdout -------------------------------\nSelect an operation:\n1. Add (+)\n2. Subtract (-)\n3. Multiply (*)\n4. Divide (/)\n\nEnter choice (1/2/3/4): \n=========================== short test summary info ===========================\nERROR tests/test_generated.py - OSError: pytest: reading from stdin while out...\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.20s",
-      "result": "retry"
-    }
-  ],
+  "heal_history": [],
   "generation_explanation": [
-    "Covers 4 function(s) and 0 class(es) discovered in the target module.",
+    "Covers 6 function(s) and 0 class(es) discovered in the target module.",
     "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
   ],
   "metrics": {
-    "functions": 4,
+    "functions": 6,
     "classes": 0,
-    "passed": false,
+    "passed": true,
     "durations_seconds": {
-      "analysis": 0.057,
+      "analysis": 0.038,
       "generation": 0.003,
-      "validation": 0.001,
-      "test_run": 1.505,
-      "healing": 0.946
+      "validation": 0.003,
+      "test_run": 1.215
     },
-    "pipeline_total_seconds": 3.591
+    "pipeline_total_seconds": 1.255
   },
-  "pipeline_duration_seconds": 3.591,
-  "pipeline_start_utc": "2026-05-13T15:21:11.284397+00:00",
-  "pipeline_end_utc": "2026-05-13T15:21:14.875171+00:00"
+  "pipeline_duration_seconds": 1.255,
+  "pipeline_start_utc": "2026-05-13T17:16:21.531210+00:00",
+  "pipeline_end_utc": "2026-05-13T17:16:22.786213+00:00"
 }
