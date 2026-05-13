@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-05-10T06:49:24.405965+00:00",
+  "timestamp_utc": "2026-05-13T15:08:07.208160+00:00",
   "analysis": {
     "file": "target_code.py",
     "line_count": 316,
@@ -144,22 +144,22 @@
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 1,
+  "heal_attempts": 0,
   "test_run": {
-    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
+    "command": "C:\\Python312\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": ".                                                                        [100%]\n1 passed in 0.01s",
-    "start_time_utc": "2026-05-10T06:49:23.737334+00:00",
-    "end_time_utc": "2026-05-10T06:49:24.405965+00:00",
-    "duration_seconds": 0.669
+    "output": ".                                                                        [100%]\n1 passed in 0.07s",
+    "start_time_utc": "2026-05-13T15:08:05.461553+00:00",
+    "end_time_utc": "2026-05-13T15:08:07.206259+00:00",
+    "duration_seconds": 1.745
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-10T06:47:23.677805+00:00",
+      "timestamp_utc": "2026-05-13T15:08:05.429282+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -168,13 +168,13 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-10T06:47:23.677805+00:00"
+      "timestamp_utc": "2026-05-13T15:08:05.429282+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-10T06:47:23.707552+00:00",
+      "timestamp_utc": "2026-05-13T15:08:05.447092+00:00",
       "details": {
         "function_count": 15,
         "class_count": 0
@@ -184,19 +184,30 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-10T06:47:23.707939+00:00"
+      "timestamp_utc": "2026-05-13T15:08:05.447092+00:00"
     },
     {
       "stage": "validation",
       "status": "running",
       "message": "Validating generated tests",
-      "timestamp_utc": "2026-05-10T06:48:10.115122+00:00"
+      "timestamp_utc": "2026-05-13T15:08:05.447092+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "failed",
+      "message": "Generated tests failed validation",
+      "timestamp_utc": "2026-05-13T15:08:05.447092+00:00",
+      "details": {
+        "issues": [
+          "Unresolved test references: process_refund"
+        ]
+      }
     },
     {
       "stage": "validation",
       "status": "completed",
       "message": "Generated tests validated",
-      "timestamp_utc": "2026-05-10T06:48:10.134428+00:00",
+      "timestamp_utc": "2026-05-13T15:08:05.460549+00:00",
       "details": {
         "passed": true,
         "issues": []
@@ -206,17 +217,17 @@
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-10T06:48:10.134428+00:00",
+      "timestamp_utc": "2026-05-13T15:08:05.461553+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
-        "explanation_lines": 0
+        "explanation_lines": 2
       }
     },
     {
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-10T06:48:10.134428+00:00",
+      "timestamp_utc": "2026-05-13T15:08:05.461553+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -225,28 +236,8 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-10T06:48:11.295857+00:00",
+      "timestamp_utc": "2026-05-13T15:08:07.206259+00:00",
       "details": {
-        "passed": false,
-        "return_code": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "running",
-      "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-10T06:48:11.295857+00:00",
-      "details": {
-        "attempt": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "completed",
-      "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-10T06:49:24.405965+00:00",
-      "details": {
-        "attempt": 1,
         "passed": true,
         "return_code": 0
       }
@@ -255,13 +246,13 @@
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-10T06:49:24.405965+00:00"
+      "timestamp_utc": "2026-05-13T15:08:07.208160+00:00"
     },
     {
       "stage": "pipeline",
       "status": "passed",
       "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-05-10T06:49:24.405965+00:00"
+      "timestamp_utc": "2026-05-13T15:08:07.208160+00:00"
     }
   ],
   "predictive_selection": {
@@ -272,28 +263,24 @@
       "tests/test_generated.py"
     ]
   },
-  "heal_history": [
-    {
-      "attempt": 1,
-      "test_output": "..F.......................FF..F............F...........F................ [ 97%]\n..                                                                       [100%]\n================================== FAILURES ===================================\n________________________ test_to_int_edge_float_string ________________________\n\n    def test_to_int_edge_float_string():\n        \"\"\"Test _to_int with a float string, expecting truncation.\"\"\"\n>       assert om._to_int(\"123.45\") == 123\nE       AssertionError: assert 0 == 123\nE        +  where 0 = <function _to_int at 0x00000156965B96C0>('123.45')\nE        +    where <function _to_int at 0x00000156965B96C0> = om._to_int\n\ntests\\test_generated.py:22: AssertionError\n_________________ test_initialize_store_edge_empty_seed_list __________________\n\n    def test_initialize_store_edge_empty_seed_list():\n        \"\"\"Test initialize_store with an empty seed list.\"\"\"\n        result = om.initialize_store(seed=[])\n        assert result[\"products\"] == 3\n        assert sorted(result[\"product_ids\"]) == [1, 2, 3]\n>       assert result[\"seeded\"] is True  # An empty list is still a seed\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert False is True\n\ntests\\test_generated.py:152: AssertionError\n_____________ test_initialize_store_edge_seed_with_invalid_items ______________\n\n    def test_initialize_store_edge_seed_with_invalid_items():\n        \"\"\"Test initialize_store with a seed list containing invalid items.\"\"\"\n        seed_data = [\n            {\"product_id\": 10, \"name\": \"Valid Item\"},\n            \"invalid_string\",  # Invalid type\n            {\"product_id\": 0, \"name\": \"Invalid ID\"},  # Invalid product_id\n            {\"product_id\": 11, \"stock\": -5},  # Negative stock\n            {\"product_id\": 12, \"price\": -10},  # Negative price\n        ]\n        result = om.initialize_store(seed_data)\n>       assert result[\"products\"] == 4  # 3 default + 1 valid custom\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert 6 == 4\n\ntests\\test_generated.py:163: AssertionError\n_________ test_register_customer_normal_new_customer_auto_id_and_name _________\n\n    def test_register_customer_normal_new_customer_auto_id_and_name():\n        \"\"\"Test registering a new customer without ID or name, expecting auto-generation.\"\"\"\n        om.register_customer(1, \"Existing Customer\")  # To ensure auto-ID increments correctly\n        result = om.register_customer(None, None)\n        expected_id = len(om._CUSTOMERS) # Should be 2 if 1 existing customer, plus this one.\n        assert result[\"customer_id\"] == expected_id\n>       assert result[\"name\"] == f\"Customer-{expected_id}\"\nE       AssertionError: assert 'None' == 'Customer-2'\nE         \nE         - Customer-2\nE         + None\n\ntests\\test_generated.py:195: AssertionError\n____________ test_add_to_cart_edge_non_existent_product_autocreate ____________\n\n    def test_add_to_cart_edge_non_existent_product_autocreate():\n        \"\"\"Test adding a non-existent product, expecting the product to be created and stocked.\"\"\"\n        om.register_customer(1, \"Test Customer\")\n        # Product 100 doesn't exist. Add_to_cart will create it with qty * 5 stock.\n        # Requested qty = 10, so stock created = 50. Then accepted_qty = min(10, 50) = 10.\n        result = om.add_to_cart(1, 100, 10)\n        assert result[\"customer_id\"] == 1\n        assert result[\"product_id\"] == 100\n        assert result[\"accepted_quantity\"] == 10\n>       assert om._INVENTORY[100][\"stock\"] == 40  # 50 - 10 = 40 (stock created minus what was added to cart)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       assert 50 == 40\n\ntests\\test_generated.py:307: AssertionError\n_______________ test_cancel_order_edge_already_cancelled_order ________________\n\n    def test_cancel_order_edge_already_cancelled_order():\n        \"\"\"Test canceling an order that is already cancelled.\"\"\"\n        om.initialize_store()\n        om.register_customer(1, \"Alice\")\n        om.add_to_cart(1, 1, 2)\n        order = om.create_order(1)\n        order_id = order[\"order_id\"]\n        om.cancel_order(order_id, \"initial cancel\")  # First cancellation\n        result = om.cancel_order(order_id, \"second attempt\")\n        assert result[\"order_id\"] == order_id\n        assert result[\"status\"] == \"already_cancelled\"\n>       assert result[\"cancel_reason\"] == \"second attempt\"\n               ^^^^^^^^^^^^^^^^^^^^^^^\nE       KeyError: 'cancel_reason'\n\ntests\\test_generated.py:440: KeyError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_to_int_edge_float_string - AssertionErro...\nFAILED tests/test_generated.py::test_initialize_store_edge_empty_seed_list - ...\nFAILED tests/test_generated.py::test_initialize_store_edge_seed_with_invalid_items\nFAILED tests/test_generated.py::test_register_customer_normal_new_customer_auto_id_and_name\nFAILED tests/test_generated.py::test_add_to_cart_edge_non_existent_product_autocreate\nFAILED tests/test_generated.py::test_cancel_order_edge_already_cancelled_order\n6 failed, 68 passed in 0.36s",
-      "result": "retry"
-    }
+  "heal_history": [],
+  "generation_explanation": [
+    "Covers 15 function(s) and 0 class(es) discovered in the target module.",
+    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
   ],
-  "generation_explanation": [],
   "metrics": {
     "functions": 15,
     "classes": 0,
     "passed": true,
     "durations_seconds": {
-      "analysis": 0.03,
-      "generation": 46.426,
-      "validation": 0.019,
-      "test_run": 1.161,
-      "healing": 73.11
+      "analysis": 0.018,
+      "generation": 0.014,
+      "validation": 0.013,
+      "test_run": 1.745
     },
-    "pipeline_total_seconds": 120.728
+    "pipeline_total_seconds": 1.779
   },
-  "pipeline_duration_seconds": 120.728,
-  "pipeline_start_utc": "2026-05-10T06:47:23.677805+00:00",
-  "pipeline_end_utc": "2026-05-10T06:49:24.405965+00:00"
+  "pipeline_duration_seconds": 1.779,
+  "pipeline_start_utc": "2026-05-13T15:08:05.429282+00:00",
+  "pipeline_end_utc": "2026-05-13T15:08:07.208160+00:00"
 }
