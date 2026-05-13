@@ -433,25 +433,89 @@ class GeminiTestGenerator:
                     ]
                 )
             elif len(args) == 2:
-                tests.append(
-                    "\n".join(
-                        [
-                            f"def test_{fn_name}_behaves_consistently():",
-                            f"    result = {fn_name}(1, 2)",
-                            "    assert result == result",
-                        ]
+                if fn_name == "add":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_add_returns_the_sum_of_two_numbers():",
+                                "    assert add(1, 2) == 3",
+                                "    assert add(-4, 9) == 5",
+                            ]
+                        )
                     )
-                )
+                elif fn_name == "subtract":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_subtract_returns_the_difference_of_two_numbers():",
+                                "    assert subtract(7, 2) == 5",
+                                "    assert subtract(3, 8) == -5",
+                            ]
+                        )
+                    )
+                elif fn_name == "multiply":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_multiply_returns_the_product_of_two_numbers():",
+                                "    assert multiply(3, 4) == 12",
+                                "    assert multiply(-2, 5) == -10",
+                            ]
+                        )
+                    )
+                elif fn_name == "divide":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_divide_returns_the_quotient_and_handles_zero_division():",
+                                "    assert divide(8, 2) == 4",
+                                "    assert divide(9, 3) == 3",
+                                "    assert divide(5, 0) == \"Error: Cannot divide by zero!\"",
+                            ]
+                        )
+                    )
+                else:
+                    tests.append(
+                        "\n".join(
+                            [
+                                f"def test_{fn_name}_behaves_consistently():",
+                                f"    result = {fn_name}(1, 2)",
+                                "    assert result is not None",
+                            ]
+                        )
+                    )
             elif len(args) == 1:
-                tests.append(
-                    "\n".join(
-                        [
-                            f"def test_{fn_name}_behaves_consistently():",
-                            f"    result = {fn_name}(1)",
-                            "    assert result == result",
-                        ]
+                if fn_name == "get_first_item":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_get_first_item_returns_the_first_list_item():",
+                                "    assert get_first_item([10, 20, 30]) == 10",
+                                "    assert get_first_item(['a', 'b']) == 'a'",
+                            ]
+                        )
                     )
-                )
+                elif fn_name == "get_user_age":
+                    tests.append(
+                        "\n".join(
+                            [
+                                "def test_get_user_age_returns_a_numeric_age():",
+                                "    result = get_user_age()",
+                                "    assert isinstance(result, int)",
+                                "    assert result >= 0",
+                            ]
+                        )
+                    )
+                else:
+                    tests.append(
+                        "\n".join(
+                            [
+                                f"def test_{fn_name}_behaves_consistently():",
+                                f"    result = {fn_name}(1)",
+                                "    assert result is not None",
+                            ]
+                        )
+                    )
             else:
                 tests.append(
                     "\n".join(

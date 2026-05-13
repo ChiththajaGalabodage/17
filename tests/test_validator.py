@@ -26,3 +26,15 @@ def test_validate_generated_test_code_flags_unexported_calls() -> None:
 
     assert result["passed"] is False
     assert any("process_refund" in issue for issue in result["issues"])
+
+
+def test_validate_generated_test_code_flags_trivial_assertions() -> None:
+    source_path = Path("target_code.py")
+    result = validate_generated_test_code(
+        "import pytest\nfrom target_code import *\n\ndef test_trivial():\n    result = add(1, 2)\n    assert result == result\n",
+        source_path,
+        analyze_code(str(source_path)),
+    )
+
+    assert result["passed"] is False
+    assert any("Trivial assertion" in issue for issue in result["issues"])

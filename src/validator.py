@@ -43,6 +43,10 @@ def validate_generated_test_code(
             "Unresolved test references: " + ", ".join(sorted(unresolved_calls))
         )
 
+    trivial_assertions = _trivial_assertion_issues(test_code)
+    if trivial_assertions:
+        issues.extend(trivial_assertions)
+
     return {
         "passed": not issues,
         "issues": issues,
@@ -130,3 +134,34 @@ def _defined_names(tree: ast.AST) -> set[str]:
                     names.add(item.optional_vars.id)
 
     return names
+
+
+def _trivial_assertion_issues(test_code: str) -> list[str]:
+    try:
+        tree = ast.parse(test_code)
+    except SyntaxError:
+        return []
+
+    issues: list[str] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Assert):
+            continue
+
+        test = node.test
+        if isinstance(test, ast.Constant) and isinstance(test.value, bool):
+            issues.append("Trivial assertion: assert literal boolean")
+            continue
+
+        if not isinstance(test, ast.Compare) or len(test.ops) != 1 or len(test.comparators) != 1:
+            continue
+
+        left = ast.dump(test.left, include_attributes=False)
+        right = ast.dump(test.comparators[0], include_attributes=False)
+        if left != right:
+            continue
+
+        op = test.ops[0]
+        if isinstance(op, (ast.Eq, ast.Is, ast.NotEq, ast.IsNot)):
+            issues.append("Trivial assertion: self-comparison in assert statement")
+
+    return issues

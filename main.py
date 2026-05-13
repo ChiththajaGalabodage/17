@@ -99,7 +99,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             )
             test_code = normalize_test_code(heal_bundle["test_code"], source_path)
         else:
-            test_code = build_smoke_test_code(source_path)
+            print("Validation failed; keeping the generated tests instead of downgrading to a smoke test.")
 
         validation_result = validate_generated_test_code(test_code, source_path, analysis)
 
