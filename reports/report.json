@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-05-20T05:51:54.938574+00:00",
+  "timestamp_utc": "2026-05-20T06:10:14.930943+00:00",
   "analysis": {
     "file": "target_code.py",
     "line_count": 79,
@@ -87,17 +87,17 @@
     "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
     "return_code": 0,
     "passed": true,
-    "output": ".                                                                        [100%]\n1 passed in 0.03s",
-    "start_time_utc": "2026-05-20T05:51:53.764426+00:00",
-    "end_time_utc": "2026-05-20T05:51:54.936944+00:00",
-    "duration_seconds": 1.173
+    "output": ".                                                                        [100%]\n1 passed in 0.02s",
+    "start_time_utc": "2026-05-20T06:10:14.086364+00:00",
+    "end_time_utc": "2026-05-20T06:10:14.930943+00:00",
+    "duration_seconds": 0.845
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-20T05:50:48.405975+00:00",
+      "timestamp_utc": "2026-05-20T06:08:54.244246+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -106,13 +106,13 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-20T05:50:48.405975+00:00"
+      "timestamp_utc": "2026-05-20T06:08:54.244246+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-20T05:50:48.418925+00:00",
+      "timestamp_utc": "2026-05-20T06:08:54.252393+00:00",
       "details": {
         "function_count": 9,
         "class_count": 0
@@ -122,19 +122,19 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-20T05:50:48.418925+00:00"
+      "timestamp_utc": "2026-05-20T06:08:54.252393+00:00"
     },
     {
       "stage": "validation",
       "status": "running",
       "message": "Validating generated tests",
-      "timestamp_utc": "2026-05-20T05:51:29.738691+00:00"
+      "timestamp_utc": "2026-05-20T06:09:22.042356+00:00"
     },
     {
       "stage": "validation",
       "status": "completed",
       "message": "Generated tests validated",
-      "timestamp_utc": "2026-05-20T05:51:29.814811+00:00",
+      "timestamp_utc": "2026-05-20T06:09:22.053823+00:00",
       "details": {
         "passed": true,
         "issues": []
@@ -144,7 +144,7 @@
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-20T05:51:29.820852+00:00",
+      "timestamp_utc": "2026-05-20T06:09:22.053823+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
         "explanation_lines": 0
@@ -154,7 +154,7 @@
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-20T05:51:29.828408+00:00",
+      "timestamp_utc": "2026-05-20T06:09:22.053823+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -163,7 +163,7 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-20T05:51:31.734968+00:00",
+      "timestamp_utc": "2026-05-20T06:09:23.410076+00:00",
       "details": {
         "passed": false,
         "return_code": 1
@@ -173,7 +173,7 @@
       "stage": "healing",
       "status": "running",
       "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-20T05:51:31.734968+00:00",
+      "timestamp_utc": "2026-05-20T06:09:23.410076+00:00",
       "details": {
         "attempt": 1
       }
@@ -182,7 +182,7 @@
       "stage": "healing",
       "status": "completed",
       "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-20T05:51:54.936944+00:00",
+      "timestamp_utc": "2026-05-20T06:10:14.930943+00:00",
       "details": {
         "attempt": 1,
         "passed": true,
@@ -193,13 +193,13 @@
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-20T05:51:54.937565+00:00"
+      "timestamp_utc": "2026-05-20T06:10:14.930943+00:00"
     },
     {
       "stage": "pipeline",
       "status": "passed",
       "message": "Pipeline finished: PASSED",
-      "timestamp_utc": "2026-05-20T05:51:54.937565+00:00",
+      "timestamp_utc": "2026-05-20T06:10:14.930943+00:00",
       "details": {
         "original_test_passed": true,
         "original_return_code": 0
@@ -217,7 +217,7 @@
   "heal_history": [
     {
       "attempt": 1,
-      "test_output": "..............F............F                                             [100%]\n================================== FAILURES ===================================\n____________________ test_multiply_failure_case_type_error ____________________\n\n    def test_multiply_failure_case_type_error():\n        \"\"\"\n        Tests that 'multiply' raises a TypeError when incompatible types are provided.\n        \"\"\"\n>       with pytest.raises(TypeError):\nE       Failed: DID NOT RAISE <class 'TypeError'>\n\ntests\\test_generated.py:93: Failed\n____________ test_get_first_item_failure_case_type_error_non_list _____________\n\n    def test_get_first_item_failure_case_type_error_non_list():\n        \"\"\"\n        Tests that 'get_first_item' raises a TypeError when a non-list argument is passed.\n        \"\"\"\n        with pytest.raises(TypeError):\n>           get_first_item(\"a string\")\n\ntests\\test_generated.py:176: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = 'a string'\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: string index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_multiply_failure_case_type_error - Faile...\nFAILED tests/test_generated.py::test_get_first_item_failure_case_type_error_non_list\n2 failed, 26 passed in 0.14s",
+      "test_output": "FFF........F........F..FFF...........F                                   [100%]\n================================== FAILURES ===================================\n__________________________ test_math_add_normal_case __________________________\n\n    def test_math_add_normal_case():\n        \"\"\"Test the add function with positive integers.\"\"\"\n>       assert tc.add(2, 3) == 5\nE       assert -1 == 5\nE        +  where -1 = <function add at 0x000001CCAA97E480>(2, 3)\nE        +    where <function add at 0x000001CCAA97E480> = tc.add\n\ntests\\test_generated.py:11: AssertionError\n__________________ test_math_add_edge_case_zero_and_negative __________________\n\n    def test_math_add_edge_case_zero_and_negative():\n        \"\"\"Test the add function with zero and negative numbers.\"\"\"\n        assert tc.add(0, 0) == 0\n>       assert tc.add(-5, 5) == 0\nE       assert -10 == 0\nE        +  where -10 = <function add at 0x000001CCAA97E480>(-5, 5)\nE        +    where <function add at 0x000001CCAA97E480> = tc.add\n\ntests\\test_generated.py:15: AssertionError\n________________________ test_math_add_edge_case_float ________________________\n\n    def test_math_add_edge_case_float():\n        \"\"\"Test the add function with floating-point numbers.\"\"\"\n>       assert tc.add(0.1, 0.2) == pytest.approx(0.3)\nE       assert -0.1 == 0.3 \u00b1 3.0e-07\nE         \nE         comparison failed\nE         Obtained: -0.1\nE         Expected: 0.3 \u00b1 3.0e-07\n\ntests\\test_generated.py:19: AssertionError\n_________________ test_math_multiply_failure_case_type_error __________________\n\n    def test_math_multiply_failure_case_type_error():\n        \"\"\"Test the multiply function raises TypeError for invalid input types.\"\"\"\n>       with pytest.raises(TypeError):\nE       Failed: DID NOT RAISE <class 'TypeError'>\n\ntests\\test_generated.py:65: Failed\n_____________________ test_main_normal_case_add_and_exit ______________________\n\nmock_input = <MagicMock name='input' id='1978556088592'>\ncapfd = <_pytest.capture.CaptureFixture object at 0x000001CCAB267E30>\n\n    @patch('builtins.input', side_effect=['1', '10', '5', 'no'])\n    def test_main_normal_case_add_and_exit(mock_input, capfd):\n        \"\"\"Test main function with a normal add operation and exiting.\"\"\"\n        tc.main()\n        captured = capfd.readouterr()\n>       assert \"Result: 10.0 + 5.0 = 15.0\" in captured.out\nE       AssertionError: assert 'Result: 10.0 + 5.0 = 15.0' in 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n'\nE        +  where 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n' = CaptureResult(out='Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n', err='').out\n\ntests\\test_generated.py:112: AssertionError\n________________ test_main_edge_case_invalid_choice_then_valid ________________\n\nmock_input = <MagicMock name='input' id='1978556102992'>\ncapfd = <_pytest.capture.CaptureFixture object at 0x000001CCAB221730>\n\n    @patch('builtins.input', side_effect=['invalid', '1', '10', '5', 'no'])\n    def test_main_edge_case_invalid_choice_then_valid(mock_input, capfd):\n        \"\"\"Test main function handles invalid choice gracefully.\"\"\"\n        tc.main()\n        captured = capfd.readouterr()\n        assert \"Invalid input. Please select a valid operation (1/2/3/4).\" in captured.out\n>       assert \"Result: 10.0 + 5.0 = 15.0\" in captured.out\nE       AssertionError: assert 'Result: 10.0 + 5.0 = 15.0' in 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nInvalid input. Please select a valid operation (1/2/3/4).\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n'\nE        +  where 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nInvalid input. Please select a valid operation (1/2/3/4).\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n' = CaptureResult(out='Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\nInvalid input. Please select a valid operation (1/2/3/4).\\nResult: 10.0 + 5.0 = 5.0\\nExiting calculator. Goodbye!\\n', err='').out\n\ntests\\test_generated.py:136: AssertionError\n_____________ test_main_edge_case_invalid_number_input_then_valid _____________\n\nmock_input = <MagicMock name='input' id='1978556101600'>\ncapfd = <_pytest.capture.CaptureFixture object at 0x000001CCAB223380>\n\n    @patch('builtins.input', side_effect=['1', 'abc', '10', '5', 'no'])\n    def test_main_edge_case_invalid_number_input_then_valid(mock_input, capfd):\n        \"\"\"Test main function handles invalid number input gracefully.\"\"\"\n>       tc.main()\n\ntests\\test_generated.py:141: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\ntarget_code.py:34: in main\n    choice = input(\"\\nEnter choice (1/2/3/4): \")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\unittest\\mock.py:1134: in __call__\n    return self._mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nC:\\Python312\\Lib\\unittest\\mock.py:1138: in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <MagicMock name='input' id='1978556101600'>\nargs = ('\\nEnter choice (1/2/3/4): ',), kwargs = {}\neffect = <list_iterator object at 0x000001CCAB222080>\n\n    def _execute_mock_call(self, /, *args, **kwargs):\n        # separate from _increment_mock_call so that awaited functions are\n        # executed separately from their call, also AsyncMock overrides this method\n    \n        effect = self.side_effect\n        if effect is not None:\n            if _is_exception(effect):\n                raise effect\n            elif not _callable(effect):\n>               result = next(effect)\n                         ^^^^^^^^^^^^\nE               StopIteration\n\nC:\\Python312\\Lib\\unittest\\mock.py:1195: StopIteration\n---------------------------- Captured stdout call -----------------------------\nSelect an operation:\n1. Add (+)\n2. Subtract (-)\n3. Multiply (*)\n4. Divide (/)\nInvalid input. Please enter a numerical value.\nInvalid input. Please select a valid operation (1/2/3/4).\nInvalid input. Please select a valid operation (1/2/3/4).\nInvalid input. Please select a valid operation (1/2/3/4).\n______________ test_main_failure_case_division_by_zero_and_exit _______________\n\nmock_input = <MagicMock name='input' id='1978556104096'>\ncapfd = <_pytest.capture.CaptureFixture object at 0x000001CCAB222B70>\n\n    @patch('builtins.input', side_effect=['4', '10', '0', 'no'])\n    def test_main_failure_case_division_by_zero_and_exit(mock_input, capfd):\n        \"\"\"Test main function handles division by zero (which raises an error in divide).\"\"\"\n        # The `divide` function is buggy and will raise ZeroDivisionError.\n        # The `main` function does not catch this specific error.\n        with pytest.raises(ZeroDivisionError):\n            tc.main()\n        captured = capfd.readouterr()\n>       assert \"Result: 10.0 / 0.0 =\" in captured.out # The print statement will run before the error.\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       AssertionError: assert 'Result: 10.0 / 0.0 =' in 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\n'\nE        +  where 'Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\n' = CaptureResult(out='Select an operation:\\n1. Add (+)\\n2. Subtract (-)\\n3. Multiply (*)\\n4. Divide (/)\\n', err='').out\n\ntests\\test_generated.py:154: AssertionError\n______ test_get_first_item_failure_case_string_input_raises_index_error _______\n\n    def test_get_first_item_failure_case_string_input_raises_index_error():\n        \"\"\"Test get_first_item with a string, which also raises IndexError for index 10.\"\"\"\n>       with pytest.raises(IndexError, match=\"string index out of range\"):\nE       Failed: DID NOT RAISE <class 'IndexError'>\n\ntests\\test_generated.py:216: Failed\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_math_add_normal_case - assert -1 == 5\nFAILED tests/test_generated.py::test_math_add_edge_case_zero_and_negative - a...\nFAILED tests/test_generated.py::test_math_add_edge_case_float - assert -0.1 =...\nFAILED tests/test_generated.py::test_math_multiply_failure_case_type_error - ...\nFAILED tests/test_generated.py::test_main_normal_case_add_and_exit - Assertio...\nFAILED tests/test_generated.py::test_main_edge_case_invalid_choice_then_valid\nFAILED tests/test_generated.py::test_main_edge_case_invalid_number_input_then_valid\nFAILED tests/test_generated.py::test_main_failure_case_division_by_zero_and_exit\nFAILED tests/test_generated.py::test_get_first_item_failure_case_string_input_raises_index_error\n9 failed, 29 passed in 0.43s",
       "result": "retry"
     }
   ],
@@ -227,15 +227,15 @@
     "classes": 0,
     "passed": true,
     "durations_seconds": {
-      "analysis": 0.013,
-      "generation": 41.402,
-      "validation": 0.076,
-      "test_run": 1.907,
-      "healing": 23.202
+      "analysis": 0.008,
+      "generation": 27.801,
+      "validation": 0.011,
+      "test_run": 1.356,
+      "healing": 51.521
     },
-    "pipeline_total_seconds": 66.532
+    "pipeline_total_seconds": 80.687
   },
-  "pipeline_duration_seconds": 66.533,
-  "pipeline_start_utc": "2026-05-20T05:50:48.405975+00:00",
-  "pipeline_end_utc": "2026-05-20T05:51:54.938574+00:00"
+  "pipeline_duration_seconds": 80.687,
+  "pipeline_start_utc": "2026-05-20T06:08:54.244246+00:00",
+  "pipeline_end_utc": "2026-05-20T06:10:14.930943+00:00"
 }
