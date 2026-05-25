@@ -16,6 +16,10 @@ from src.test_select_agent import TestSelectAgent
 from src.validator import build_smoke_test_code, validate_generated_test_code
 
 
+def pipeline_status(passed: bool) -> str:
+    return "PASSED" if passed else "FAILED"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="AI Test Generator pipeline")
     parser.add_argument("--source", default="target_code.py", help="Path to target Python file")
@@ -205,11 +209,10 @@ def run_pipeline(args: argparse.Namespace) -> int:
 
     print("[5/5] Writing report...")
     tracker.record("report", "running", "Writing report")
-    # Force pipeline to report passed regardless of test outcomes.
-    status = "PASSED"
+    status = pipeline_status(bool(test_result.get("passed")))
     tracker.record(
         "pipeline",
-        "passed",
+        "passed" if test_result.get("passed") else "failed",
         f"Pipeline finished: {status}",
         original_test_passed=test_result.get("passed"),
         original_return_code=test_result.get("return_code"),

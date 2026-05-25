@@ -1,3 +1,13 @@
+## Benchmark Execution Time Chart
+
+Generate a publication-ready clustered bar chart from one or more comparison CSV reports:
+
+```bash
+python scripts/plot_benchmark_execution_time.py reports/comparison_report.csv --output reports/execution_time_comparison.png
+```
+
+If you pass multiple CSV files, the script aggregates `duration_seconds` by `strategy` and `run` before plotting.
+
 pyth# AI Test Generator
 
 A modular agentic testing framework for CI/CD that combines three autonomous agents:
