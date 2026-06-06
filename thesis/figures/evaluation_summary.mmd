@@ -1,0 +1,12 @@
+flowchart LR
+  A1[Run Prototype Harness] --> A2[Generate Tests]
+  A2 --> A3[Validate Output]
+  A3 --> A4{Valid?}
+  A4 -- No --> A5[Fallback Smoke Test]
+  A4 -- Yes --> A6[Write Generated File]
+  A5 --> A6
+  A6 --> A7[Execute Pytest]
+  A7 --> A8{Pass?}
+  A8 -- No --> A9[Automated Heal]
+  A9 --> A6
+  A8 -- Yes --> A10[Write Report + Summary]

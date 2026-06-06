@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import csv
@@ -282,10 +282,25 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
     summary: dict[str, Any] = {}
     for strategy, rows in by_strategy.items():
         coverage_values = []
+        pipeline_durations = []
         for row in rows:
             coverage = row.get("coverage") or {}
             if isinstance(coverage, dict) and coverage.get("ran"):
                 coverage_values.append(float(coverage.get("percent_covered", 0.0)))
+            if row.get("pipeline_duration_seconds") is not None:
+                pipeline_durations.append(float(row.get("pipeline_duration_seconds", 0.0)))
+
+        total_tests_total = sum(int(row.get("tests_total", 0) or 0) for row in rows)
+        total_tests_passed = sum(int(row.get("tests_passed", 0) or 0) for row in rows)
+        total_tests_failed = sum(int(row.get("tests_failed", 0) or 0) for row in rows)
+        total_defects_detected = sum(int(row.get("defects_detected", 0) or 0) for row in rows)
+        total_selected_tests = sum(int(row.get("selected_tests_count", 0) or 0) for row in rows)
+        total_heal_attempts = sum(int(row.get("heal_attempts", 0) or 0) for row in rows)
+        per_test_durations = []
+        for row in rows:
+            duration_seconds = float(row.get("duration_seconds", 0.0))
+            tests_total = int(row.get("tests_total", 0) or 0)
+            per_test_durations.append(duration_seconds / tests_total if tests_total else duration_seconds)
 
         summary[strategy] = {
             "runs": len(rows),
@@ -293,8 +308,17 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
                 (sum(1 for row in rows if row.get("passed")) / len(rows) * 100.0) if rows else 0.0,
                 2,
             ),
+            "total_tests_total": total_tests_total,
+            "total_tests_passed": total_tests_passed,
+            "total_tests_failed": total_tests_failed,
+            "total_defects_detected": total_defects_detected,
+            "total_selected_tests": total_selected_tests,
+            "total_heal_attempts": total_heal_attempts,
             "avg_duration_seconds": safe_mean([float(row.get("duration_seconds", 0.0)) for row in rows]),
+            "avg_duration_per_test_seconds": safe_mean(per_test_durations),
+            "avg_pipeline_duration_seconds": safe_mean(pipeline_durations),
             "avg_tests_total": safe_mean([float(row.get("tests_total", 0.0)) for row in rows]),
+            "avg_tests_passed": safe_mean([float(row.get("tests_passed", 0.0)) for row in rows]),
             "avg_tests_failed": safe_mean([float(row.get("tests_failed", 0.0)) for row in rows]),
             "avg_defects_detected": safe_mean([float(row.get("defects_detected", 0.0)) for row in rows]),
             "avg_selected_tests": safe_mean([float(row.get("selected_tests_count", 0.0)) for row in rows]),
@@ -308,6 +332,11 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
         "duration_seconds": round(
             float(agentic.get("avg_duration_seconds", 0.0))
             - float(traditional.get("avg_duration_seconds", 0.0)),
+            3,
+        ),
+        "duration_per_test_seconds": round(
+            float(agentic.get("avg_duration_per_test_seconds", 0.0))
+            - float(traditional.get("avg_duration_per_test_seconds", 0.0)),
             3,
         ),
         "coverage_percent": round(
@@ -378,15 +407,131 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
     summary = payload.get("summary", {})
     delta = summary.get("delta_agentic_minus_traditional", {})
 
+    def fmt_number(value: Any, digits: int = 2) -> str:
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            return "0"
+
+        text = f"{number:.{digits}f}"
+        return text.rstrip("0").rstrip(".") if "." in text else text
+
+    def metric_row(label: str, agentic_key: str, traditional_key: str, delta_key: str, better: str) -> str:
+        agentic_value = summary.get("agentic", {}).get(agentic_key, 0.0)
+        traditional_value = summary.get("traditional", {}).get(traditional_key, 0.0)
+        delta_value = delta.get(delta_key, 0.0)
+        if better == "Higher":
+            if agentic_value > traditional_value:
+                winner = "Agentic"
+            elif traditional_value > agentic_value:
+                winner = "Traditional"
+            else:
+                winner = "Tie"
+        else:
+            if agentic_value < traditional_value:
+                winner = "Agentic"
+            elif traditional_value < agentic_value:
+                winner = "Traditional"
+            else:
+                winner = "Tie"
+        return "| " + " | ".join(
+            [
+                label,
+                fmt_number(agentic_value),
+                fmt_number(traditional_value),
+                fmt_number(delta_value, 3),
+                better,
+                winner,
+            ]
+        ) + " |"
+
+    def total_row(strategy: str) -> str:
+        item = summary.get(strategy, {})
+        return "| " + " | ".join(
+            [
+                strategy,
+                str(item.get("total_tests_total", 0)),
+                str(item.get("total_tests_passed", 0)),
+                str(item.get("total_tests_failed", 0)),
+            ]
+        ) + " |"
+
+    metric_specs = [
+        ("pass_rate_percent", "pass_rate_percent", "Higher", 0.18),
+        ("avg_duration_per_test_seconds", "avg_duration_per_test_seconds", "Lower", 0.14),
+        ("avg_pipeline_duration_seconds", "avg_pipeline_duration_seconds", "Lower", 0.08),
+        ("avg_coverage_percent", "avg_coverage_percent", "Higher", 0.16),
+        ("avg_defects_detected", "avg_defects_detected", "Higher", 0.12),
+        ("avg_selected_tests", "avg_selected_tests", "Lower", 0.08),
+        ("avg_heal_attempts", "avg_heal_attempts", "Lower", 0.08),
+        ("avg_tests_total", "avg_tests_total", "Higher", 0.08),
+        ("avg_tests_passed", "avg_tests_passed", "Higher", 0.08),
+        ("avg_tests_failed", "avg_tests_failed", "Lower", 0.08),
+    ]
+
+    def weighted_score(strategy: str) -> float:
+        score = 0.0
+        for agentic_key, traditional_key, direction, weight in metric_specs:
+            agentic_value = float(summary.get("agentic", {}).get(agentic_key, 0.0))
+            traditional_value = float(summary.get("traditional", {}).get(traditional_key, 0.0))
+
+            if agentic_value == traditional_value:
+                contribution = 0.5
+            elif direction == "Higher":
+                contribution = 1.0 if (strategy == "agentic" and agentic_value > traditional_value) or (
+                    strategy == "traditional" and traditional_value > agentic_value
+                ) else 0.0
+            else:
+                contribution = 1.0 if (strategy == "agentic" and agentic_value < traditional_value) or (
+                    strategy == "traditional" and traditional_value < agentic_value
+                ) else 0.0
+
+            score += weight * contribution
+
+        return round(score * 100.0, 2)
+
+    agentic_score = weighted_score("agentic")
+    traditional_score = weighted_score("traditional")
+    if agentic_score > traditional_score:
+        overall_winner = "Agentic"
+    elif traditional_score > agentic_score:
+        overall_winner = "Traditional"
+    else:
+        overall_winner = "Tie"
+
     lines = [
-        "# Agentic vs Traditional Continuous Testing",
+        "# Final Comparison Report",
         "",
         f"Generated: {payload.get('generated_at_utc', '')}",
         "",
+        "## Benchmark Totals",
+        "",
+        "| Strategy | Test cases | Tests passed | Tests failed |",
+        "|---|---:|---:|---:|",
+        total_row("agentic"),
+        total_row("traditional"),
+        "",
+        "## Comparison Matrix",
+        "",
+        "| Metric | Agentic | Traditional | Delta (A - T) | Better | Winner |",
+        "|---|---:|---:|---:|---|---|",
+        metric_row("Pass rate (%)", "pass_rate_percent", "pass_rate_percent", "pass_rate_percent", "Higher"),
+        metric_row("Avg execution time per test (s)", "avg_duration_per_test_seconds", "avg_duration_per_test_seconds", "duration_per_test_seconds", "Lower"),
+        metric_row("Avg pipeline duration (s)", "avg_pipeline_duration_seconds", "avg_pipeline_duration_seconds", "duration_seconds", "Lower"),
+        metric_row("Avg coverage (%)", "avg_coverage_percent", "avg_coverage_percent", "coverage_percent", "Higher"),
+        metric_row("Avg defects detected", "avg_defects_detected", "avg_defects_detected", "defects_detected", "Higher"),
+        metric_row("Avg tests selected", "avg_selected_tests", "avg_selected_tests", "selected_tests", "Lower"),
+        metric_row("Avg heal attempts", "avg_heal_attempts", "avg_heal_attempts", "heal_attempts", "Lower"),
+        metric_row("Avg test cases", "avg_tests_total", "avg_tests_total", "selected_tests", "Higher"),
+        metric_row("Avg tests passed", "avg_tests_passed", "avg_tests_passed", "selected_tests", "Higher"),
+        metric_row("Avg tests failed", "avg_tests_failed", "avg_tests_failed", "selected_tests", "Lower"),
+        "",
+        f"**Weighted score**: Agentic {fmt_number(agentic_score, 2)} vs Traditional {fmt_number(traditional_score, 2)}. Overall winner: {overall_winner}.",
+        "",
         "## Summary",
         "",
-        "| Strategy | Runs | Pass Rate % | Avg Duration (s) | Avg Coverage % | Avg Defects Detected | Avg Tests Selected |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Strategy | Runs | Pass Rate % | Test Cases | Passed | Failed | Avg Execution Time / Test (s) | Avg Pipeline Duration (s) | Avg Coverage % | Avg Defects Detected | Avg Tests Selected | Avg Heal Attempts |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
 
     for strategy in ["agentic", "traditional"]:
@@ -397,11 +542,16 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
                 [
                     strategy,
                     str(item.get("runs", 0)),
-                    str(item.get("pass_rate_percent", 0.0)),
-                    str(item.get("avg_duration_seconds", 0.0)),
-                    str(item.get("avg_coverage_percent", 0.0)),
-                    str(item.get("avg_defects_detected", 0.0)),
-                    str(item.get("avg_selected_tests", 0.0)),
+                    fmt_number(item.get("pass_rate_percent", 0.0)),
+                    str(item.get("total_tests_total", 0)),
+                    str(item.get("total_tests_passed", 0)),
+                    str(item.get("total_tests_failed", 0)),
+                    fmt_number(item.get("avg_duration_per_test_seconds", 0.0)),
+                    fmt_number(item.get("avg_pipeline_duration_seconds", 0.0)),
+                    fmt_number(item.get("avg_coverage_percent", 0.0)),
+                    fmt_number(item.get("avg_defects_detected", 0.0)),
+                    fmt_number(item.get("avg_selected_tests", 0.0)),
+                    fmt_number(item.get("avg_heal_attempts", 0.0)),
                 ]
             )
             + " |"
@@ -412,10 +562,11 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
             "",
             "## Delta (Agentic - Traditional)",
             "",
-            f"- Duration seconds: {delta.get('duration_seconds', 0.0)}",
-            f"- Coverage percent: {delta.get('coverage_percent', 0.0)}",
-            f"- Defects detected: {delta.get('defects_detected', 0.0)}",
-            f"- Selected tests: {delta.get('selected_tests', 0.0)}",
+            f"- Execution time per test seconds: {fmt_number(delta.get('duration_per_test_seconds', 0.0), 3)}",
+            f"- Coverage percent: {fmt_number(delta.get('coverage_percent', 0.0), 3)}",
+            f"- Defects detected: {fmt_number(delta.get('defects_detected', 0.0), 3)}",
+            f"- Selected tests: {fmt_number(delta.get('selected_tests', 0.0), 3)}",
+            f"- Heal attempts: {fmt_number(delta.get('heal_attempts', 0.0), 3)}",
             "",
             "## Per-Run Details",
             "",
@@ -434,11 +585,11 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
                     str(row.get("strategy", "")),
                     str(row.get("run", "")),
                     str(row.get("passed", "")),
-                    str(row.get("duration_seconds", "")),
+                    fmt_number(row.get("duration_seconds", ""), 3),
                     f"{row.get('tests_passed', 0)}/{row.get('tests_total', 0)}",
                     str(row.get("defects_detected", "")),
                     str(row.get("selected_tests_count", "")),
-                    str(coverage_percent),
+                    fmt_number(coverage_percent, 2),
                 ]
             )
             + " |"

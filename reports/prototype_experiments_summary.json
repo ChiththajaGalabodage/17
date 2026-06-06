@@ -1,0 +1,33 @@
+{
+  "generated_utc": "2026-06-06T05:02:18.915252+00:00",
+  "rows": [
+    {
+      "source": "target_code.py",
+      "run": 1,
+      "source_functions": 9,
+      "source_classes": 0,
+      "validation_passed": false,
+      "validation_issues": 1,
+      "generated_lines": 5,
+      "run1_passed": true,
+      "run1_duration_seconds": 0.969,
+      "healer_applied": false,
+      "final_passed": true,
+      "final_duration_seconds": 0.969,
+      "report_file": "reports/prototype_experiments/prototype_run_target_code_1.json",
+      "test_file": "tests/experiments/generated_tests_target_code_run_1.py"
+    }
+  ],
+  "summary": {
+    "generated_utc": "2026-06-06T05:02:18.915252+00:00",
+    "total_runs": 1,
+    "sources": [
+      "target_code.py"
+    ],
+    "final_pass_rate": 100.0,
+    "validation_pass_rate": 0.0,
+    "mean_run1_duration_seconds": 0.969,
+    "mean_final_duration_seconds": 0.969,
+    "mean_generated_lines": 5
+  }
+}

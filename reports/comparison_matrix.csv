@@ -1,0 +1,11 @@
+metric,agentic,traditional,delta,winner
+pass_rate,100.0,96.72,3.28,Agentic
+defect_detection_rate,0.0,3.28,-3.28,Traditional
+coverage,20.83,37.5,-16.67,Traditional
+test_generation_time,30.922,0.0,30.922,Traditional
+test_execution_time,73.939,6.671,67.268,Traditional
+test_selection_accuracy,60.0,100.0,-40.0,Traditional
+validation_accuracy,100.0,100.0,0.0,Tie
+false_positive_rate,0.0,0.0,0.0,Tie
+maintenance_effort,1.0,1.0,0.0,Tie
+cost_per_run,0.0915,0.0067,0.0848,Traditional

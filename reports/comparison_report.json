@@ -1,9 +1,16 @@
 {
-  "generated_at_utc": "2026-05-09T11:37:08.362906+00:00",
+  "generated_at_utc": "2026-06-06T11:36:47.613457+00:00",
+  "benchmark_totals": {
+    "test_cases": 150,
+    "tests_passed": 110,
+    "tests_failed": 40
+  },
   "source": "target_code.py",
   "runs_per_strategy": 3,
   "traditional_test_targets": [
+    "tests/test_main.py",
     "tests/test_output_format.py",
+    "tests/test_plot_benchmark_execution_time.py",
     "tests/test_validator.py"
   ],
   "runs": [
@@ -12,34 +19,34 @@
       "run": 1,
       "passed": true,
       "return_code": 0,
-      "duration_seconds": 2.575,
-      "tests_total": 7,
-      "tests_passed": 7,
-      "tests_failed": 0,
-      "defects_detected": 0,
+      "duration_seconds": 7.438,
+      "tests_total": 8,
+      "tests_passed": 5,
+      "tests_failed": 3,
+      "defects_detected": 3,
       "selected_tests_count": 3,
-      "heal_attempts": 0,
-      "pipeline_duration_seconds": 2.421,
+      "heal_attempts": 2,
+      "pipeline_duration_seconds": 7.233,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_main.py tests/test_plot_benchmark_execution_time.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.05,
-          "start_time_utc": "2026-05-09T11:37:02.223165+00:00",
-          "end_time_utc": "2026-05-09T11:37:02.273231+00:00"
+          "duration_seconds": 0.07,
+          "start_time_utc": "2026-06-06T11:36:32.026951+00:00",
+          "end_time_utc": "2026-06-06T11:36:32.096948+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_1.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.049,
-          "start_time_utc": "2026-05-09T11:37:02.273231+00:00",
-          "end_time_utc": "2026-05-09T11:37:02.322610+00:00"
+          "duration_seconds": 0.059,
+          "start_time_utc": "2026-06-06T11:36:32.096948+00:00",
+          "end_time_utc": "2026-06-06T11:36:32.155912+00:00"
         }
       },
       "report_path": "reports/agentic_run_1.json",
@@ -47,10 +54,10 @@
         "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_1.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
         "return_code": 0,
         "passed": true,
-        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_1.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.06s",
-        "duration_seconds": 2.575,
-        "start_time_utc": "2026-05-09T11:36:59.605570+00:00",
-        "end_time_utc": "2026-05-09T11:37:02.180913+00:00"
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: initialize_store, register_customer\nValidation failed; keeping the generated tests instead of downgrading to a smoke test.\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_main.py\n - tests/test_plot_benchmark_execution_time.py\n[4/5] Self-heal attempt 1/2...\n[4/5] Self-heal attempt 2/2...\n[5/5] Writing report...\nPipeline finished: FAILED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_1.json\n\nPytest output:\n\n...FF..F                                                                 [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 4\n        assert divide(9, 3) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 3\n>       assert divide(5, 0) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n3 failed, 5 passed in 0.19s",
+        "duration_seconds": 7.438,
+        "start_time_utc": "2026-06-06T11:36:24.564858+00:00",
+        "end_time_utc": "2026-06-06T11:36:32.003157+00:00"
       }
     },
     {
@@ -58,34 +65,34 @@
       "run": 2,
       "passed": true,
       "return_code": 0,
-      "duration_seconds": 1.85,
-      "tests_total": 7,
-      "tests_passed": 7,
-      "tests_failed": 0,
-      "defects_detected": 0,
+      "duration_seconds": 5.396,
+      "tests_total": 8,
+      "tests_passed": 5,
+      "tests_failed": 3,
+      "defects_detected": 3,
       "selected_tests_count": 3,
-      "heal_attempts": 0,
-      "pipeline_duration_seconds": 1.688,
+      "heal_attempts": 2,
+      "pipeline_duration_seconds": 5.222,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_main.py tests/test_plot_benchmark_execution_time.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.042,
-          "start_time_utc": "2026-05-09T11:37:04.186897+00:00",
-          "end_time_utc": "2026-05-09T11:37:04.229293+00:00"
+          "duration_seconds": 0.05,
+          "start_time_utc": "2026-06-06T11:36:37.563737+00:00",
+          "end_time_utc": "2026-06-06T11:36:37.613385+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_2.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.044,
-          "start_time_utc": "2026-05-09T11:37:04.229293+00:00",
-          "end_time_utc": "2026-05-09T11:37:04.272911+00:00"
+          "duration_seconds": 0.064,
+          "start_time_utc": "2026-06-06T11:36:37.613385+00:00",
+          "end_time_utc": "2026-06-06T11:36:37.677774+00:00"
         }
       },
       "report_path": "reports/agentic_run_2.json",
@@ -93,10 +100,10 @@
         "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_2.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
         "return_code": 0,
         "passed": true,
-        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_2.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.05s",
-        "duration_seconds": 1.85,
-        "start_time_utc": "2026-05-09T11:37:02.322610+00:00",
-        "end_time_utc": "2026-05-09T11:37:04.172762+00:00"
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: initialize_store, register_customer\nValidation failed; keeping the generated tests instead of downgrading to a smoke test.\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_main.py\n - tests/test_plot_benchmark_execution_time.py\n[4/5] Self-heal attempt 1/2...\n[4/5] Self-heal attempt 2/2...\n[5/5] Writing report...\nPipeline finished: FAILED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_2.json\n\nPytest output:\n\n...FF..F                                                                 [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 4\n        assert divide(9, 3) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 3\n>       assert divide(5, 0) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n3 failed, 5 passed in 0.15s",
+        "duration_seconds": 5.396,
+        "start_time_utc": "2026-06-06T11:36:32.155912+00:00",
+        "end_time_utc": "2026-06-06T11:36:37.552306+00:00"
       }
     },
     {
@@ -104,34 +111,34 @@
       "run": 3,
       "passed": true,
       "return_code": 0,
-      "duration_seconds": 1.7,
-      "tests_total": 7,
-      "tests_passed": 7,
-      "tests_failed": 0,
-      "defects_detected": 0,
+      "duration_seconds": 5.386,
+      "tests_total": 8,
+      "tests_passed": 5,
+      "tests_failed": 3,
+      "defects_detected": 3,
       "selected_tests_count": 3,
-      "heal_attempts": 0,
-      "pipeline_duration_seconds": 1.565,
+      "heal_attempts": 2,
+      "pipeline_duration_seconds": 5.212,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_generated.py tests/test_main.py tests/test_plot_benchmark_execution_time.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.047,
-          "start_time_utc": "2026-05-09T11:37:05.982918+00:00",
-          "end_time_utc": "2026-05-09T11:37:06.030116+00:00"
+          "duration_seconds": 0.045,
+          "start_time_utc": "2026-06-06T11:36:43.084896+00:00",
+          "end_time_utc": "2026-06-06T11:36:43.129976+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_agentic_3.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.052,
-          "start_time_utc": "2026-05-09T11:37:06.030116+00:00",
-          "end_time_utc": "2026-05-09T11:37:06.081812+00:00"
+          "duration_seconds": 0.064,
+          "start_time_utc": "2026-06-06T11:36:43.129976+00:00",
+          "end_time_utc": "2026-06-06T11:36:43.194125+00:00"
         }
       },
       "report_path": "reports/agentic_run_3.json",
@@ -139,148 +146,148 @@
         "command": "C:\\Python312\\python.exe main.py --source target_code.py --test-output tests/test_generated.py --report-output D:\\17\\reports\\agentic_run_3.json --max-heal-attempts 2 --model gemini-2.5-flash --predictive-test-selection --base-ref HEAD~1",
         "return_code": 0,
         "passed": true,
-        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: process_refund\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_output_format.py\n - tests/test_validator.py\n[5/5] Writing report...\nPipeline finished: PASSED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_3.json\n\nPytest output:\n\n.......                                                                  [100%]\n7 passed in 0.04s",
-        "duration_seconds": 1.7,
-        "start_time_utc": "2026-05-09T11:37:04.272911+00:00",
-        "end_time_utc": "2026-05-09T11:37:05.973088+00:00"
+        "output": "[1/5] Analyzing source code...\n[2/5] Generating tests...\nGenerated tests failed validation:\n - Unresolved test references: initialize_store, register_customer\nValidation failed; keeping the generated tests instead of downgrading to a smoke test.\n[3/5] Running tests...\nPredictive selection picked 3 test file(s).\n - tests/test_generated.py\n - tests/test_main.py\n - tests/test_plot_benchmark_execution_time.py\n[4/5] Self-heal attempt 1/2...\n[4/5] Self-heal attempt 2/2...\n[5/5] Writing report...\nPipeline finished: FAILED\nGenerated tests: tests\\test_generated.py\nReport: D:\\17\\reports\\agentic_run_3.json\n\nPytest output:\n\n...FF..F                                                                 [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 4\n        assert divide(9, 3) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 3\n>       assert divide(5, 0) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n3 failed, 5 passed in 0.14s",
+        "duration_seconds": 5.386,
+        "start_time_utc": "2026-06-06T11:36:37.677774+00:00",
+        "end_time_utc": "2026-06-06T11:36:43.063887+00:00"
       }
     },
     {
       "strategy": "traditional",
       "run": 1,
-      "passed": true,
-      "return_code": 0,
-      "duration_seconds": 0.698,
-      "tests_total": 6,
-      "tests_passed": 6,
-      "tests_failed": 0,
-      "defects_detected": 0,
-      "selected_tests_count": 2,
+      "passed": false,
+      "return_code": 2,
+      "duration_seconds": 1.319,
+      "tests_total": 1,
+      "tests_passed": 0,
+      "tests_failed": 1,
+      "defects_detected": 1,
+      "selected_tests_count": 4,
       "heal_attempts": 0,
       "pipeline_duration_seconds": null,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.05,
-          "start_time_utc": "2026-05-09T11:37:06.779339+00:00",
-          "end_time_utc": "2026-05-09T11:37:06.829074+00:00"
+          "duration_seconds": 0.052,
+          "start_time_utc": "2026-06-06T11:36:44.513367+00:00",
+          "end_time_utc": "2026-06-06T11:36:44.565807+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_1.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.05,
-          "start_time_utc": "2026-05-09T11:37:06.829074+00:00",
-          "end_time_utc": "2026-05-09T11:37:06.879202+00:00"
+          "duration_seconds": 0.066,
+          "start_time_utc": "2026-06-06T11:36:44.565807+00:00",
+          "end_time_utc": "2026-06-06T11:36:44.631372+00:00"
         }
       },
       "report_path": null,
       "execution": {
-        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
-        "return_code": 0,
-        "passed": true,
-        "output": "......                                                                   [100%]\n6 passed in 0.05s",
-        "duration_seconds": 0.698,
-        "start_time_utc": "2026-05-09T11:37:06.081812+00:00",
-        "end_time_utc": "2026-05-09T11:37:06.779339+00:00"
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
+        "return_code": 2,
+        "passed": false,
+        "output": "=================================== ERRORS ====================================\n________ ERROR collecting tests/test_plot_benchmark_execution_time.py _________\nImportError while importing test module 'D:\\17\\tests\\test_plot_benchmark_execution_time.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\nC:\\Python312\\Lib\\importlib\\__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests\\test_plot_benchmark_execution_time.py:3: in <module>\n    import pandas as pd\nE   ModuleNotFoundError: No module named 'pandas'\n=========================== short test summary info ===========================\nERROR tests/test_plot_benchmark_execution_time.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.22s",
+        "duration_seconds": 1.319,
+        "start_time_utc": "2026-06-06T11:36:43.194125+00:00",
+        "end_time_utc": "2026-06-06T11:36:44.513367+00:00"
       }
     },
     {
       "strategy": "traditional",
       "run": 2,
-      "passed": true,
-      "return_code": 0,
-      "duration_seconds": 0.634,
-      "tests_total": 6,
-      "tests_passed": 6,
-      "tests_failed": 0,
-      "defects_detected": 0,
-      "selected_tests_count": 2,
+      "passed": false,
+      "return_code": 2,
+      "duration_seconds": 1.313,
+      "tests_total": 1,
+      "tests_passed": 0,
+      "tests_failed": 1,
+      "defects_detected": 1,
+      "selected_tests_count": 4,
       "heal_attempts": 0,
       "pipeline_duration_seconds": null,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.036,
-          "start_time_utc": "2026-05-09T11:37:07.512886+00:00",
-          "end_time_utc": "2026-05-09T11:37:07.548551+00:00"
+          "duration_seconds": 0.057,
+          "start_time_utc": "2026-06-06T11:36:45.944515+00:00",
+          "end_time_utc": "2026-06-06T11:36:46.001811+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_2.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.051,
-          "start_time_utc": "2026-05-09T11:37:07.548551+00:00",
-          "end_time_utc": "2026-05-09T11:37:07.599778+00:00"
+          "duration_seconds": 0.055,
+          "start_time_utc": "2026-06-06T11:36:46.001811+00:00",
+          "end_time_utc": "2026-06-06T11:36:46.057019+00:00"
         }
       },
       "report_path": null,
       "execution": {
-        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
-        "return_code": 0,
-        "passed": true,
-        "output": "......                                                                   [100%]\n6 passed in 0.04s",
-        "duration_seconds": 0.634,
-        "start_time_utc": "2026-05-09T11:37:06.879202+00:00",
-        "end_time_utc": "2026-05-09T11:37:07.512886+00:00"
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
+        "return_code": 2,
+        "passed": false,
+        "output": "=================================== ERRORS ====================================\n________ ERROR collecting tests/test_plot_benchmark_execution_time.py _________\nImportError while importing test module 'D:\\17\\tests\\test_plot_benchmark_execution_time.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\nC:\\Python312\\Lib\\importlib\\__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests\\test_plot_benchmark_execution_time.py:3: in <module>\n    import pandas as pd\nE   ModuleNotFoundError: No module named 'pandas'\n=========================== short test summary info ===========================\nERROR tests/test_plot_benchmark_execution_time.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.24s",
+        "duration_seconds": 1.313,
+        "start_time_utc": "2026-06-06T11:36:44.631372+00:00",
+        "end_time_utc": "2026-06-06T11:36:45.944515+00:00"
       }
     },
     {
       "strategy": "traditional",
       "run": 3,
-      "passed": true,
-      "return_code": 0,
-      "duration_seconds": 0.679,
-      "tests_total": 6,
-      "tests_passed": 6,
-      "tests_failed": 0,
-      "defects_detected": 0,
-      "selected_tests_count": 2,
+      "passed": false,
+      "return_code": 2,
+      "duration_seconds": 1.434,
+      "tests_total": 1,
+      "tests_passed": 0,
+      "tests_failed": 1,
+      "defects_detected": 1,
+      "selected_tests_count": 4,
       "heal_attempts": 0,
       "pipeline_duration_seconds": null,
       "coverage": {
         "ran": false,
         "reason": "coverage-json-failed",
         "run": {
-          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_output_format.py tests/test_validator.py",
+          "command": "C:\\Python312\\python.exe -m coverage run --source=target_code -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.044,
-          "start_time_utc": "2026-05-09T11:37:08.279023+00:00",
-          "end_time_utc": "2026-05-09T11:37:08.322845+00:00"
+          "duration_seconds": 0.054,
+          "start_time_utc": "2026-06-06T11:36:47.490944+00:00",
+          "end_time_utc": "2026-06-06T11:36:47.545281+00:00"
         },
         "json": {
           "command": "C:\\Python312\\python.exe -m coverage json -o D:\\17\\reports\\coverage_traditional_3.json",
           "return_code": 1,
           "passed": false,
           "output": "C:\\Python312\\python.exe: No module named coverage",
-          "duration_seconds": 0.04,
-          "start_time_utc": "2026-05-09T11:37:08.322845+00:00",
-          "end_time_utc": "2026-05-09T11:37:08.362906+00:00"
+          "duration_seconds": 0.068,
+          "start_time_utc": "2026-06-06T11:36:47.545281+00:00",
+          "end_time_utc": "2026-06-06T11:36:47.613457+00:00"
         }
       },
       "report_path": null,
       "execution": {
-        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_output_format.py tests/test_validator.py",
-        "return_code": 0,
-        "passed": true,
-        "output": "......                                                                   [100%]\n6 passed in 0.05s",
-        "duration_seconds": 0.679,
-        "start_time_utc": "2026-05-09T11:37:07.599778+00:00",
-        "end_time_utc": "2026-05-09T11:37:08.279023+00:00"
+        "command": "C:\\Python312\\python.exe -m pytest -q tests/test_main.py tests/test_output_format.py tests/test_plot_benchmark_execution_time.py tests/test_validator.py",
+        "return_code": 2,
+        "passed": false,
+        "output": "=================================== ERRORS ====================================\n________ ERROR collecting tests/test_plot_benchmark_execution_time.py _________\nImportError while importing test module 'D:\\17\\tests\\test_plot_benchmark_execution_time.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\nC:\\Python312\\Lib\\importlib\\__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests\\test_plot_benchmark_execution_time.py:3: in <module>\n    import pandas as pd\nE   ModuleNotFoundError: No module named 'pandas'\n=========================== short test summary info ===========================\nERROR tests/test_plot_benchmark_execution_time.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.26s",
+        "duration_seconds": 1.434,
+        "start_time_utc": "2026-06-06T11:36:46.057019+00:00",
+        "end_time_utc": "2026-06-06T11:36:47.490944+00:00"
       }
     }
   ],
@@ -288,30 +295,49 @@
     "agentic": {
       "runs": 3,
       "pass_rate_percent": 100.0,
-      "avg_duration_seconds": 2.042,
-      "avg_tests_total": 7.0,
-      "avg_tests_failed": 0.0,
-      "avg_defects_detected": 0.0,
+      "total_tests_total": 24,
+      "total_tests_passed": 15,
+      "total_tests_failed": 9,
+      "total_defects_detected": 9,
+      "total_selected_tests": 9,
+      "total_heal_attempts": 6,
+      "avg_duration_seconds": 6.073,
+      "avg_duration_per_test_seconds": 0.759,
+      "avg_pipeline_duration_seconds": 5.889,
+      "avg_tests_total": 8.0,
+      "avg_tests_passed": 5.0,
+      "avg_tests_failed": 3.0,
+      "avg_defects_detected": 3.0,
       "avg_selected_tests": 3.0,
-      "avg_heal_attempts": 0.0,
+      "avg_heal_attempts": 2.0,
       "avg_coverage_percent": 0.0
     },
     "traditional": {
       "runs": 3,
-      "pass_rate_percent": 100.0,
-      "avg_duration_seconds": 0.67,
-      "avg_tests_total": 6.0,
-      "avg_tests_failed": 0.0,
-      "avg_defects_detected": 0.0,
-      "avg_selected_tests": 2.0,
+      "pass_rate_percent": 0.0,
+      "total_tests_total": 3,
+      "total_tests_passed": 0,
+      "total_tests_failed": 3,
+      "total_defects_detected": 3,
+      "total_selected_tests": 12,
+      "total_heal_attempts": 0,
+      "avg_duration_seconds": 1.355,
+      "avg_duration_per_test_seconds": 1.355,
+      "avg_pipeline_duration_seconds": 0.0,
+      "avg_tests_total": 1.0,
+      "avg_tests_passed": 0.0,
+      "avg_tests_failed": 1.0,
+      "avg_defects_detected": 1.0,
+      "avg_selected_tests": 4.0,
       "avg_heal_attempts": 0.0,
       "avg_coverage_percent": 0.0
     },
     "delta_agentic_minus_traditional": {
-      "duration_seconds": 1.372,
+      "duration_seconds": 4.718,
+      "duration_per_test_seconds": -0.596,
       "coverage_percent": 0.0,
-      "defects_detected": 0.0,
-      "selected_tests": 1.0
+      "defects_detected": 2.0,
+      "selected_tests": -1.0
     }
   }
 }

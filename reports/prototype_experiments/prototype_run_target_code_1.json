@@ -1,0 +1,115 @@
+{
+  "source": "target_code.py",
+  "output_test": "tests\\experiments\\generated_tests_target_code_run_1.py",
+  "analysis": {
+    "file": "target_code.py",
+    "line_count": 79,
+    "function_count": 9,
+    "class_count": 0,
+    "imports": [],
+    "functions": [
+      {
+        "name": "add",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 2
+      },
+      {
+        "name": "subtract",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 6
+      },
+      {
+        "name": "multiply",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 10
+      },
+      {
+        "name": "divide",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 14
+      },
+      {
+        "name": "reset_demo_state",
+        "args": [],
+        "has_docstring": false,
+        "line": 21
+      },
+      {
+        "name": "main",
+        "args": [],
+        "has_docstring": false,
+        "line": 25
+      },
+      {
+        "name": "add",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 66
+      },
+      {
+        "name": "get_user_age",
+        "args": [],
+        "has_docstring": false,
+        "line": 70
+      },
+      {
+        "name": "get_first_item",
+        "args": [
+          "my_list"
+        ],
+        "has_docstring": false,
+        "line": 74
+      }
+    ],
+    "classes": []
+  },
+  "generation_explanation": [
+    "Covers 9 function(s) and 0 class(es) discovered in the target module.",
+    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  ],
+  "validation": {
+    "passed": false,
+    "issues": [
+      "Unresolved test references: initialize_store, register_customer"
+    ],
+    "exported_names": [
+      "add",
+      "divide",
+      "get_first_item",
+      "get_user_age",
+      "main",
+      "multiply",
+      "reset_demo_state",
+      "subtract"
+    ]
+  },
+  "run1": {
+    "command": "C:\\Python312\\python.exe -m pytest tests\\experiments\\generated_tests_target_code_run_1.py -q",
+    "return_code": 0,
+    "passed": true,
+    "output": ".                                                                        [100%]\n1 passed in 0.02s",
+    "start_time_utc": "2026-06-06T05:02:17.945947+00:00",
+    "end_time_utc": "2026-06-06T05:02:18.915252+00:00",
+    "duration_seconds": 0.969
+  },
+  "healer_applied": false
+}

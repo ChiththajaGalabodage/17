@@ -1,9 +1,9 @@
 {
-  "timestamp_utc": "2026-05-24T15:08:44.188664+00:00",
+  "timestamp_utc": "2026-06-06T10:57:02.431557+00:00",
   "analysis": {
     "file": "target_code.py",
-    "line_count": 79,
-    "function_count": 9,
+    "line_count": 665,
+    "function_count": 154,
     "class_count": 0,
     "imports": [],
     "functions": [
@@ -77,27 +77,1187 @@
         ],
         "has_docstring": false,
         "line": 74
+      },
+      {
+        "name": "pass_func_001",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 85
+      },
+      {
+        "name": "pass_func_002",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 89
+      },
+      {
+        "name": "pass_func_003",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 93
+      },
+      {
+        "name": "pass_func_004",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 97
+      },
+      {
+        "name": "pass_func_005",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 101
+      },
+      {
+        "name": "pass_func_006",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 105
+      },
+      {
+        "name": "pass_func_007",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 109
+      },
+      {
+        "name": "pass_func_008",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 113
+      },
+      {
+        "name": "pass_func_009",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 117
+      },
+      {
+        "name": "pass_func_010",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 121
+      },
+      {
+        "name": "pass_func_011",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 125
+      },
+      {
+        "name": "pass_func_012",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 129
+      },
+      {
+        "name": "pass_func_013",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 133
+      },
+      {
+        "name": "pass_func_014",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 137
+      },
+      {
+        "name": "pass_func_015",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 141
+      },
+      {
+        "name": "pass_func_016",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 145
+      },
+      {
+        "name": "pass_func_017",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 149
+      },
+      {
+        "name": "pass_func_018",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 153
+      },
+      {
+        "name": "pass_func_019",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 157
+      },
+      {
+        "name": "pass_func_020",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 161
+      },
+      {
+        "name": "pass_func_021",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 165
+      },
+      {
+        "name": "pass_func_022",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 169
+      },
+      {
+        "name": "pass_func_023",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 173
+      },
+      {
+        "name": "pass_func_024",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 177
+      },
+      {
+        "name": "pass_func_025",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 181
+      },
+      {
+        "name": "pass_func_026",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 185
+      },
+      {
+        "name": "pass_func_027",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 189
+      },
+      {
+        "name": "pass_func_028",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 193
+      },
+      {
+        "name": "pass_func_029",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 197
+      },
+      {
+        "name": "pass_func_030",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 201
+      },
+      {
+        "name": "pass_func_031",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 205
+      },
+      {
+        "name": "pass_func_032",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 209
+      },
+      {
+        "name": "pass_func_033",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 213
+      },
+      {
+        "name": "pass_func_034",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 217
+      },
+      {
+        "name": "pass_func_035",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 221
+      },
+      {
+        "name": "pass_func_036",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 225
+      },
+      {
+        "name": "pass_func_037",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 229
+      },
+      {
+        "name": "pass_func_038",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 233
+      },
+      {
+        "name": "pass_func_039",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 237
+      },
+      {
+        "name": "pass_func_040",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 241
+      },
+      {
+        "name": "pass_func_041",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 245
+      },
+      {
+        "name": "pass_func_042",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 249
+      },
+      {
+        "name": "pass_func_043",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 253
+      },
+      {
+        "name": "pass_func_044",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 257
+      },
+      {
+        "name": "pass_func_045",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 261
+      },
+      {
+        "name": "pass_func_046",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 265
+      },
+      {
+        "name": "pass_func_047",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 269
+      },
+      {
+        "name": "pass_func_048",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 273
+      },
+      {
+        "name": "pass_func_049",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 277
+      },
+      {
+        "name": "pass_func_050",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 281
+      },
+      {
+        "name": "pass_func_051",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 285
+      },
+      {
+        "name": "pass_func_052",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 289
+      },
+      {
+        "name": "pass_func_053",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 293
+      },
+      {
+        "name": "pass_func_054",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 297
+      },
+      {
+        "name": "pass_func_055",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 301
+      },
+      {
+        "name": "pass_func_056",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 305
+      },
+      {
+        "name": "pass_func_057",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 309
+      },
+      {
+        "name": "pass_func_058",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 313
+      },
+      {
+        "name": "pass_func_059",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 317
+      },
+      {
+        "name": "pass_func_060",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 321
+      },
+      {
+        "name": "pass_func_061",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 325
+      },
+      {
+        "name": "pass_func_062",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 329
+      },
+      {
+        "name": "pass_func_063",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 333
+      },
+      {
+        "name": "pass_func_064",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 337
+      },
+      {
+        "name": "pass_func_065",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 341
+      },
+      {
+        "name": "pass_func_066",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 345
+      },
+      {
+        "name": "pass_func_067",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 349
+      },
+      {
+        "name": "pass_func_068",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 353
+      },
+      {
+        "name": "pass_func_069",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 357
+      },
+      {
+        "name": "pass_func_070",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 361
+      },
+      {
+        "name": "pass_func_071",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 365
+      },
+      {
+        "name": "pass_func_072",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 369
+      },
+      {
+        "name": "pass_func_073",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 373
+      },
+      {
+        "name": "pass_func_074",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 377
+      },
+      {
+        "name": "pass_func_075",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 381
+      },
+      {
+        "name": "pass_func_076",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 385
+      },
+      {
+        "name": "pass_func_077",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 389
+      },
+      {
+        "name": "pass_func_078",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 393
+      },
+      {
+        "name": "pass_func_079",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 397
+      },
+      {
+        "name": "pass_func_080",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 401
+      },
+      {
+        "name": "pass_func_081",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 405
+      },
+      {
+        "name": "pass_func_082",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 409
+      },
+      {
+        "name": "pass_func_083",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 413
+      },
+      {
+        "name": "pass_func_084",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 417
+      },
+      {
+        "name": "pass_func_085",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 421
+      },
+      {
+        "name": "pass_func_086",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 425
+      },
+      {
+        "name": "pass_func_087",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 429
+      },
+      {
+        "name": "pass_func_088",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 433
+      },
+      {
+        "name": "pass_func_089",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 437
+      },
+      {
+        "name": "pass_func_090",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 441
+      },
+      {
+        "name": "pass_func_091",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 445
+      },
+      {
+        "name": "pass_func_092",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 449
+      },
+      {
+        "name": "pass_func_093",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 453
+      },
+      {
+        "name": "pass_func_094",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 457
+      },
+      {
+        "name": "pass_func_095",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 461
+      },
+      {
+        "name": "pass_func_096",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 465
+      },
+      {
+        "name": "pass_func_097",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 469
+      },
+      {
+        "name": "pass_func_098",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 473
+      },
+      {
+        "name": "pass_func_099",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 477
+      },
+      {
+        "name": "pass_func_100",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 481
+      },
+      {
+        "name": "pass_func_101",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 485
+      },
+      {
+        "name": "pass_func_102",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 489
+      },
+      {
+        "name": "pass_func_103",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 493
+      },
+      {
+        "name": "pass_func_104",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 497
+      },
+      {
+        "name": "pass_func_105",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 501
+      },
+      {
+        "name": "pass_func_106",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 505
+      },
+      {
+        "name": "pass_func_107",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 509
+      },
+      {
+        "name": "pass_func_108",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 513
+      },
+      {
+        "name": "pass_func_109",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 517
+      },
+      {
+        "name": "pass_func_110",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 521
+      },
+      {
+        "name": "fail_func_001",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 525
+      },
+      {
+        "name": "fail_func_002",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 529
+      },
+      {
+        "name": "fail_func_003",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 533
+      },
+      {
+        "name": "fail_func_004",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 537
+      },
+      {
+        "name": "fail_func_005",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 541
+      },
+      {
+        "name": "fail_func_006",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 545
+      },
+      {
+        "name": "fail_func_007",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 549
+      },
+      {
+        "name": "fail_func_008",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 553
+      },
+      {
+        "name": "fail_func_009",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 557
+      },
+      {
+        "name": "fail_func_010",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 561
+      },
+      {
+        "name": "fail_func_011",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 565
+      },
+      {
+        "name": "fail_func_012",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 569
+      },
+      {
+        "name": "fail_func_013",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 573
+      },
+      {
+        "name": "fail_func_014",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 577
+      },
+      {
+        "name": "fail_func_015",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 581
+      },
+      {
+        "name": "fail_func_016",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 585
+      },
+      {
+        "name": "fail_func_017",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 589
+      },
+      {
+        "name": "fail_func_018",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 593
+      },
+      {
+        "name": "fail_func_019",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 597
+      },
+      {
+        "name": "fail_func_020",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 601
+      },
+      {
+        "name": "fail_func_021",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 605
+      },
+      {
+        "name": "fail_func_022",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 609
+      },
+      {
+        "name": "fail_func_023",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 613
+      },
+      {
+        "name": "fail_func_024",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 617
+      },
+      {
+        "name": "fail_func_025",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 621
+      },
+      {
+        "name": "fail_func_026",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 625
+      },
+      {
+        "name": "fail_func_027",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 629
+      },
+      {
+        "name": "fail_func_028",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 633
+      },
+      {
+        "name": "fail_func_029",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 637
+      },
+      {
+        "name": "fail_func_030",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 641
+      },
+      {
+        "name": "fail_func_031",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 645
+      },
+      {
+        "name": "fail_func_032",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 649
+      },
+      {
+        "name": "fail_func_033",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 653
+      },
+      {
+        "name": "fail_func_034",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 657
+      },
+      {
+        "name": "fail_func_035",
+        "args": [
+          "value"
+        ],
+        "has_docstring": false,
+        "line": 661
       }
     ],
     "classes": []
   },
   "test_file": "tests\\test_generated.py",
-  "heal_attempts": 2,
+  "heal_attempts": 0,
   "test_run": {
-    "command": "C:\\Python312\\python.exe -m pytest tests\\test_generated.py -q",
-    "return_code": 1,
-    "passed": false,
-    "output": "...FF..F                                                                 [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 4\n        assert divide(9, 3) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 3\n>       assert divide(5, 0) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) is not None  # healed from strict equality: was is not None  # healed from strict equality: was == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n3 failed, 5 passed in 0.10s",
-    "start_time_utc": "2026-05-24T15:08:43.163754+00:00",
-    "end_time_utc": "2026-05-24T15:08:44.188664+00:00",
-    "duration_seconds": 1.025
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest tests\\test_generated.py -q",
+    "return_code": 0,
+    "passed": true,
+    "output": ".                                                                        [100%]\n1 passed in 0.05s",
+    "start_time_utc": "2026-06-06T10:57:00.849739+00:00",
+    "end_time_utc": "2026-06-06T10:57:02.427782+00:00",
+    "duration_seconds": 1.578
   },
   "pipeline_events": [
     {
       "stage": "pipeline",
       "status": "started",
       "message": "Pipeline run started",
-      "timestamp_utc": "2026-05-24T15:08:41.100491+00:00",
+      "timestamp_utc": "2026-06-06T10:54:06.663525+00:00",
       "details": {
         "source": "target_code.py"
       }
@@ -106,15 +1266,15 @@
       "stage": "analysis",
       "status": "running",
       "message": "Analyzing source code",
-      "timestamp_utc": "2026-05-24T15:08:41.100491+00:00"
+      "timestamp_utc": "2026-06-06T10:54:06.666354+00:00"
     },
     {
       "stage": "analysis",
       "status": "completed",
       "message": "Source analysis completed",
-      "timestamp_utc": "2026-05-24T15:08:41.108560+00:00",
+      "timestamp_utc": "2026-06-06T10:54:06.671034+00:00",
       "details": {
-        "function_count": 9,
+        "function_count": 154,
         "class_count": 0
       }
     },
@@ -122,22 +1282,22 @@
       "stage": "generation",
       "status": "running",
       "message": "Generating tests",
-      "timestamp_utc": "2026-05-24T15:08:41.108560+00:00"
+      "timestamp_utc": "2026-06-06T10:54:06.671034+00:00"
     },
     {
       "stage": "validation",
       "status": "running",
       "message": "Validating generated tests",
-      "timestamp_utc": "2026-05-24T15:08:41.109584+00:00"
+      "timestamp_utc": "2026-06-06T10:55:33.526939+00:00"
     },
     {
       "stage": "validation",
       "status": "failed",
       "message": "Generated tests failed validation",
-      "timestamp_utc": "2026-05-24T15:08:41.112829+00:00",
+      "timestamp_utc": "2026-06-06T10:55:33.577834+00:00",
       "details": {
         "issues": [
-          "Unresolved test references: initialize_store, register_customer"
+          "Unresolved test references: func"
         ]
       }
     },
@@ -145,11 +1305,11 @@
       "stage": "validation",
       "status": "completed",
       "message": "Generated tests validated",
-      "timestamp_utc": "2026-05-24T15:08:41.114934+00:00",
+      "timestamp_utc": "2026-06-06T10:57:00.841652+00:00",
       "details": {
         "passed": false,
         "issues": [
-          "Unresolved test references: initialize_store, register_customer"
+          "Trivial assertion: assert literal boolean"
         ]
       }
     },
@@ -157,17 +1317,17 @@
       "stage": "generation",
       "status": "completed",
       "message": "Test file written",
-      "timestamp_utc": "2026-05-24T15:08:41.117710+00:00",
+      "timestamp_utc": "2026-06-06T10:57:00.849739+00:00",
       "details": {
         "test_file": "tests\\test_generated.py",
-        "explanation_lines": 2
+        "explanation_lines": 0
       }
     },
     {
       "stage": "test_run",
       "status": "running",
       "message": "Executing initial test run",
-      "timestamp_utc": "2026-05-24T15:08:41.117710+00:00",
+      "timestamp_utc": "2026-06-06T10:57:00.849739+00:00",
       "details": {
         "test_file": "tests\\test_generated.py"
       }
@@ -176,66 +1336,26 @@
       "stage": "test_run",
       "status": "completed",
       "message": "Initial test run completed",
-      "timestamp_utc": "2026-05-24T15:08:42.158437+00:00",
+      "timestamp_utc": "2026-06-06T10:57:02.427782+00:00",
       "details": {
-        "passed": false,
-        "return_code": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "running",
-      "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-24T15:08:42.158437+00:00",
-      "details": {
-        "attempt": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "completed",
-      "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-24T15:08:43.161575+00:00",
-      "details": {
-        "attempt": 1,
-        "passed": false,
-        "return_code": 1
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "running",
-      "message": "Self-heal attempt started",
-      "timestamp_utc": "2026-05-24T15:08:43.162091+00:00",
-      "details": {
-        "attempt": 2
-      }
-    },
-    {
-      "stage": "healing",
-      "status": "completed",
-      "message": "Self-heal attempt completed",
-      "timestamp_utc": "2026-05-24T15:08:44.188664+00:00",
-      "details": {
-        "attempt": 2,
-        "passed": false,
-        "return_code": 1
+        "passed": true,
+        "return_code": 0
       }
     },
     {
       "stage": "report",
       "status": "running",
       "message": "Writing report",
-      "timestamp_utc": "2026-05-24T15:08:44.188664+00:00"
+      "timestamp_utc": "2026-06-06T10:57:02.431557+00:00"
     },
     {
       "stage": "pipeline",
-      "status": "failed",
-      "message": "Pipeline finished: FAILED",
-      "timestamp_utc": "2026-05-24T15:08:44.188664+00:00",
+      "status": "passed",
+      "message": "Pipeline finished: PASSED",
+      "timestamp_utc": "2026-06-06T10:57:02.431557+00:00",
       "details": {
-        "original_test_passed": false,
-        "original_return_code": 1
+        "original_test_passed": true,
+        "original_return_code": 0
       }
     }
   ],
@@ -247,36 +1367,21 @@
       "tests/test_generated.py"
     ]
   },
-  "heal_history": [
-    {
-      "attempt": 1,
-      "test_output": "F..FF..F                                                                 [100%]\n================================== FAILURES ===================================\n___________________ test_add_returns_the_sum_of_two_numbers ___________________\n\n    def test_add_returns_the_sum_of_two_numbers():\n>       assert add(1, 2) == 3\nE       assert -1 == 3\nE        +  where -1 = add(1, 2)\n\ntests\\test_generated.py:33: AssertionError\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) == 4\n        assert divide(9, 3) == 3\n>       assert divide(5, 0) == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_add_returns_the_sum_of_two_numbers - ass...\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n4 failed, 4 passed in 0.12s",
-      "result": "retry"
-    },
-    {
-      "attempt": 2,
-      "test_output": "...FF..F                                                                 [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) is not None  # healed from strict equality: was == 4\n        assert divide(9, 3) is not None  # healed from strict equality: was == 3\n>       assert divide(5, 0) is not None  # healed from strict equality: was == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\ntests\\test_generated.py:19: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n_____________________ test_reset_demo_state_clears_state ______________________\n\n    def test_reset_demo_state_clears_state():\n>       initialize_store()\n        ^^^^^^^^^^^^^^^^\nE       NameError: name 'initialize_store' is not defined\n\ntests\\test_generated.py:22: NameError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) is not None  # healed from strict equality: was == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_generated.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED tests/test_generated.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED tests/test_generated.py::test_reset_demo_state_clears_state - NameErro...\nFAILED tests/test_generated.py::test_get_first_item_returns_the_first_list_item\n3 failed, 5 passed in 0.11s",
-      "result": "retry"
-    }
-  ],
-  "generation_explanation": [
-    "Covers 9 function(s) and 0 class(es) discovered in the target module.",
-    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
-  ],
+  "heal_history": [],
+  "generation_explanation": [],
   "metrics": {
-    "functions": 9,
+    "functions": 154,
     "classes": 0,
-    "passed": false,
+    "passed": true,
     "durations_seconds": {
-      "analysis": 0.008,
-      "generation": 0.009,
-      "validation": 0.005,
-      "test_run": 1.041,
-      "healing": 1.027
+      "analysis": 0.005,
+      "generation": 174.179,
+      "validation": 87.315,
+      "test_run": 1.578
     },
-    "pipeline_total_seconds": 3.088
+    "pipeline_total_seconds": 175.768
   },
-  "pipeline_duration_seconds": 3.088,
-  "pipeline_start_utc": "2026-05-24T15:08:41.100491+00:00",
-  "pipeline_end_utc": "2026-05-24T15:08:44.188664+00:00"
+  "pipeline_duration_seconds": 175.768,
+  "pipeline_start_utc": "2026-06-06T10:54:06.663525+00:00",
+  "pipeline_end_utc": "2026-06-06T10:57:02.431557+00:00"
 }

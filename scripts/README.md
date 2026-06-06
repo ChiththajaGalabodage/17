@@ -8,7 +8,25 @@ python scripts/plot_benchmark_execution_time.py reports/comparison_report.csv --
 
 If you pass multiple CSV files, the script aggregates `duration_seconds` by `strategy` and `run` before plotting.
 
-pyth# AI Test Generator
+## Prototype Experimental Harness
+
+Run the LLM-backed prototype across one or more sources and collect reproducible experiment artifacts:
+
+```bash
+python scripts/run_prototype_experiments.py --sources target_code.py --runs 3
+```
+
+Outputs:
+
+- `reports/prototype_experiments_summary.json`
+- `reports/prototype_experiments_summary.csv`
+- `reports/prototype_experiments_summary.md`
+- Per-run generated tests under `tests/experiments/`
+- Per-run prototype reports under `reports/prototype_experiments/`
+
+The runner loads a local `.env` file automatically if present, so you can set `GEMINI_API_KEY` without exporting it in the shell.
+
+# AI Test Generator
 
 A modular agentic testing framework for CI/CD that combines three autonomous agents:
 

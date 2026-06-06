@@ -1,0 +1,11 @@
+flowchart LR
+  A[Source Code / PR Diff] --> B[Analyzer]
+  B --> C[LLM Test Generator]
+  C --> D[Normalizer]
+  D --> E[Validator]
+  E --> F[Pytest Runner]
+  F --> G{Passed?}
+  G -- Yes --> H[Report Writer]
+  G -- No --> I[Healer]
+  I --> D
+  H --> J[Experiment Summaries]

@@ -6,6 +6,13 @@ from pathlib import Path
 from typing import Any
 
 
+def _find_repo_root(path: Path) -> Path:
+    for candidate in [path, *path.parents]:
+        if (candidate / "main.py").exists() and (candidate / "src").is_dir():
+            return candidate
+    return path.parent
+
+
 def run_pytest_targets(test_targets: list[str]) -> dict[str, Any]:
     """Execute pytest for one or more test targets and return metadata."""
     if not test_targets:
@@ -29,7 +36,7 @@ def run_pytest_targets(test_targets: list[str]) -> dict[str, Any]:
         command,
         text=True,
         capture_output=True,
-        cwd=str(Path(normalized_targets[0]).parent.parent),
+        cwd=str(_find_repo_root(Path(normalized_targets[0]).resolve())),
     )
 
     end_ts = time.time()

@@ -1,0 +1,7 @@
+strategy,run,pass_rate,defects_detected,coverage,test_generation_time,test_execution_time,test_selection_accuracy,validation_accuracy,false_positive_rate,maintenance_effort,cost_per_run
+agentic,1,100.0,0,20.83,32.028,91.314,60.0,100.0,0.0,1,0.1091
+agentic,2,100.0,0,20.83,20.84,45.509,60.0,100.0,0.0,1,0.0628
+agentic,3,100.0,0,20.83,39.897,84.995,60.0,100.0,0.0,1,0.1026
+traditional,1,96.72,4,37.5,0.0,6.736,100.0,100.0,0.0,1,0.0067
+traditional,2,96.72,4,37.5,0.0,6.703,100.0,100.0,0.0,1,0.0067
+traditional,3,96.72,4,37.5,0.0,6.573,100.0,100.0,0.0,1,0.0066

@@ -1,0 +1,22 @@
+flowchart TB
+  subgraph Baseline CI
+    B1[Commit / PR] --> B2[Run Existing Tests]
+    B2 --> B3{Pass?}
+    B3 -- Yes --> B4[Merge]
+    B3 -- No --> B5[Manual Debugging]
+    B5 --> B2
+  end
+
+  subgraph LLM-Enhanced CI
+    L1[Commit / PR] --> L2[Analyze Source and Diff]
+    L2 --> L3[Generate or Heal Tests]
+    L3 --> L4[Validate and Normalize]
+    L4 --> L5[Run Selected Tests]
+    L5 --> L6{Pass?}
+    L6 -- Yes --> L7[Merge or Publish Report]
+    L6 -- No --> L8[Deterministic Fallback / Human Review]
+    L8 --> L4
+  end
+
+  Baseline CI --- C[Manual triage vs constrained model assistance]
+  LLM-Enhanced CI --- C
