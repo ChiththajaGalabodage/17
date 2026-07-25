@@ -1,0 +1,19 @@
+{
+  "branch_coverage_percent": 75.0,
+  "coverage_schema_version": "7.14.1",
+  "covered_branches": 3,
+  "covered_lines": 17,
+  "duration_seconds": 1.313,
+  "line_coverage_percent": 94.44,
+  "missing_branches": 1,
+  "missing_lines": 1,
+  "num_branches": 4,
+  "num_statements": 18,
+  "source": "benchmarks/calculator_subject.py",
+  "test_return_code": 0,
+  "test_targets": [
+    "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+  ],
+  "tests_passed": true,
+  "valid": true
+}

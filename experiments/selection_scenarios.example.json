@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "selector-harness-smoke-test",
+      "role": "demo",
+      "tests_dir": "tests",
+      "changed_files": [
+        "src/healer.py"
+      ],
+      "changed_symbols": [
+        "heal_test_bundle",
+        "classify_failure"
+      ],
+      "relevant_tests": [
+        "tests/test_healer.py"
+      ],
+      "oracle_source": "Manually reviewed framework smoke-test mapping; not thesis evidence"
+    }
+  ]
+}

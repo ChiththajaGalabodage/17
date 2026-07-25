@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "subjects": [
+    {
+      "id": "calculator-harness-smoke-test",
+      "role": "demo",
+      "source": "benchmarks/calculator_subject.py",
+      "manual_tests": [
+        "benchmarks/tests/test_calculator_manual.py"
+      ],
+      "minimum_target_coverage": 80.0
+    }
+  ]
+}

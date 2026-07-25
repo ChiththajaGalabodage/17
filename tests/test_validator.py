@@ -7,7 +7,7 @@ from src.validator import validate_generated_test_code
 def test_validate_generated_test_code_accepts_exported_calls() -> None:
     source_path = Path("target_code.py")
     result = validate_generated_test_code(
-        "import pytest\nfrom target_code import *\n\ndef test_smoke():\n    reset_demo_state()\n",
+        "import pytest\nfrom target_code import *\n\ndef test_subtract():\n    assert subtract(7, 2) == 5\n",
         source_path,
         analyze_code(str(source_path)),
     )
@@ -38,3 +38,49 @@ def test_validate_generated_test_code_flags_trivial_assertions() -> None:
 
     assert result["passed"] is False
     assert any("Trivial assertion" in issue for issue in result["issues"])
+
+
+def test_validate_generated_test_code_rejects_non_none_oracle() -> None:
+    source_path = Path("target_code.py")
+    result = validate_generated_test_code(
+        "import pytest\nfrom target_code import *\n\ndef test_weak():\n    result = subtract(7, 2)\n    assert result is not None\n",
+        source_path,
+        analyze_code(str(source_path)),
+    )
+
+    assert result["passed"] is False
+    assert any("Weak assertion" in issue for issue in result["issues"])
+
+
+def test_validate_generated_test_code_rejects_duplicate_test_names() -> None:
+    source_path = Path("target_code.py")
+    result = validate_generated_test_code(
+        "import pytest\n"
+        "from target_code import *\n\n"
+        "def test_operation():\n"
+        "    assert subtract(7, 2) == 5\n\n"
+        "def test_operation():\n"
+        "    assert multiply(3, 4) == 12\n",
+        source_path,
+        analyze_code(str(source_path)),
+    )
+
+    assert result["passed"] is False
+    assert any("Duplicate test names: test_operation" in issue for issue in result["issues"])
+
+
+def test_validate_generated_test_code_rejects_dangerous_operations() -> None:
+    source_path = Path("target_code.py")
+    result = validate_generated_test_code(
+        "import subprocess\n"
+        "from target_code import *\n\n"
+        "def test_dangerous():\n"
+        "    subprocess.Popen(['echo', 'unsafe'])\n"
+        "    assert subtract(7, 2) == 5\n",
+        source_path,
+        analyze_code(str(source_path)),
+    )
+
+    assert result["passed"] is False
+    assert any("Unsafe import" in issue for issue in result["issues"])
+    assert any("Unsafe call" in issue for issue in result["issues"])

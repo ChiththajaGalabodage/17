@@ -1,4 +1,4 @@
-name: AI Test Generator Pipeline
+name: LLM Continuous Testing Framework
 
 on:
   push:
@@ -7,12 +7,14 @@ on:
     branches: ["main", "master"]
 
 jobs:
-  run-pipeline:
+  verify-framework:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout full history
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,30 +24,48 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-lock.txt
 
-      - name: Run AI test generation pipeline
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python main.py --source target_code.py --max-heal-attempts 2 --predictive-test-selection
+      - name: Run framework regression tests
+        run: >-
+          python -m pytest -q tests benchmarks/tests
+          --ignore=tests/test_research_suite.py
+          --ignore=tests/test_generated.py
+          --ignore=tests/generated_tests.py
+          --ignore=tests/experiments
 
-      - name: Validate generated tests
-        run: |
-          python scripts/validate_generated_tests.py
+      - name: Run clean benchmark pipeline
+        run: >-
+          python main.py
+          --source benchmarks/calculator_subject.py
+          --test-output reports/ci/benchmark_generated.py
+          --report-output reports/ci/benchmark_pipeline.json
+          --minimum-target-coverage 80
+          --stability-runs 2
+          --offline
 
-      - name: Run agentic vs traditional comparison
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python scripts/compare_methods.py --source target_code.py --runs 1
+      - name: Run mutation-ground-truth harness smoke test
+        run: >-
+          python scripts/run_research_experiment.py
+          --offline
+          --runs 1
+          --stability-runs 2
+          --mutation-limit 5
+          --run-id ci-smoke
 
-      - name: Upload generated artifacts
+      - name: Run selection-metric harness smoke test
+        run: >-
+          python scripts/evaluate_test_selection.py
+          --offline
+          --runs 1
+          --run-id ci-smoke
+
+      - name: Upload evidence artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ai-test-generator-artifacts
+          name: continuous-testing-evidence
           path: |
-            tests/test_generated.py
-            reports/report.json
-            reports/comparison_report.json
-            reports/comparison_report.csv
-            reports/comparison_report.md
+            reports/ci/
+            reports/research_runs/ci-smoke/
+            reports/selection_runs/ci-smoke/

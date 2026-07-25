@@ -13,6 +13,11 @@ def build_report(
     predictive_selection: dict[str, Any] | None = None,
     heal_history: list[dict[str, Any]] | None = None,
     generation_explanation: list[str] | None = None,
+    validation: dict[str, Any] | None = None,
+    stability: dict[str, Any] | None = None,
+    generation_provenance: dict[str, Any] | None = None,
+    final_test_targets: list[str] | None = None,
+    repair_audit: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a JSON-serializable pipeline report."""
     events = pipeline_events or []
@@ -33,13 +38,23 @@ def build_report(
         by_stage.setdefault(stage, []).append(ev)
 
     for stage, evs in by_stage.items():
-        # find earliest 'running' timestamp and latest 'completed' timestamp
+        # Find the earliest running timestamp and latest terminal timestamp.
         start_ts = None
         end_ts = None
         for e in evs:
             if e.get("status") == "running":
-                start_ts = _parse_iso(e.get("timestamp_utc")) or start_ts
-            if e.get("status") in ("completed", "finished", "passed", "failed"):
+                start_ts_candidate = _parse_iso(e.get("timestamp_utc"))
+                if start_ts_candidate and (
+                    start_ts is None or start_ts_candidate < start_ts
+                ):
+                    start_ts = start_ts_candidate
+            if e.get("status") in (
+                "completed",
+                "finished",
+                "passed",
+                "failed",
+                "skipped",
+            ):
                 end_ts_candidate = _parse_iso(e.get("timestamp_utc"))
                 if end_ts_candidate:
                     if end_ts is None or end_ts_candidate > end_ts:
@@ -69,11 +84,27 @@ def build_report(
             "selected_tests": [],
         },
         "heal_history": heal_history or [],
+        "repair_audit": repair_audit or {
+            "generation_repair_attempts": 0,
+            "generation_repair_acceptances": 0,
+            "runtime_repair_opportunities": 0,
+            "runtime_repair_attempts": heal_attempts,
+            "runtime_repair_acceptances": 0,
+            "runtime_repair_rejections": 0,
+            "protected_runtime_failures": 0,
+        },
         "generation_explanation": generation_explanation or [],
+        "generation_provenance": generation_provenance or {},
+        "validation": validation or {},
+        "stability": stability or {},
+        "final_test_targets": final_test_targets or [test_file],
         "metrics": {
             "functions": analysis.get("function_count", 0),
             "classes": analysis.get("class_count", 0),
             "passed": bool(test_run.get("passed", False)),
+            "validation_passed": bool((validation or {}).get("passed", False)),
+            "flaky": bool((stability or {}).get("flaky", False)),
+            "tests": test_run.get("summary", {}),
             "durations_seconds": durations,
         },
     }

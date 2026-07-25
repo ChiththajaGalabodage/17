@@ -1,5 +1,7 @@
 ﻿from __future__ import annotations
 
+"""Legacy diagnostic only; use run_research_experiment.py for thesis evidence."""
+
 import argparse
 import csv
 import json
@@ -502,6 +504,8 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
     lines = [
         "# Final Comparison Report",
         "",
+        "> **Legacy diagnostic only:** failed pytest cases are not unique defects. Do not cite this report as thesis evidence; use `run_research_experiment.py`.",
+        "",
         f"Generated: {payload.get('generated_at_utc', '')}",
         "",
         "## Benchmark Totals",
@@ -601,6 +605,10 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
 
 def main() -> int:
     args = parse_args()
+    print(
+        "WARNING: legacy proxy metrics only; use scripts/run_research_experiment.py for thesis evidence.",
+        file=sys.stderr,
+    )
     repo_root = Path(__file__).resolve().parent.parent
     report_output = repo_root / args.report_output
     report_output.parent.mkdir(parents=True, exist_ok=True)
@@ -624,6 +632,8 @@ def main() -> int:
         results.append(run_traditional_iteration(repo_root, args, run_index, traditional_targets))
 
     payload = {
+        "research_evidence_valid": False,
+        "research_evidence_warning": "Legacy proxy metrics; pytest failures are not unique defects.",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": args.source,
         "runs_per_strategy": args.runs,

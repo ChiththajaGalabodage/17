@@ -1,0 +1,19 @@
+{
+  "branch_coverage_percent": 100.0,
+  "coverage_schema_version": "7.14.1",
+  "covered_branches": 4,
+  "covered_lines": 18,
+  "duration_seconds": 1.297,
+  "line_coverage_percent": 100.0,
+  "missing_branches": 0,
+  "missing_lines": 0,
+  "num_branches": 4,
+  "num_statements": 18,
+  "source": "benchmarks/calculator_subject.py",
+  "test_return_code": 0,
+  "test_targets": [
+    "benchmarks/tests/test_calculator_manual.py"
+  ],
+  "tests_passed": true,
+  "valid": true
+}

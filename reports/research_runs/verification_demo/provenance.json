@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-07-22T13:30:11.066857+00:00",
+  "dependencies": {
+    "coverage": "7.14.1",
+    "google-genai": "2.7.0",
+    "matplotlib": "3.10.9",
+    "pandas": "3.0.3",
+    "pytest": "9.0.3"
+  },
+  "git_commit": "9d5904beaabaeb097726898070bfe3035fc946ee",
+  "git_dirty": true,
+  "git_status_sha256": "c17dbe58db9ebd3dfef4853aba6c82ca404c4cc4eed70f2176f8459178601144",
+  "model": "gemini-2.5-flash",
+  "offline_requested": true,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+  "python_executable": "D:\\17\\.venv\\Scripts\\python.exe",
+  "python_version": "3.12.3"
+}

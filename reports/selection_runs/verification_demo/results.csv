@@ -1,0 +1,4 @@
+scenario_id,role,strategy,run,backend,fallback,selected_count,universe_count,precision,recall,f1,test_reduction
+selector-harness-smoke-test,demo,change-impact,1,deterministic,False,1,11,1.0,1.0,1.0,0.9091
+selector-harness-smoke-test,demo,llm-hybrid,1,deterministic,False,1,11,1.0,1.0,1.0,0.9091
+selector-harness-smoke-test,demo,llm-hybrid,2,deterministic,False,1,11,1.0,1.0,1.0,0.9091

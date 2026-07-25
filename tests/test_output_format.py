@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from src.generator import GeminiTestGenerator
 from src.output_format import normalize_test_code, parse_generation_bundle
 
@@ -14,8 +16,8 @@ def test_build_prompt_contains_strict_quality_rules() -> None:
     assert "You are a senior Python test engineer." in prompt
     assert 'DO NOT use "assert result is not None"' in prompt
     assert "Every test must validate real expected outputs" in prompt
-    assert "at least 1 normal case" in prompt
-    assert "at least 1 failure case (use pytest.raises)" in prompt
+    assert "normal, edge, and documented failure case" in prompt
+    assert "must not access network, credentials, shell commands" in prompt
 
 
 def test_parse_generation_bundle_extracts_code_and_explanation() -> None:
@@ -41,6 +43,19 @@ def test_normalize_test_code_rebuilds_import_block() -> None:
 
     assert normalized.startswith("import pytest\nfrom target_code import *\n\n")
     assert "def test_example():" in normalized
+
+
+def test_normalize_test_code_does_not_turn_invalid_syntax_into_smoke_test() -> None:
+    normalized = normalize_test_code(
+        "def test_broken(:\n    assert subtract(7, 2) == 5\n",
+        Path("target_code.py"),
+    )
+
+    assert "def test_broken(:" in normalized
+    assert "def test_smoke():" not in normalized
+    assert "assert True" not in normalized
+    with pytest.raises(SyntaxError):
+        compile(normalized, "<generated>", "exec")
 
 
 def test_fallback_generation_includes_explanation() -> None:
@@ -74,7 +89,7 @@ def test_fallback_generation_includes_explanation() -> None:
     )
 
     assert "assert result is not None" not in bundle["test_code"]
-    assert "pytest.raises" in bundle["test_code"]
-    assert "assert order['status'] == 'confirmed'" in bundle["test_code"]
-    assert "def test_process_refund_behaves_consistently():" in bundle["test_code"]
-    assert bundle["explanation"]
+    assert "assert order['status'] == 'confirmed'" not in bundle["test_code"]
+    assert "def test_process_refund_requires_llm_semantic_oracle():" in bundle["test_code"]
+    assert "pytest.skip('No deterministic semantic oracle is available for process_refund')" in bundle["test_code"]
+    assert any("not LLM evidence" in line for line in bundle["explanation"])

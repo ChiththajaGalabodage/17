@@ -9,8 +9,24 @@ from scripts.plot_benchmark_execution_time import (
 )
 
 
-def test_summarize_execution_time_groups_by_strategy_and_run() -> None:
-    frame = load_benchmark_csvs([Path("reports/comparison_report.csv")])
+def test_summarize_execution_time_groups_by_strategy_and_run(tmp_path: Path) -> None:
+    benchmark_path = tmp_path / "comparison_report.csv"
+    pd.DataFrame(
+        {
+            "run": [1, 1, 2, 2, 3, 3],
+            "strategy": [
+                "agentic",
+                "traditional",
+                "agentic",
+                "traditional",
+                "agentic",
+                "traditional",
+            ],
+            "duration_seconds": [2.575, 0.698, 1.85, 0.634, 1.7, 0.679],
+        }
+    ).to_csv(benchmark_path, index=False)
+
+    frame = load_benchmark_csvs([benchmark_path])
     summary = summarize_execution_time(frame)
 
     assert list(summary["run"]) == [1, 1, 2, 2, 3, 3]

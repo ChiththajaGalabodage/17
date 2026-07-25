@@ -1,0 +1,255 @@
+{
+  "config": {
+    "minimum_study_scenarios": 30,
+    "model": "gemini-2.5-flash",
+    "offline": true,
+    "runs": 2
+  },
+  "experiment_id": "verification_demo",
+  "generated_at_utc": "2026-07-22T13:35:20.070161+00:00",
+  "provenance": {
+    "captured_at_utc": "2026-07-22T13:35:20.128973+00:00",
+    "git_commit": "9d5904beaabaeb097726898070bfe3035fc946ee",
+    "model": "gemini-2.5-flash",
+    "offline_requested": true,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.12.3",
+    "scenario_manifest_sha256": "45d7a083163cde85599d7241bf59ffb55c275d986225e9be5be160626df72538"
+  },
+  "scenarios": [
+    {
+      "baseline": {
+        "evidence": {
+          "backend": "deterministic",
+          "changed_files": [
+            "src/healer.py"
+          ],
+          "fallback": false,
+          "fallback_reason": null,
+          "model": null,
+          "reasons": {
+            "tests/test_healer.py": [
+              "deterministic:imports-changed-module:healer",
+              "deterministic:imports-changed-module:src.healer",
+              "deterministic:references-changed-symbol:classify_failure",
+              "deterministic:references-changed-symbol:heal_test_bundle"
+            ]
+          },
+          "selected": [
+            "tests/test_healer.py"
+          ],
+          "selection_ratio": 0.0909,
+          "universe": [
+            "tests/test_generated.py",
+            "tests/test_healer.py",
+            "tests/test_main.py",
+            "tests/test_mutation_testing.py",
+            "tests/test_output_format.py",
+            "tests/test_plot_benchmark_execution_time.py",
+            "tests/test_research_metrics.py",
+            "tests/test_research_suite.py",
+            "tests/test_runner.py",
+            "tests/test_test_select_agent.py",
+            "tests/test_validator.py"
+          ]
+        },
+        "metrics": {
+          "f1": 1.0,
+          "false_negative": 0,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "relevant_count": 1,
+          "selected_count": 1,
+          "selected_fraction": 0.0909,
+          "test_reduction": 0.9091,
+          "true_negative": 10,
+          "true_positive": 1,
+          "universe_count": 11
+        }
+      },
+      "proposed_runs": [
+        {
+          "evidence": {
+            "backend": "deterministic",
+            "changed_files": [
+              "src/healer.py"
+            ],
+            "fallback": false,
+            "fallback_reason": null,
+            "model": null,
+            "reasons": {
+              "tests/test_healer.py": [
+                "deterministic:imports-changed-module:healer",
+                "deterministic:imports-changed-module:src.healer",
+                "deterministic:references-changed-symbol:classify_failure",
+                "deterministic:references-changed-symbol:heal_test_bundle"
+              ]
+            },
+            "selected": [
+              "tests/test_healer.py"
+            ],
+            "selection_ratio": 0.0909,
+            "universe": [
+              "tests/test_generated.py",
+              "tests/test_healer.py",
+              "tests/test_main.py",
+              "tests/test_mutation_testing.py",
+              "tests/test_output_format.py",
+              "tests/test_plot_benchmark_execution_time.py",
+              "tests/test_research_metrics.py",
+              "tests/test_research_suite.py",
+              "tests/test_runner.py",
+              "tests/test_test_select_agent.py",
+              "tests/test_validator.py"
+            ]
+          },
+          "metrics": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "relevant_count": 1,
+            "selected_count": 1,
+            "selected_fraction": 0.0909,
+            "test_reduction": 0.9091,
+            "true_negative": 10,
+            "true_positive": 1,
+            "universe_count": 11
+          },
+          "run": 1
+        },
+        {
+          "evidence": {
+            "backend": "deterministic",
+            "changed_files": [
+              "src/healer.py"
+            ],
+            "fallback": false,
+            "fallback_reason": null,
+            "model": null,
+            "reasons": {
+              "tests/test_healer.py": [
+                "deterministic:imports-changed-module:healer",
+                "deterministic:imports-changed-module:src.healer",
+                "deterministic:references-changed-symbol:classify_failure",
+                "deterministic:references-changed-symbol:heal_test_bundle"
+              ]
+            },
+            "selected": [
+              "tests/test_healer.py"
+            ],
+            "selection_ratio": 0.0909,
+            "universe": [
+              "tests/test_generated.py",
+              "tests/test_healer.py",
+              "tests/test_main.py",
+              "tests/test_mutation_testing.py",
+              "tests/test_output_format.py",
+              "tests/test_plot_benchmark_execution_time.py",
+              "tests/test_research_metrics.py",
+              "tests/test_research_suite.py",
+              "tests/test_runner.py",
+              "tests/test_test_select_agent.py",
+              "tests/test_validator.py"
+            ]
+          },
+          "metrics": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "relevant_count": 1,
+            "selected_count": 1,
+            "selected_fraction": 0.0909,
+            "test_reduction": 0.9091,
+            "true_negative": 10,
+            "true_positive": 1,
+            "universe_count": 11
+          },
+          "run": 2
+        }
+      ],
+      "scenario": {
+        "changed_files": [
+          "src/healer.py"
+        ],
+        "oracle_source": "Manually reviewed framework smoke-test mapping; not thesis evidence",
+        "relevant_tests": [
+          "tests/test_healer.py"
+        ],
+        "role": "demo",
+        "scenario_id": "selector-harness-smoke-test",
+        "tests_dir": "tests"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "summary": {
+    "claim_readiness": {
+      "note": "Readiness does not imply the LLM-assisted selector is superior.",
+      "ready": false,
+      "reasons": [
+        "Only 0 study scenario(s); at least 30 are required by this protocol.",
+        "The manifest contains only demo scenarios."
+      ]
+    },
+    "fallback_study_runs": 0,
+    "non_llm_study_runs": 0,
+    "paired_proposed_vs_change_impact": {},
+    "proposed_backend_counts": {},
+    "proposed_metric_summaries": {
+      "f1": {
+        "bootstrap_mean_ci95": [
+          null,
+          null
+        ],
+        "maximum": null,
+        "mean": null,
+        "median": null,
+        "minimum": null,
+        "n": 0,
+        "standard_deviation": null
+      },
+      "precision": {
+        "bootstrap_mean_ci95": [
+          null,
+          null
+        ],
+        "maximum": null,
+        "mean": null,
+        "median": null,
+        "minimum": null,
+        "n": 0,
+        "standard_deviation": null
+      },
+      "recall": {
+        "bootstrap_mean_ci95": [
+          null,
+          null
+        ],
+        "maximum": null,
+        "mean": null,
+        "median": null,
+        "minimum": null,
+        "n": 0,
+        "standard_deviation": null
+      },
+      "test_reduction": {
+        "bootstrap_mean_ci95": [
+          null,
+          null
+        ],
+        "maximum": null,
+        "mean": null,
+        "median": null,
+        "minimum": null,
+        "n": 0,
+        "standard_deviation": null
+      }
+    },
+    "study_scenarios": 0
+  }
+}

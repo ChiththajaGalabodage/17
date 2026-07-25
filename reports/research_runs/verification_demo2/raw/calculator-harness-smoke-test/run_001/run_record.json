@@ -1,0 +1,315 @@
+{
+  "coverage": {
+    "branch_coverage_percent": 75.0,
+    "coverage_schema_version": "7.14.1",
+    "covered_branches": 3,
+    "covered_lines": 17,
+    "duration_seconds": 1.313,
+    "line_coverage_percent": 94.44,
+    "missing_branches": 1,
+    "missing_lines": 1,
+    "num_branches": 4,
+    "num_statements": 18,
+    "source": "benchmarks/calculator_subject.py",
+    "test_return_code": 0,
+    "test_targets": [
+      "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+    ],
+    "tests_passed": true,
+    "valid": true
+  },
+  "coverage_report": "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/coverage.json",
+  "exit_status_consistent": true,
+  "expected_semantic_exit": 0,
+  "fault_detection": {
+    "fault_recall": 1.0,
+    "killable_fault_count": 3,
+    "killed_fault_count": 3,
+    "killed_fault_ids": [
+      "AOR-0001-L0010-C011-78b11987",
+      "AOR-0002-L0014-C011-8f1d1be0",
+      "AOR-0003-L0018-C011-fe8e88a9"
+    ],
+    "missed_fault_count": 0,
+    "missed_fault_ids": [],
+    "missed_fault_rate": 0.0
+  },
+  "generated_test": "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py",
+  "generation_provenance": {
+    "api_calls": 0,
+    "api_usage_records": [],
+    "backend": "deterministic-fallback",
+    "duration_seconds": 0.0,
+    "fallback_reason": "GEMINI_API_KEY or google-genai client unavailable",
+    "generated_test_sha256": "2ae67d3fd1ce36b4806213de1f32235b7abb20f546e1856bb264ed28d90a018d",
+    "model": null,
+    "prompt_sha256": "fe443b628bbf1c897ca9b5256d1ec169126ad1c562ac5b64e6f39f94a305ab24",
+    "seed": 4885,
+    "source_sha256": "3d2fa745118a261b8e1effb4fe45ebdb29b3492a8b0a125cd5b990a9655589f7",
+    "temperature": 0.2,
+    "total_api_calls_including_healing": 0
+  },
+  "mutation": {
+    "baseline": {
+      "command": [
+        "D:\\17\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+      ],
+      "duration_seconds": 0.547,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": ".......                                                                  [100%]\n7 passed in 0.05s\n",
+      "timed_out": false
+    },
+    "generated_at_utc": "2026-07-22T13:46:42.061397+00:00",
+    "invalid_mutant_ids": [],
+    "killed_mutant_ids": [
+      "AOR-0001-L0010-C011-78b11987",
+      "AOR-0002-L0014-C011-8f1d1be0",
+      "AOR-0003-L0018-C011-fe8e88a9"
+    ],
+    "mutants": [
+      {
+        "category": "arithmetic",
+        "col_offset": 11,
+        "invalid_reason": null,
+        "lineno": 10,
+        "mutant_id": "AOR-0001-L0010-C011-78b11987",
+        "node_type": "BinOp",
+        "original_operator": "+",
+        "replacement_operator": "-",
+        "source_excerpt": "left + right",
+        "source_sha256": "40ebea41f0cd4fb70c67d8e6bca5b14fb8d55658e38c9636b025895ce645e28c",
+        "status": "killed",
+        "test_run": {
+          "command": [
+            "D:\\17\\.venv\\Scripts\\python.exe",
+            "-m",
+            "pytest",
+            "-q",
+            "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+          ],
+          "duration_seconds": 0.609,
+          "return_code": 1,
+          "stderr": "",
+          "stdout": "F......                                                                  [100%]\n================================== FAILURES ===================================\n___________________ test_add_returns_the_sum_of_two_numbers ___________________\n\n    def test_add_returns_the_sum_of_two_numbers():\n>       assert add(1, 2) == 3\nE       assert -1 == 3\nE        +  where -1 = add(1, 2)\n\nreports\\research_runs\\verification_demo2\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py:6: AssertionError\n=========================== short test summary info ===========================\nFAILED reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py::test_add_returns_the_sum_of_two_numbers\n1 failed, 6 passed in 0.10s\n",
+          "timed_out": false
+        }
+      },
+      {
+        "category": "arithmetic",
+        "col_offset": 11,
+        "invalid_reason": null,
+        "lineno": 14,
+        "mutant_id": "AOR-0002-L0014-C011-8f1d1be0",
+        "node_type": "BinOp",
+        "original_operator": "-",
+        "replacement_operator": "+",
+        "source_excerpt": "left - right",
+        "source_sha256": "739d5bd5da919cfe671cc77a937f7b63020a1a0ff24ad59a55db2bfd4a88d9d5",
+        "status": "killed",
+        "test_run": {
+          "command": [
+            "D:\\17\\.venv\\Scripts\\python.exe",
+            "-m",
+            "pytest",
+            "-q",
+            "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+          ],
+          "duration_seconds": 0.579,
+          "return_code": 1,
+          "stderr": "",
+          "stdout": ".F.....                                                                  [100%]\n================================== FAILURES ===================================\n_____________ test_subtract_returns_the_difference_of_two_numbers _____________\n\n    def test_subtract_returns_the_difference_of_two_numbers():\n>       assert subtract(7, 2) == 5\nE       assert 9 == 5\nE        +  where 9 = subtract(7, 2)\n\nreports\\research_runs\\verification_demo2\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py:9: AssertionError\n=========================== short test summary info ===========================\nFAILED reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py::test_subtract_returns_the_difference_of_two_numbers\n1 failed, 6 passed in 0.10s\n",
+          "timed_out": false
+        }
+      },
+      {
+        "category": "arithmetic",
+        "col_offset": 11,
+        "invalid_reason": null,
+        "lineno": 18,
+        "mutant_id": "AOR-0003-L0018-C011-fe8e88a9",
+        "node_type": "BinOp",
+        "original_operator": "*",
+        "replacement_operator": "//",
+        "source_excerpt": "left * right",
+        "source_sha256": "cb3f8c1118aacf7c4dbe83fb3ff29a7d4f1910e4d70dc64fb4900103953442d8",
+        "status": "killed",
+        "test_run": {
+          "command": [
+            "D:\\17\\.venv\\Scripts\\python.exe",
+            "-m",
+            "pytest",
+            "-q",
+            "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+          ],
+          "duration_seconds": 0.579,
+          "return_code": 1,
+          "stderr": "",
+          "stdout": "..F....                                                                  [100%]\n================================== FAILURES ===================================\n______________ test_multiply_returns_the_product_of_two_numbers _______________\n\n    def test_multiply_returns_the_product_of_two_numbers():\n>       assert multiply(3, 4) == 12\nE       assert 0 == 12\nE        +  where 0 = multiply(3, 4)\n\nreports\\research_runs\\verification_demo2\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py:12: AssertionError\n=========================== short test summary info ===========================\nFAILED reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py::test_multiply_returns_the_product_of_two_numbers\n1 failed, 6 passed in 0.09s\n",
+          "timed_out": false
+        }
+      }
+    ],
+    "mutation_score": 100.0,
+    "original_source_sha256": "3d2fa745118a261b8e1effb4fe45ebdb29b3492a8b0a125cd5b990a9655589f7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.12.3",
+    "score_denominator": 3,
+    "score_excludes_invalid_and_timed_out": true,
+    "source_path": "benchmarks/calculator_subject.py",
+    "survived_mutant_ids": [],
+    "test_targets": [
+      "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+    ],
+    "timed_out_mutant_ids": [],
+    "timeout_seconds": 15.0,
+    "valid_mutant_ids": [
+      "AOR-0001-L0010-C011-78b11987",
+      "AOR-0002-L0014-C011-8f1d1be0",
+      "AOR-0003-L0018-C011-fe8e88a9"
+    ]
+  },
+  "mutation_report": "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/mutation.json",
+  "pipeline_duration_seconds": 2.102,
+  "pipeline_report": "reports/research_runs/verification_demo2/raw/calculator-harness-smoke-test/run_001/pipeline.json",
+  "pipeline_report_present": true,
+  "process": {
+    "duration_seconds": 3.878,
+    "return_code": 0,
+    "timed_out": false
+  },
+  "run": 1,
+  "semantic_status": "PASSED",
+  "stability": {
+    "all_passed": true,
+    "consistent": true,
+    "durations_seconds": [
+      0.71,
+      0.681
+    ],
+    "flaky": false,
+    "runs": 2,
+    "signatures": [
+      {
+        "error_count": 0,
+        "failed_count": 0,
+        "failing_node_ids": [],
+        "passed": true,
+        "passed_count": 7,
+        "return_code": 0
+      },
+      {
+        "error_count": 0,
+        "failed_count": 0,
+        "failing_node_ids": [],
+        "passed": true,
+        "passed_count": 7,
+        "return_code": 0
+      }
+    ],
+    "unique_outcome_count": 1
+  },
+  "status": "valid",
+  "test_execution_seconds": 0.7,
+  "validation": {
+    "exported_names": [
+      "add",
+      "divide",
+      "get_first_item",
+      "get_user_age",
+      "multiply",
+      "reset_demo_state",
+      "subtract"
+    ],
+    "history": [
+      {
+        "phase": "initial",
+        "result": {
+          "exported_names": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "issues": [],
+          "metrics": {
+            "assertion_count": 15,
+            "covered_public_targets": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "exception_assertion_count": 0,
+            "public_target_count": 7,
+            "quality_signature": [
+              15,
+              7,
+              7
+            ],
+            "target_calls": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "target_function_coverage_percent": 100.0,
+            "test_function_count": 7,
+            "tests_without_assertions": [],
+            "uncovered_public_targets": []
+          },
+          "passed": true,
+          "warnings": []
+        }
+      }
+    ],
+    "issues": [],
+    "metrics": {
+      "assertion_count": 15,
+      "covered_public_targets": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "exception_assertion_count": 0,
+      "public_target_count": 7,
+      "quality_signature": [
+        15,
+        7,
+        7
+      ],
+      "target_calls": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "target_function_coverage_percent": 100.0,
+      "test_function_count": 7,
+      "tests_without_assertions": [],
+      "uncovered_public_targets": []
+    },
+    "passed": true,
+    "warnings": []
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "timestamp_utc": "2026-07-22T13:30:20.870862+00:00",
+  "analysis": {
+    "file": "benchmarks\\calculator_subject.py",
+    "line_count": 38,
+    "function_count": 7,
+    "class_count": 0,
+    "imports": [],
+    "functions": [
+      {
+        "name": "add",
+        "args": [
+          "left",
+          "right"
+        ],
+        "has_docstring": false,
+        "line": 9
+      },
+      {
+        "name": "subtract",
+        "args": [
+          "left",
+          "right"
+        ],
+        "has_docstring": false,
+        "line": 13
+      },
+      {
+        "name": "multiply",
+        "args": [
+          "left",
+          "right"
+        ],
+        "has_docstring": false,
+        "line": 17
+      },
+      {
+        "name": "divide",
+        "args": [
+          "left",
+          "right"
+        ],
+        "has_docstring": false,
+        "line": 21
+      },
+      {
+        "name": "reset_demo_state",
+        "args": [],
+        "has_docstring": false,
+        "line": 27
+      },
+      {
+        "name": "get_user_age",
+        "args": [],
+        "has_docstring": false,
+        "line": 31
+      },
+      {
+        "name": "get_first_item",
+        "args": [
+          "values"
+        ],
+        "has_docstring": false,
+        "line": 35
+      }
+    ],
+    "classes": [],
+    "shadowed_definitions": []
+  },
+  "test_file": "reports\\research_runs\\verification_demo\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py",
+  "heal_attempts": 0,
+  "test_run": {
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest reports\\research_runs\\verification_demo\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py -q",
+    "return_code": 0,
+    "passed": true,
+    "output": ".......                                                                  [100%]\n7 passed in 0.03s",
+    "start_time_utc": "2026-07-22T13:30:18.694729+00:00",
+    "end_time_utc": "2026-07-22T13:30:19.446174+00:00",
+    "duration_seconds": 0.751,
+    "timed_out": false,
+    "summary": {
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "xpassed": 0,
+      "total": 7,
+      "failing_node_ids": []
+    }
+  },
+  "pipeline_events": [
+    {
+      "stage": "pipeline",
+      "status": "started",
+      "message": "Pipeline run started",
+      "timestamp_utc": "2026-07-22T13:30:18.689702+00:00",
+      "details": {
+        "source": "benchmarks/calculator_subject.py"
+      }
+    },
+    {
+      "stage": "analysis",
+      "status": "running",
+      "message": "Analyzing source code",
+      "timestamp_utc": "2026-07-22T13:30:18.689702+00:00"
+    },
+    {
+      "stage": "analysis",
+      "status": "completed",
+      "message": "Source analysis completed",
+      "timestamp_utc": "2026-07-22T13:30:18.689702+00:00",
+      "details": {
+        "function_count": 7,
+        "class_count": 0
+      }
+    },
+    {
+      "stage": "generation",
+      "status": "running",
+      "message": "Generating tests",
+      "timestamp_utc": "2026-07-22T13:30:18.689702+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "running",
+      "message": "Validating generated tests",
+      "timestamp_utc": "2026-07-22T13:30:18.691714+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "completed",
+      "message": "Generated-test validation finished",
+      "timestamp_utc": "2026-07-22T13:30:18.694729+00:00",
+      "details": {
+        "passed": true,
+        "issues": [],
+        "warnings": [],
+        "metrics": {
+          "test_function_count": 7,
+          "assertion_count": 15,
+          "exception_assertion_count": 0,
+          "tests_without_assertions": [],
+          "target_calls": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "public_target_count": 7,
+          "covered_public_targets": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "uncovered_public_targets": [],
+          "target_function_coverage_percent": 100.0,
+          "quality_signature": [
+            15,
+            7,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "stage": "generation",
+      "status": "completed",
+      "message": "Test file written",
+      "timestamp_utc": "2026-07-22T13:30:18.694729+00:00",
+      "details": {
+        "test_file": "reports\\research_runs\\verification_demo\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py",
+        "explanation_lines": 2
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "running",
+      "message": "Executing generated tests",
+      "timestamp_utc": "2026-07-22T13:30:18.694729+00:00",
+      "details": {
+        "test_file": "reports\\research_runs\\verification_demo\\raw\\calculator-harness-smoke-test\\run_001\\generated_tests.py"
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "completed",
+      "message": "Generated-test execution completed",
+      "timestamp_utc": "2026-07-22T13:30:19.446836+00:00",
+      "details": {
+        "passed": true,
+        "return_code": 0
+      }
+    },
+    {
+      "stage": "report",
+      "status": "running",
+      "message": "Writing report",
+      "timestamp_utc": "2026-07-22T13:30:20.870862+00:00"
+    },
+    {
+      "stage": "pipeline",
+      "status": "passed",
+      "message": "Pipeline finished: PASSED",
+      "timestamp_utc": "2026-07-22T13:30:20.870862+00:00",
+      "details": {
+        "semantic_test_passed": true,
+        "validation_passed": true,
+        "stability_consistent": true,
+        "final_return_code": 0
+      }
+    }
+  ],
+  "predictive_selection": {
+    "enabled": false,
+    "mode": "hybrid",
+    "base_ref": "HEAD~1",
+    "changed_files": [],
+    "selected_tests": [
+      "reports/research_runs/verification_demo/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+    ],
+    "backend": "disabled",
+    "fallback_reason": null
+  },
+  "heal_history": [],
+  "generation_explanation": [
+    "Covers 7 function(s) and 0 class(es) discovered in the target module.",
+    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  ],
+  "generation_provenance": {
+    "backend": "deterministic-fallback",
+    "model": null,
+    "api_calls": 0,
+    "fallback_reason": "GEMINI_API_KEY or google-genai client unavailable",
+    "prompt_sha256": "aff58c35b1012afb0f8f168070a297d9682ccefd2514a853e0e1c96808346d7f",
+    "source_sha256": "3d2fa745118a261b8e1effb4fe45ebdb29b3492a8b0a125cd5b990a9655589f7",
+    "duration_seconds": 0.0,
+    "generated_test_sha256": "2ae67d3fd1ce36b4806213de1f32235b7abb20f546e1856bb264ed28d90a018d"
+  },
+  "validation": {
+    "passed": true,
+    "issues": [],
+    "warnings": [],
+    "exported_names": [
+      "add",
+      "divide",
+      "get_first_item",
+      "get_user_age",
+      "multiply",
+      "reset_demo_state",
+      "subtract"
+    ],
+    "metrics": {
+      "test_function_count": 7,
+      "assertion_count": 15,
+      "exception_assertion_count": 0,
+      "tests_without_assertions": [],
+      "target_calls": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "public_target_count": 7,
+      "covered_public_targets": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "uncovered_public_targets": [],
+      "target_function_coverage_percent": 100.0,
+      "quality_signature": [
+        15,
+        7,
+        7
+      ]
+    },
+    "history": [
+      {
+        "phase": "initial",
+        "result": {
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "exported_names": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "metrics": {
+            "test_function_count": 7,
+            "assertion_count": 15,
+            "exception_assertion_count": 0,
+            "tests_without_assertions": [],
+            "target_calls": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "public_target_count": 7,
+            "covered_public_targets": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "uncovered_public_targets": [],
+            "target_function_coverage_percent": 100.0,
+            "quality_signature": [
+              15,
+              7,
+              7
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "stability": {
+    "runs": 2,
+    "consistent": true,
+    "flaky": false,
+    "unique_outcome_count": 1,
+    "signatures": [
+      {
+        "return_code": 0,
+        "passed": true,
+        "passed_count": 7,
+        "failed_count": 0,
+        "error_count": 0,
+        "failing_node_ids": []
+      },
+      {
+        "return_code": 0,
+        "passed": true,
+        "passed_count": 7,
+        "failed_count": 0,
+        "error_count": 0,
+        "failing_node_ids": []
+      }
+    ],
+    "durations_seconds": [
+      0.722,
+      0.702
+    ]
+  },
+  "final_test_targets": [
+    "reports/research_runs/verification_demo/raw/calculator-harness-smoke-test/run_001/generated_tests.py"
+  ],
+  "metrics": {
+    "functions": 7,
+    "classes": 0,
+    "passed": true,
+    "validation_passed": true,
+    "flaky": false,
+    "tests": {
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "xpassed": 0,
+      "total": 7,
+      "failing_node_ids": []
+    },
+    "durations_seconds": {
+      "analysis": 0.0,
+      "generation": 0.005,
+      "validation": 0.003,
+      "test_run": 0.752
+    },
+    "pipeline_total_seconds": 2.181
+  },
+  "semantic_status": "PASSED",
+  "pipeline_duration_seconds": 2.181,
+  "pipeline_start_utc": "2026-07-22T13:30:18.689702+00:00",
+  "pipeline_end_utc": "2026-07-22T13:30:20.870862+00:00"
+}

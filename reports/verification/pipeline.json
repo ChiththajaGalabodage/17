@@ -1,0 +1,464 @@
+{
+  "timestamp_utc": "2026-07-22T13:44:17.555628+00:00",
+  "analysis": {
+    "file": "target_code.py",
+    "line_count": 79,
+    "function_count": 8,
+    "class_count": 0,
+    "imports": [],
+    "functions": [
+      {
+        "name": "subtract",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 6
+      },
+      {
+        "name": "multiply",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 10
+      },
+      {
+        "name": "divide",
+        "args": [
+          "x",
+          "y"
+        ],
+        "has_docstring": false,
+        "line": 14
+      },
+      {
+        "name": "reset_demo_state",
+        "args": [],
+        "has_docstring": false,
+        "line": 21
+      },
+      {
+        "name": "main",
+        "args": [],
+        "has_docstring": false,
+        "line": 25
+      },
+      {
+        "name": "add",
+        "args": [
+          "a",
+          "b"
+        ],
+        "has_docstring": false,
+        "line": 66
+      },
+      {
+        "name": "get_user_age",
+        "args": [],
+        "has_docstring": false,
+        "line": 70
+      },
+      {
+        "name": "get_first_item",
+        "args": [
+          "my_list"
+        ],
+        "has_docstring": false,
+        "line": 74
+      }
+    ],
+    "classes": [],
+    "shadowed_definitions": [
+      {
+        "name": "add",
+        "shadowed_line": 2,
+        "effective_line": 66
+      }
+    ]
+  },
+  "test_file": "reports\\verification\\generated_tests.py",
+  "heal_attempts": 0,
+  "test_run": {
+    "command": "D:\\17\\.venv\\Scripts\\python.exe -m pytest reports/verification/generated_tests.py -q",
+    "return_code": 1,
+    "passed": false,
+    "output": "..F.FFF                                                                  [100%]\n================================== FAILURES ===================================\n_________ test_divide_returns_the_quotient_and_handles_zero_division __________\n\n    def test_divide_returns_the_quotient_and_handles_zero_division():\n        assert divide(8, 2) == 4\n        assert divide(9, 3) == 3\n>       assert divide(5, 0) == \"Error: Cannot divide by zero!\"\n               ^^^^^^^^^^^^\n\nreports\\verification\\generated_tests.py:14: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nx = 5, y = 0\n\n    def divide(x, y):\n        # Handle division by zero to prevent crashes\n        if y == 0:\n>           return x / y\n                   ^^^^^\nE           ZeroDivisionError: division by zero\n\ntarget_code.py:17: ZeroDivisionError\n___________________ test_add_returns_the_sum_of_two_numbers ___________________\n\n    def test_add_returns_the_sum_of_two_numbers():\n>       assert add(1, 2) == 3\nE       assert -1 == 3\nE        +  where -1 = add(1, 2)\n\nreports\\verification\\generated_tests.py:19: AssertionError\n________________ test_get_user_age_returns_a_realistic_integer ________________\n\n    def test_get_user_age_returns_a_realistic_integer():\n        result = get_user_age()\n>       assert isinstance(result, int)\nE       AssertionError: assert False\nE        +  where False = isinstance('twenty-five', int)\n\nreports\\verification\\generated_tests.py:23: AssertionError\n_______________ test_get_first_item_returns_the_first_list_item _______________\n\n    def test_get_first_item_returns_the_first_list_item():\n>       assert get_first_item([10, 20, 30]) == 10\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nreports\\verification\\generated_tests.py:26: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nmy_list = [10, 20, 30]\n\n    def get_first_item(my_list):\n        # Index 10 doesn't exist in a small list! This will crash.\n>       return my_list[10]\n               ^^^^^^^^^^^\nE       IndexError: list index out of range\n\ntarget_code.py:76: IndexError\n=========================== short test summary info ===========================\nFAILED reports/verification/generated_tests.py::test_divide_returns_the_quotient_and_handles_zero_division\nFAILED reports/verification/generated_tests.py::test_add_returns_the_sum_of_two_numbers\nFAILED reports/verification/generated_tests.py::test_get_user_age_returns_a_realistic_integer\nFAILED reports/verification/generated_tests.py::test_get_first_item_returns_the_first_list_item\n4 failed, 3 passed in 0.12s",
+    "start_time_utc": "2026-07-22T13:44:15.045475+00:00",
+    "end_time_utc": "2026-07-22T13:44:15.887926+00:00",
+    "duration_seconds": 0.842,
+    "timed_out": false,
+    "isolated": true,
+    "isolation_copy_seconds": 0.199,
+    "summary": {
+      "passed": 3,
+      "failed": 4,
+      "errors": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "xpassed": 0,
+      "total": 7,
+      "failing_node_ids": [
+        "reports/verification/generated_tests.py::test_add_returns_the_sum_of_two_numbers",
+        "reports/verification/generated_tests.py::test_divide_returns_the_quotient_and_handles_zero_division",
+        "reports/verification/generated_tests.py::test_get_first_item_returns_the_first_list_item",
+        "reports/verification/generated_tests.py::test_get_user_age_returns_a_realistic_integer"
+      ]
+    }
+  },
+  "pipeline_events": [
+    {
+      "stage": "pipeline",
+      "status": "started",
+      "message": "Pipeline run started",
+      "timestamp_utc": "2026-07-22T13:44:15.036402+00:00",
+      "details": {
+        "source": "target_code.py"
+      }
+    },
+    {
+      "stage": "analysis",
+      "status": "running",
+      "message": "Analyzing source code",
+      "timestamp_utc": "2026-07-22T13:44:15.036402+00:00"
+    },
+    {
+      "stage": "analysis",
+      "status": "completed",
+      "message": "Source analysis completed",
+      "timestamp_utc": "2026-07-22T13:44:15.036402+00:00",
+      "details": {
+        "function_count": 8,
+        "class_count": 0
+      }
+    },
+    {
+      "stage": "generation",
+      "status": "running",
+      "message": "Generating tests",
+      "timestamp_utc": "2026-07-22T13:44:15.036402+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "running",
+      "message": "Validating generated tests",
+      "timestamp_utc": "2026-07-22T13:44:15.045475+00:00"
+    },
+    {
+      "stage": "validation",
+      "status": "completed",
+      "message": "Generated-test validation finished",
+      "timestamp_utc": "2026-07-22T13:44:15.045475+00:00",
+      "details": {
+        "passed": true,
+        "issues": [],
+        "warnings": [],
+        "metrics": {
+          "test_function_count": 7,
+          "assertion_count": 15,
+          "exception_assertion_count": 0,
+          "tests_without_assertions": [],
+          "target_calls": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "public_target_count": 7,
+          "covered_public_targets": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "uncovered_public_targets": [],
+          "target_function_coverage_percent": 100.0,
+          "quality_signature": [
+            15,
+            7,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "stage": "generation",
+      "status": "completed",
+      "message": "Test file written",
+      "timestamp_utc": "2026-07-22T13:44:15.045475+00:00",
+      "details": {
+        "test_file": "reports\\verification\\generated_tests.py",
+        "explanation_lines": 2
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "running",
+      "message": "Executing generated tests",
+      "timestamp_utc": "2026-07-22T13:44:15.045475+00:00",
+      "details": {
+        "test_file": "reports\\verification\\generated_tests.py"
+      }
+    },
+    {
+      "stage": "test_run",
+      "status": "completed",
+      "message": "Generated-test execution completed",
+      "timestamp_utc": "2026-07-22T13:44:15.887926+00:00",
+      "details": {
+        "passed": false,
+        "return_code": 1
+      }
+    },
+    {
+      "stage": "healing",
+      "status": "skipped",
+      "message": "Failure preserved as possible product-defect evidence",
+      "timestamp_utc": "2026-07-22T13:44:15.887926+00:00",
+      "details": {
+        "classification": {
+          "category": "possible-product-defect",
+          "safe_to_heal": false,
+          "markers": [
+            "AssertionError",
+            "IndexError",
+            "ZeroDivisionError",
+            "assert "
+          ],
+          "reason": "Behavioural failures must remain visible to preserve defect-detection evidence."
+        }
+      }
+    },
+    {
+      "stage": "report",
+      "status": "running",
+      "message": "Writing report",
+      "timestamp_utc": "2026-07-22T13:44:17.555628+00:00"
+    },
+    {
+      "stage": "pipeline",
+      "status": "failed",
+      "message": "Pipeline finished: FAILED",
+      "timestamp_utc": "2026-07-22T13:44:17.555628+00:00",
+      "details": {
+        "semantic_test_passed": false,
+        "validation_passed": true,
+        "stability_consistent": true,
+        "stability_all_passed": false,
+        "final_return_code": 1
+      }
+    }
+  ],
+  "predictive_selection": {
+    "enabled": false,
+    "mode": "hybrid",
+    "base_ref": "HEAD~1",
+    "changed_files": [],
+    "selected_tests": [
+      "reports/verification/generated_tests.py"
+    ],
+    "backend": "disabled",
+    "fallback_reason": null
+  },
+  "heal_history": [],
+  "generation_explanation": [
+    "Covers 8 function(s) and 0 class(es) discovered in the target module.",
+    "Uses simple call-or-assert patterns so the tests stay executable and easy to heal."
+  ],
+  "generation_provenance": {
+    "backend": "deterministic-fallback",
+    "model": null,
+    "api_calls": 0,
+    "fallback_reason": "GEMINI_API_KEY or google-genai client unavailable",
+    "prompt_sha256": "87344d1e49d70652689bed5f6c8f7d7fe6c3207a4a87dd896b99216fb1c04cf5",
+    "source_sha256": "57afc9eb43e34a2f631bf014d023dbb75d305258476dc58aa67eaa8084504a78",
+    "duration_seconds": 0.0,
+    "temperature": 0.2,
+    "seed": 4885,
+    "api_usage_records": [],
+    "total_api_calls_including_healing": 0,
+    "generated_test_sha256": "11400a88097cf00373dc063144d989efff9cf12c73730c771bdd1dd1e6a22309"
+  },
+  "validation": {
+    "passed": true,
+    "issues": [],
+    "warnings": [],
+    "exported_names": [
+      "add",
+      "divide",
+      "get_first_item",
+      "get_user_age",
+      "main",
+      "multiply",
+      "reset_demo_state",
+      "subtract"
+    ],
+    "metrics": {
+      "test_function_count": 7,
+      "assertion_count": 15,
+      "exception_assertion_count": 0,
+      "tests_without_assertions": [],
+      "target_calls": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "public_target_count": 7,
+      "covered_public_targets": [
+        "add",
+        "divide",
+        "get_first_item",
+        "get_user_age",
+        "multiply",
+        "reset_demo_state",
+        "subtract"
+      ],
+      "uncovered_public_targets": [],
+      "target_function_coverage_percent": 100.0,
+      "quality_signature": [
+        15,
+        7,
+        7
+      ]
+    },
+    "history": [
+      {
+        "phase": "initial",
+        "result": {
+          "passed": true,
+          "issues": [],
+          "warnings": [],
+          "exported_names": [
+            "add",
+            "divide",
+            "get_first_item",
+            "get_user_age",
+            "main",
+            "multiply",
+            "reset_demo_state",
+            "subtract"
+          ],
+          "metrics": {
+            "test_function_count": 7,
+            "assertion_count": 15,
+            "exception_assertion_count": 0,
+            "tests_without_assertions": [],
+            "target_calls": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "public_target_count": 7,
+            "covered_public_targets": [
+              "add",
+              "divide",
+              "get_first_item",
+              "get_user_age",
+              "multiply",
+              "reset_demo_state",
+              "subtract"
+            ],
+            "uncovered_public_targets": [],
+            "target_function_coverage_percent": 100.0,
+            "quality_signature": [
+              15,
+              7,
+              7
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "stability": {
+    "runs": 2,
+    "consistent": true,
+    "flaky": false,
+    "all_passed": false,
+    "unique_outcome_count": 1,
+    "signatures": [
+      {
+        "return_code": 1,
+        "passed": false,
+        "passed_count": 3,
+        "failed_count": 4,
+        "error_count": 0,
+        "failing_node_ids": [
+          "reports/verification/generated_tests.py::test_add_returns_the_sum_of_two_numbers",
+          "reports/verification/generated_tests.py::test_divide_returns_the_quotient_and_handles_zero_division",
+          "reports/verification/generated_tests.py::test_get_first_item_returns_the_first_list_item",
+          "reports/verification/generated_tests.py::test_get_user_age_returns_a_realistic_integer"
+        ]
+      },
+      {
+        "return_code": 1,
+        "passed": false,
+        "passed_count": 3,
+        "failed_count": 4,
+        "error_count": 0,
+        "failing_node_ids": [
+          "reports/verification/generated_tests.py::test_add_returns_the_sum_of_two_numbers",
+          "reports/verification/generated_tests.py::test_divide_returns_the_quotient_and_handles_zero_division",
+          "reports/verification/generated_tests.py::test_get_first_item_returns_the_first_list_item",
+          "reports/verification/generated_tests.py::test_get_user_age_returns_a_realistic_integer"
+        ]
+      }
+    ],
+    "durations_seconds": [
+      0.844,
+      0.811
+    ]
+  },
+  "final_test_targets": [
+    "reports/verification/generated_tests.py"
+  ],
+  "metrics": {
+    "functions": 8,
+    "classes": 0,
+    "passed": false,
+    "validation_passed": true,
+    "flaky": false,
+    "tests": {
+      "passed": 3,
+      "failed": 4,
+      "errors": 0,
+      "skipped": 0,
+      "xfailed": 0,
+      "xpassed": 0,
+      "total": 7,
+      "failing_node_ids": [
+        "reports/verification/generated_tests.py::test_add_returns_the_sum_of_two_numbers",
+        "reports/verification/generated_tests.py::test_divide_returns_the_quotient_and_handles_zero_division",
+        "reports/verification/generated_tests.py::test_get_first_item_returns_the_first_list_item",
+        "reports/verification/generated_tests.py::test_get_user_age_returns_a_realistic_integer"
+      ]
+    },
+    "durations_seconds": {
+      "analysis": 0.0,
+      "generation": 0.009,
+      "validation": 0.0,
+      "test_run": 0.842
+    },
+    "pipeline_total_seconds": 2.519
+  },
+  "semantic_status": "FAILED",
+  "pipeline_duration_seconds": 2.519,
+  "pipeline_start_utc": "2026-07-22T13:44:15.036402+00:00",
+  "pipeline_end_utc": "2026-07-22T13:44:17.555628+00:00"
+}

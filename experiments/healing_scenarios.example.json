@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "missing-pytest-import-demo",
+      "project_id": "calculator-healing-harness",
+      "role": "demo",
+      "artifact_type": "missing-import",
+      "source": "benchmarks/healing_cases/subject.py",
+      "broken_test": "benchmarks/healing_cases/missing_pytest_broken_case.py",
+      "reference_test": "benchmarks/healing_cases/missing_pytest_reference_case.py",
+      "expected_safe_to_heal": true,
+      "mutation_limit": 3
+    },
+    {
+      "id": "product-assertion-failure-demo",
+      "project_id": "calculator-healing-harness",
+      "role": "demo",
+      "artifact_type": "protected-behavioural-failure",
+      "source": "benchmarks/healing_cases/subject.py",
+      "broken_test": "benchmarks/healing_cases/product_failure_broken_case.py",
+      "reference_test": "benchmarks/healing_cases/product_failure_reference_case.py",
+      "expected_safe_to_heal": false,
+      "mutation_limit": 3
+    }
+  ]
+}

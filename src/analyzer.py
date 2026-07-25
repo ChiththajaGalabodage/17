@@ -25,20 +25,31 @@ def analyze_code(file_path: str) -> dict[str, Any]:
     source = path.read_text(encoding="utf-8")
     tree = ast.parse(source)
 
-    functions: list[FunctionInfo] = []
+    functions_by_name: dict[str, FunctionInfo] = {}
     classes: list[ClassInfo] = []
     imports: list[str] = []
+    shadowed_definitions: list[dict[str, Any]] = []
 
-    for node in ast.walk(tree):
-        if isinstance(node, ast.FunctionDef):
+    # Only top-level definitions form the importable module surface.  Using
+    # ast.walk here previously misreported methods and nested helpers as bare
+    # module functions, which led the generator to create invalid calls.
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             args = [arg.arg for arg in node.args.args]
-            functions.append(
-                FunctionInfo(
-                    name=node.name,
-                    args=args,
-                    has_docstring=bool(ast.get_docstring(node)),
-                    line=node.lineno,
+            if node.name in functions_by_name:
+                previous = functions_by_name[node.name]
+                shadowed_definitions.append(
+                    {
+                        "name": node.name,
+                        "shadowed_line": previous.line,
+                        "effective_line": node.lineno,
+                    }
                 )
+            functions_by_name[node.name] = FunctionInfo(
+                name=node.name,
+                args=args,
+                has_docstring=bool(ast.get_docstring(node)),
+                line=node.lineno,
             )
         elif isinstance(node, ast.ClassDef):
             method_names = [
@@ -55,13 +66,16 @@ def analyze_code(file_path: str) -> dict[str, Any]:
             module = node.module or ""
             imports.append(module)
 
+    functions = sorted(functions_by_name.values(), key=lambda item: item.line)
+
     analysis: dict[str, Any] = {
         "file": str(path),
         "line_count": len(source.splitlines()),
         "function_count": len(functions),
         "class_count": len(classes),
         "imports": sorted(set(imports)),
-        "functions": [asdict(item) for item in sorted(functions, key=lambda x: x.line)],
+        "functions": [asdict(item) for item in functions],
         "classes": [asdict(item) for item in sorted(classes, key=lambda x: x.line)],
+        "shadowed_definitions": shadowed_definitions,
     }
     return analysis

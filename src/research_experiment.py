@@ -1,566 +1,1034 @@
-"""Research experiment pipeline for comparing agentic and traditional testing.
+"""Evidence-preserving research experiment orchestration.
 
-The pipeline keeps the execution logic deterministic and transparent while
-leveraging the existing Gemini-backed agentic runner in the repository.
+The runner evaluates generated tests and a manually authored reference suite
+against the same clean source and the same deterministic mutant IDs.  It never
+uses failed pytest cases as a proxy for unique defects, never hardcodes result
+totals, and keeps every raw run in a unique directory.
 """
+
 from __future__ import annotations
 
 import csv
+import hashlib
+import importlib.metadata
 import json
-import logging
-import math
 import os
+import platform
 import subprocess
 import sys
-from dataclasses import dataclass, asdict
+from collections import Counter
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 from typing import Any
 
-from src.analyzer import analyze_code
-from src.test_select_agent import TestSelectAgent
-import scripts.compare_methods as compare_methods
+from src.mutation_testing import BaselineFailure, MutationReport, evaluate_mutations
+from src.coverage_evaluation import evaluate_coverage
+from src.research_metrics import (
+    descriptive_statistics,
+    fault_detection_metrics,
+    paired_comparison,
+)
+from src.runner import run_stability
 
-logger = logging.getLogger(__name__)
+
+@dataclass(frozen=True, slots=True)
+class SubjectConfig:
+    """One clean project subject and its manually authored oracle suite."""
+
+    subject_id: str
+    source: str
+    manual_tests: tuple[str, ...]
+    role: str = "study"
+    minimum_target_coverage: float = 50.0
+    project_id: str | None = None
+    revision: str | None = None
+    source_sha256: str | None = None
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "SubjectConfig":
+        tests = payload.get("manual_tests", [])
+        if not isinstance(tests, list) or not tests:
+            raise ValueError("Each subject requires a non-empty manual_tests list")
+        return cls(
+            subject_id=str(payload["id"]),
+            source=str(payload["source"]),
+            manual_tests=tuple(str(item) for item in tests),
+            role=str(payload.get("role", "study")),
+            minimum_target_coverage=float(payload.get("minimum_target_coverage", 50.0)),
+            project_id=(str(payload["project_id"]) if payload.get("project_id") else None),
+            revision=(str(payload["revision"]) if payload.get("revision") else None),
+            source_sha256=(
+                str(payload["source_sha256"]).lower()
+                if payload.get("source_sha256")
+                else None
+            ),
+        )
 
 
 @dataclass(slots=True)
 class ExperimentConfig:
-    """Configuration for a research comparison run."""
+    """Immutable-input settings for a complete experiment run."""
 
     repo_root: Path
-    source: str = "target_code.py"
+    subjects: tuple[SubjectConfig, ...]
     runs: int = 3
-    base_ref: str = "HEAD~1"
     model: str = "gemini-2.5-flash"
+    temperature: float = 0.2
+    base_seed: int = 4885
+    offline: bool = False
+    stability_runs: int = 3
+    mutation_limit: int = 20
+    mutation_timeout_seconds: float = 30.0
+    pipeline_timeout_seconds: float = 300.0
     max_heal_attempts: int = 2
-    output_dir: Path = Path("reports")
-    charts_dir: Path = Path("reports/charts")
-    results_csv: Path = Path("reports/results.csv")
-    comparison_csv: Path = Path("reports/comparison_matrix.csv")
-    summary_json: Path = Path("reports/summary.json")
-    research_report_md: Path = Path("reports/research_report.md")
-    gemini_call_cost_usd: float = 0.01
-    execution_cost_per_second_usd: float = 0.001
+    output_root: Path = Path("reports/research_runs")
+    run_id: str | None = None
+    minimum_study_subjects: int = 3
+    minimum_study_projects: int = 3
+    minimum_killable_faults: int = 30
+    minimum_generation_runs: int = 3
+    minimum_stability_runs: int = 3
+    equivalent_mutant_protocol: Path | None = None
+    allow_uncontained_llm_tests: bool = False
 
-
-@dataclass(slots=True)
-class RunRecord:
-    """Single strategy/run row used for CSV and analysis."""
-
-    strategy: str
-    run: int
-    pass_rate: float
-    defects_detected: int
-    coverage: float
-    test_generation_time: float
-    test_execution_time: float
-    test_selection_accuracy: float
-    validation_accuracy: float
-    false_positive_rate: float
-    maintenance_effort: int
-    cost_per_run: float
-    tests_total: int
-    tests_passed: int
-    tests_failed: int
-    selected_tests: int
-    heal_attempts: int
-    gemini_api_calls: int
-    generation_explanation_count: int
-    pipeline_duration_seconds: float
-    report_path: str
-
-
-class MetricsCollector:
-    """Convert raw execution payloads into normalized experiment metrics."""
-
-    def __init__(self, config: ExperimentConfig) -> None:
-        self.config = config
-
-    def from_agentic(self, run: int, payload: dict[str, Any], total_available_tests: int) -> RunRecord:
-        execution = payload.get("execution", {})
-        report_path = str(payload.get("report_path", ""))
-        test_run_output = str(execution.get("output", ""))
-        validation_accuracy = 100.0 if "Generated tests failed validation:" not in test_run_output else 0.0
-        false_positive_rate = 100.0 - validation_accuracy
-        gemini_api_calls = 1 + int(payload.get("heal_attempts", 0) or 0)
-        generation_time = self._duration_from_report(report_path, "generation", fallback=0.0)
-        selection_time = self._duration_from_report(report_path, "selection", fallback=0.0)
-        validation_time = self._duration_from_report(report_path, "validation", fallback=0.0)
-        test_execution_time = float(payload.get("duration_seconds", 0.0))
-        pipeline_duration = float(payload.get("pipeline_duration_seconds", test_execution_time))
-        coverage = self._coverage_percent(payload.get("coverage"))
-        tests_total = int(payload.get("tests_total", 0) or 0)
-        tests_passed = int(payload.get("tests_passed", 0) or 0)
-        tests_failed = int(payload.get("tests_failed", 0) or 0)
-        pass_rate = round((tests_passed / tests_total * 100.0) if tests_total else 0.0, 2)
-        defects_detected = int(payload.get("defects_detected", 0) or 0)
-        selected_tests = int(payload.get("selected_tests_count", 0) or 0)
-        selection_accuracy = round((selected_tests / total_available_tests * 100.0) if total_available_tests else 0.0, 2)
-        maintenance_effort = int(payload.get("heal_attempts", 0) or 0) + (1 if validation_accuracy < 100.0 else 0)
-        cost_per_run = round(
-            gemini_api_calls * self.config.gemini_call_cost_usd + pipeline_duration * self.config.execution_cost_per_second_usd,
-            4,
-        )
-
-        return RunRecord(
-            strategy="agentic",
-            run=run,
-            pass_rate=pass_rate,
-            defects_detected=defects_detected,
-            coverage=coverage,
-            test_generation_time=round(generation_time + selection_time + validation_time, 3),
-            test_execution_time=round(test_execution_time, 3),
-            test_selection_accuracy=selection_accuracy,
-            validation_accuracy=validation_accuracy,
-            false_positive_rate=false_positive_rate,
-            maintenance_effort=maintenance_effort,
-            cost_per_run=cost_per_run,
-            tests_total=tests_total,
-            tests_passed=tests_passed,
-            tests_failed=tests_failed,
-            selected_tests=selected_tests,
-            heal_attempts=int(payload.get("heal_attempts", 0) or 0),
-            gemini_api_calls=gemini_api_calls,
-            generation_explanation_count=len(payload.get("generation_explanation", []) or []),
-            pipeline_duration_seconds=round(pipeline_duration, 3),
-            report_path=report_path,
-        )
-
-    def from_traditional(self, run: int, payload: dict[str, Any], total_available_tests: int) -> RunRecord:
-        execution = payload.get("execution", {})
-        coverage = self._coverage_percent(payload.get("coverage"))
-        tests_total = int(payload.get("tests_total", 0) or 0)
-        tests_passed = int(payload.get("tests_passed", 0) or 0)
-        tests_failed = int(payload.get("tests_failed", 0) or 0)
-        pass_rate = round((tests_passed / tests_total * 100.0) if tests_total else 0.0, 2)
-        test_execution_time = float(payload.get("duration_seconds", 0.0))
-        selection_accuracy = 100.0
-        validation_accuracy = 100.0
-        false_positive_rate = 0.0
-        maintenance_effort = 1 if not payload.get("passed", False) else 0
-        cost_per_run = round(test_execution_time * self.config.execution_cost_per_second_usd, 4)
-
-        return RunRecord(
-            strategy="traditional",
-            run=run,
-            pass_rate=pass_rate,
-            defects_detected=int(payload.get("defects_detected", 0) or 0),
-            coverage=coverage,
-            test_generation_time=0.0,
-            test_execution_time=round(test_execution_time, 3),
-            test_selection_accuracy=selection_accuracy,
-            validation_accuracy=validation_accuracy,
-            false_positive_rate=false_positive_rate,
-            maintenance_effort=maintenance_effort,
-            cost_per_run=cost_per_run,
-            tests_total=tests_total,
-            tests_passed=tests_passed,
-            tests_failed=tests_failed,
-            selected_tests=int(payload.get("selected_tests_count", 0) or 0),
-            heal_attempts=0,
-            gemini_api_calls=0,
-            generation_explanation_count=0,
-            pipeline_duration_seconds=0.0,
-            report_path=str(payload.get("report_path", "") or ""),
-        )
-
-    def _coverage_percent(self, coverage_payload: Any) -> float:
-        if isinstance(coverage_payload, dict) and coverage_payload.get("ran"):
-            return float(coverage_payload.get("percent_covered", 0.0))
-        return 0.0
-
-    def _duration_from_report(self, report_path: str, stage: str, fallback: float = 0.0) -> float:
-        if not report_path:
-            return fallback
-        path = Path(report_path)
-        if not path.is_absolute():
-            path = self.config.repo_root / report_path
-        try:
-            report = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            return fallback
-        durations = report.get("metrics", {}).get("durations_seconds", {})
-        return float(durations.get(stage, fallback) or fallback)
-
-
-class AgenticTestExecutor:
-    """Execute the agentic pipeline by invoking `main.py`."""
-
-    def __init__(self, config: ExperimentConfig) -> None:
-        self.config = config
-
-    def execute(self, run: int) -> dict[str, Any]:
-        logger.info("Running agentic pipeline: run=%s", run)
-        args = type("Args", (), {
-            "source": self.config.source,
-            "max_heal_attempts": self.config.max_heal_attempts,
-            "model": self.config.model,
-            "base_ref": self.config.base_ref,
-        })()
-        payload = compare_methods.run_agentic_iteration(self.config.repo_root, args, run)
-        selected_tests = payload.get("execution", {}).get("output", "")
-        total_available_tests = len(TraditionalTestExecutor(self.config).find_targets())
-        collector = MetricsCollector(self.config)
-        row = collector.from_agentic(run, payload, total_available_tests)
-        return {"row": row, "selected_tests": selected_tests, "report": payload, "execution": payload.get("execution", {})}
-
-
-class TraditionalTestExecutor:
-    """Execute the manually authored pytest baseline."""
-
-    def __init__(self, config: ExperimentConfig) -> None:
-        self.config = config
-
-    def find_targets(self) -> list[str]:
-        tests_dir = self.config.repo_root / "tests"
-        candidates = sorted(path for path in tests_dir.glob("test_*.py") if path.is_file())
-        filtered = [path for path in candidates if path.name != "test_generated.py"]
-        return [path.relative_to(self.config.repo_root).as_posix() for path in (filtered or candidates)]
-
-    def execute(self, run: int) -> dict[str, Any]:
-        targets = self.find_targets()
-        if not targets:
-            raise FileNotFoundError("No pytest targets found under tests/")
-        logger.info("Running traditional baseline: run=%s targets=%s", run, len(targets))
-        args = type("Args", (), {"source": self.config.source})()
-        payload = compare_methods.run_traditional_iteration(self.config.repo_root, args, run, targets)
-        return payload
-
-
-class ResultAnalyzer:
-    """Aggregate run records into averages, deltas, and weighted scores."""
-
-    def analyze(self, rows: list[RunRecord]) -> dict[str, Any]:
-        by_strategy: dict[str, list[RunRecord]] = {"agentic": [], "traditional": []}
-        for row in rows:
-            by_strategy.setdefault(row.strategy, []).append(row)
-
-        summary: dict[str, Any] = {}
-        for strategy, strategy_rows in by_strategy.items():
-            summary[strategy] = {
-                "runs": len(strategy_rows),
-                "pass_rate": round(self._mean([row.pass_rate for row in strategy_rows]), 2),
-                "defect_detection_rate": round(self._mean([row.defects_detected / row.tests_total * 100 if row.tests_total else 0.0 for row in strategy_rows]), 2),
-                "coverage": round(self._mean([row.coverage for row in strategy_rows]), 2),
-                "test_generation_time": round(self._mean([row.test_generation_time for row in strategy_rows]), 3),
-                "test_execution_time": round(self._mean([row.test_execution_time for row in strategy_rows]), 3),
-                "test_selection_accuracy": round(self._mean([row.test_selection_accuracy for row in strategy_rows]), 2),
-                "validation_accuracy": round(self._mean([row.validation_accuracy for row in strategy_rows]), 2),
-                "false_positive_rate": round(self._mean([row.false_positive_rate for row in strategy_rows]), 2),
-                "maintenance_effort": round(self._mean([float(row.maintenance_effort) for row in strategy_rows]), 2),
-                "cost_per_run": round(self._mean([row.cost_per_run for row in strategy_rows]), 4),
-                "tests_total": sum(row.tests_total for row in strategy_rows),
-                "tests_passed": sum(row.tests_passed for row in strategy_rows),
-                "tests_failed": sum(row.tests_failed for row in strategy_rows),
-                "selected_tests": round(self._mean([float(row.selected_tests) for row in strategy_rows]), 2),
-                "heal_attempts": round(self._mean([float(row.heal_attempts) for row in strategy_rows]), 2),
-            }
-
-        agentic = summary.get("agentic", {})
-        traditional = summary.get("traditional", {})
-        summary["delta"] = {
-            "pass_rate": round(agentic.get("pass_rate", 0.0) - traditional.get("pass_rate", 0.0), 2),
-            "defect_detection_rate": round(agentic.get("defect_detection_rate", 0.0) - traditional.get("defect_detection_rate", 0.0), 2),
-            "coverage": round(agentic.get("coverage", 0.0) - traditional.get("coverage", 0.0), 2),
-            "test_generation_time": round(agentic.get("test_generation_time", 0.0) - traditional.get("test_generation_time", 0.0), 3),
-            "test_execution_time": round(agentic.get("test_execution_time", 0.0) - traditional.get("test_execution_time", 0.0), 3),
-            "test_selection_accuracy": round(agentic.get("test_selection_accuracy", 0.0) - traditional.get("test_selection_accuracy", 0.0), 2),
-            "validation_accuracy": round(agentic.get("validation_accuracy", 0.0) - traditional.get("validation_accuracy", 0.0), 2),
-            "false_positive_rate": round(agentic.get("false_positive_rate", 0.0) - traditional.get("false_positive_rate", 0.0), 2),
-            "maintenance_effort": round(agentic.get("maintenance_effort", 0.0) - traditional.get("maintenance_effort", 0.0), 2),
-            "cost_per_run": round(agentic.get("cost_per_run", 0.0) - traditional.get("cost_per_run", 0.0), 4),
-        }
-        summary["weighted_score"] = {
-            "agentic": self._weighted_score(agentic),
-            "traditional": self._weighted_score(traditional),
-        }
-        summary["winner_by_metric"] = self._winners(agentic, traditional)
-        return summary
-
-    def _weighted_score(self, metrics: dict[str, Any]) -> float:
-        weights = {
-            "pass_rate": 0.18,
-            "defect_detection_rate": 0.12,
-            "coverage": 0.14,
-            "test_generation_time": 0.08,
-            "test_execution_time": 0.12,
-            "test_selection_accuracy": 0.08,
-            "validation_accuracy": 0.08,
-            "false_positive_rate": 0.08,
-            "maintenance_effort": 0.06,
-            "cost_per_run": 0.06,
-        }
-        max_better = {"pass_rate", "defect_detection_rate", "coverage", "test_selection_accuracy", "validation_accuracy"}
-        min_better = set(weights) - max_better
-        score = 0.0
-        for key, weight in weights.items():
-            value = float(metrics.get(key, 0.0))
-            if key in max_better:
-                score += weight * value
-            else:
-                score += weight * (100.0 - value if value <= 100 else 0.0)
-        return round(score, 2)
-
-    def _winners(self, agentic: dict[str, Any], traditional: dict[str, Any]) -> dict[str, str]:
-        winners: dict[str, str] = {}
-        higher_better = {"pass_rate", "defect_detection_rate", "coverage", "test_selection_accuracy", "validation_accuracy"}
-        lower_better = {"test_generation_time", "test_execution_time", "false_positive_rate", "maintenance_effort", "cost_per_run"}
-        for key in higher_better:
-            winners[key] = self._winner(agentic.get(key, 0), traditional.get(key, 0), higher=True)
-        for key in lower_better:
-            winners[key] = self._winner(agentic.get(key, 0), traditional.get(key, 0), higher=False)
-        return winners
-
-    def _winner(self, agentic_value: float, traditional_value: float, higher: bool) -> str:
-        if agentic_value == traditional_value:
-            return "Tie"
-        if higher:
-            return "Agentic" if agentic_value > traditional_value else "Traditional"
-        return "Agentic" if agentic_value < traditional_value else "Traditional"
-
-    def _mean(self, values: list[float]) -> float:
-        return mean(values) if values else 0.0
-
-
-class ReportGenerator:
-    """Generate CSV, JSON, Markdown, and chart artifacts."""
-
-    def __init__(self, config: ExperimentConfig) -> None:
-        self.config = config
-
-    def write_outputs(self, rows: list[RunRecord], summary: dict[str, Any], *, exact_benchmark_totals: dict[str, int] | None = None) -> None:
-        self._write_results_csv(rows)
-        self._write_comparison_csv(summary)
-        self._write_summary_json(rows, summary, exact_benchmark_totals or {})
-        self._write_research_report(summary, exact_benchmark_totals or {})
-        self._write_charts(summary)
-
-    def _write_results_csv(self, rows: list[RunRecord]) -> None:
-        self.config.results_csv.parent.mkdir(parents=True, exist_ok=True)
-        with self.config.results_csv.open("w", newline="", encoding="utf-8") as handle:
-            writer = csv.writer(handle)
-            writer.writerow([
-                "strategy",
-                "run",
-                "pass_rate",
-                "defects_detected",
-                "coverage",
-                "test_generation_time",
-                "test_execution_time",
-                "test_selection_accuracy",
-                "validation_accuracy",
-                "false_positive_rate",
-                "maintenance_effort",
-                "cost_per_run",
-            ])
-            for row in rows:
-                writer.writerow([
-                    row.strategy,
-                    row.run,
-                    row.pass_rate,
-                    row.defects_detected,
-                    row.coverage,
-                    row.test_generation_time,
-                    row.test_execution_time,
-                    row.test_selection_accuracy,
-                    row.validation_accuracy,
-                    row.false_positive_rate,
-                    row.maintenance_effort,
-                    row.cost_per_run,
-                ])
-
-    def _write_comparison_csv(self, summary: dict[str, Any]) -> None:
-        self.config.comparison_csv.parent.mkdir(parents=True, exist_ok=True)
-        with self.config.comparison_csv.open("w", newline="", encoding="utf-8") as handle:
-            writer = csv.writer(handle)
-            writer.writerow(["metric", "agentic", "traditional", "delta", "winner"])
-            agentic = summary.get("agentic", {})
-            traditional = summary.get("traditional", {})
-            delta = summary.get("delta", {})
-            winner = summary.get("winner_by_metric", {})
-            for metric in [
-                "pass_rate",
-                "defect_detection_rate",
-                "coverage",
-                "test_generation_time",
-                "test_execution_time",
-                "test_selection_accuracy",
-                "validation_accuracy",
-                "false_positive_rate",
-                "maintenance_effort",
-                "cost_per_run",
-            ]:
-                writer.writerow([
-                    metric,
-                    agentic.get(metric, 0),
-                    traditional.get(metric, 0),
-                    delta.get(metric, 0),
-                    winner.get(metric, "Tie"),
-                ])
-
-    def _write_summary_json(self, rows: list[RunRecord], summary: dict[str, Any], exact_benchmark_totals: dict[str, int]) -> None:
-        payload = {
-            "generated_utc": datetime.now(timezone.utc).isoformat(),
-            "benchmark_totals": exact_benchmark_totals,
-            "rows": [asdict(row) for row in rows],
-            "summary": summary,
-            "config": {
-                "source": self.config.source,
-                "runs": self.config.runs,
-                "base_ref": self.config.base_ref,
-                "model": self.config.model,
-                "max_heal_attempts": self.config.max_heal_attempts,
-            },
-        }
-        self.config.summary_json.parent.mkdir(parents=True, exist_ok=True)
-        self.config.summary_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-    def _write_research_report(self, summary: dict[str, Any], exact_benchmark_totals: dict[str, int]) -> None:
-        agentic = summary.get("agentic", {})
-        traditional = summary.get("traditional", {})
-        delta = summary.get("delta", {})
-        winners = summary.get("winner_by_metric", {})
-        lines = [
-            "# Research Report",
-            "",
-            "## Experiment Setup",
-            f"- Source module: `{self.config.source}`",
-            f"- Runs per strategy: {self.config.runs}",
-            f"- Gemini model: `{self.config.model}`",
-            f"- Base ref for predictive selection: `{self.config.base_ref}`",
-            "",
-            "## Sample Project Description",
-            "- The sample project is the repository's Python target module plus the research test suite.",
-            "- The research suite contains 150 pytest cases: 110 passing and 40 failing.",
-            "- The failed cases preserve real defects and intentional mis-expectations for transparent comparison.",
-            "",
-            "## Agentic Testing Architecture",
-            "- Gemini generates tests, validates output, and supports predictive test selection.",
-            "- The pipeline records generation time, execution time, validation accuracy, false positive rate, and cost.",
-            "",
-            "## Traditional Testing Architecture",
-            "- The baseline runs the full manually written pytest suite without LLM intervention.",
-            "- Failures are reported as-is; no hidden retries or forced pass behavior is applied.",
-            "",
-            "## Results Table",
-            "",
-            f"- Benchmark totals: {exact_benchmark_totals.get('test_cases', 0)} test cases, {exact_benchmark_totals.get('tests_passed', 0)} passed, {exact_benchmark_totals.get('tests_failed', 0)} failed.",
-            f"- Agentic pass rate: {agentic.get('pass_rate', 0.0)}%",
-            f"- Traditional pass rate: {traditional.get('pass_rate', 0.0)}%",
-            f"- Agentic execution time per test: {agentic.get('test_execution_time', 0.0)}s",
-            f"- Traditional execution time per test: {traditional.get('test_execution_time', 0.0)}s",
-            "",
-            "## Comparison Matrix",
-            "",
-            "| Metric | Agentic | Traditional | Delta | Winner |",
-            "|---|---:|---:|---:|---|",
-        ]
-        for metric in [
-            "pass_rate",
-            "defect_detection_rate",
-            "coverage",
-            "test_generation_time",
-            "test_execution_time",
-            "test_selection_accuracy",
-            "validation_accuracy",
-            "false_positive_rate",
-            "maintenance_effort",
-            "cost_per_run",
-        ]:
-            lines.append(
-                f"| {metric} | {agentic.get(metric, 0)} | {traditional.get(metric, 0)} | {delta.get(metric, 0)} | {winners.get(metric, 'Tie')} |"
-            )
-        lines.extend([
-            "",
-            "## Statistical Analysis",
-            f"- Weighted score: Agentic {summary.get('weighted_score', {}).get('agentic', 0)} vs Traditional {summary.get('weighted_score', {}).get('traditional', 0)}",
-            f"- Per-metric winners: {winners}",
-            "",
-            "## Threats to Validity",
-            "- The sample project is deliberately small and the failed tests include intentional mis-expectations.",
-            "- Gemini cost is estimated from call count and execution time, not billed usage.",
-            "- Coverage and selection accuracy are derived from the repository's current layout and pipeline outputs.",
-            "",
-            "## Discussion",
-            "- The report prioritizes transparency over maximizing pass rates.",
-            "- Failures are retained in the metrics to show actual defect detection behavior.",
-            "",
-            "## Conclusion",
-            "- LLM-assisted testing can be measured realistically when failure, coverage, and maintenance cost are preserved in the analysis.",
-        ])
-        self.config.research_report_md.parent.mkdir(parents=True, exist_ok=True)
-        self.config.research_report_md.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    def _write_charts(self, summary: dict[str, Any]) -> None:
-        try:
-            import matplotlib.pyplot as plt
-        except Exception as exc:  # pragma: no cover - plotting dependency missing
-            logger.warning("Skipping charts because matplotlib is unavailable: %s", exc)
-            return
-
-        self.config.charts_dir.mkdir(parents=True, exist_ok=True)
-        metrics = [
-            ("pass_rate", "Pass Rate Comparison", "Pass Rate (%)"),
-            ("defect_detection_rate", "Defect Detection Comparison", "Defect Detection Rate (%)"),
-            ("coverage", "Coverage Comparison", "Coverage (%)"),
-            ("test_execution_time", "Execution Time Comparison", "Execution Time (s)", True),
-            ("validation_accuracy", "Validation Accuracy Comparison", "Validation Accuracy (%)"),
-            ("weighted_score", "Overall Weighted Score Comparison", "Weighted Score"),
-        ]
-        agentic = summary.get("agentic", {})
-        traditional = summary.get("traditional", {})
-        weighted = summary.get("weighted_score", {})
-        for item in metrics:
-            metric_key = item[0]
-            title = item[1]
-            ylabel = item[2]
-            invert = bool(item[3]) if len(item) > 3 else False
-            if metric_key == "weighted_score":
-                values = [weighted.get("agentic", 0.0), weighted.get("traditional", 0.0)]
-            else:
-                values = [agentic.get(metric_key, 0.0), traditional.get(metric_key, 0.0)]
-            if invert:
-                values = [float(value) for value in values]
-            fig, ax = plt.subplots(figsize=(6, 4))
-            ax.bar(["Agentic", "Traditional"], values, color=["#2E86AB", "#A23B72"])
-            ax.set_title(title)
-            ax.set_ylabel(ylabel)
-            ax.grid(axis="y", alpha=0.2)
-            path = self.config.charts_dir / f"{metric_key}.png"
-            fig.tight_layout()
-            fig.savefig(path, dpi=160)
-            plt.close(fig)
+    def validate(self) -> None:
+        self.repo_root = self.repo_root.resolve()
+        if not self.repo_root.is_dir():
+            raise FileNotFoundError(f"Repository root not found: {self.repo_root}")
+        if not self.subjects:
+            raise ValueError("At least one subject is required")
+        if self.runs <= 0 or self.stability_runs <= 0 or self.mutation_limit <= 0:
+            raise ValueError("runs, stability_runs, and mutation_limit must be positive")
+        if self.mutation_timeout_seconds <= 0 or self.pipeline_timeout_seconds <= 0:
+            raise ValueError("Experiment timeouts must be positive")
+        if self.equivalent_mutant_protocol is not None:
+            protocol = self.equivalent_mutant_protocol
+            if not protocol.is_absolute():
+                protocol = self.repo_root / protocol
+            protocol = protocol.resolve()
+            try:
+                protocol.relative_to(self.repo_root)
+            except ValueError as error:
+                raise ValueError(
+                    "equivalent_mutant_protocol must stay inside the repository"
+                ) from error
+            if not protocol.is_file():
+                raise FileNotFoundError(
+                    f"Equivalent-mutant protocol not found: {protocol}"
+                )
+            self.equivalent_mutant_protocol = protocol
+        ids = [subject.subject_id for subject in self.subjects]
+        if len(ids) != len(set(ids)):
+            raise ValueError("Subject IDs must be unique")
+        for subject in self.subjects:
+            if subject.role not in {"study", "demo"}:
+                raise ValueError("Subject role must be 'study' or 'demo'")
+            _require_relative_existing(self.repo_root, subject.source, "source")
+            for test_target in subject.manual_tests:
+                _require_relative_existing(
+                    self.repo_root,
+                    test_target.partition("::")[0],
+                    "manual test",
+                )
 
 
 class ExperimentRunner:
-    """High-level orchestration for agentic vs traditional testing experiments."""
+    """Run isolated generation/mutation comparisons and derive one report."""
 
     def __init__(self, config: ExperimentConfig) -> None:
         self.config = config
-        self.agentic = AgenticTestExecutor(config)
-        self.traditional = TraditionalTestExecutor(config)
-        self.collector = MetricsCollector(config)
-        self.analyzer = ResultAnalyzer()
-        self.report_generator = ReportGenerator(config)
 
     def run(self) -> dict[str, Any]:
-        logger.info("Starting research experiment: source=%s runs=%s", self.config.source, self.config.runs)
-        rows: list[RunRecord] = []
-        traditional_targets = self.traditional.find_targets()
-        benchmark_total = {"test_cases": 150, "tests_passed": 110, "tests_failed": 40}
+        self.config.validate()
+        run_id = self.config.run_id or datetime.now(timezone.utc).strftime(
+            "%Y%m%dT%H%M%S%fZ"
+        )
+        experiment_dir = _resolve_output_directory(
+            self.config.repo_root,
+            self.config.output_root,
+            run_id,
+        )
+        experiment_dir.mkdir(parents=True, exist_ok=False)
 
-        for run in range(1, self.config.runs + 1):
-            agentic_payload = self.agentic.execute(run)
-            rows.append(agentic_payload["row"])
+        provenance = _collect_provenance(self.config)
+        _write_json(experiment_dir / "provenance.json", provenance)
 
-        for run in range(1, self.config.runs + 1):
-            traditional_output = self.traditional.execute(run)
-            rows.append(self.collector.from_traditional(run, traditional_output, len(traditional_targets)))
+        subject_results = [
+            self._run_subject(subject, experiment_dir)
+            for subject in self.config.subjects
+        ]
+        summary = _summarize_experiment(self.config, subject_results)
+        payload = {
+            "schema_version": 3,
+            "experiment_id": run_id,
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "experiment_directory": _relative_or_absolute(
+                experiment_dir, self.config.repo_root
+            ),
+            "config": _config_payload(self.config),
+            "provenance": provenance,
+            "subjects": subject_results,
+            "summary": summary,
+        }
+        _write_json(experiment_dir / "summary.json", payload)
+        _write_results_csv(experiment_dir / "results.csv", subject_results)
+        _write_markdown_report(experiment_dir / "research_report.md", payload)
+        return payload
 
-        summary = self.analyzer.analyze(rows)
-        self.report_generator.write_outputs(rows, summary, exact_benchmark_totals=benchmark_total)
-        logger.info("Experiment completed. Outputs written to %s", self.config.output_dir)
-        return {"rows": rows, "summary": summary, "benchmark_totals": benchmark_total}
+    def _run_subject(
+        self,
+        subject: SubjectConfig,
+        experiment_dir: Path,
+    ) -> dict[str, Any]:
+        subject_dir = experiment_dir / "raw" / _safe_name(subject.subject_id)
+        subject_dir.mkdir(parents=True, exist_ok=False)
+        observed_source_sha256 = hashlib.sha256(
+            (self.config.repo_root / subject.source).read_bytes()
+        ).hexdigest()
+        manual_stability = run_stability(
+            list(subject.manual_tests),
+            runs=self.config.stability_runs,
+            isolated=True,
+            timeout_seconds=self.config.mutation_timeout_seconds,
+        )
+        result: dict[str, Any] = {
+            "subject": asdict(subject),
+            "observed_source_sha256": observed_source_sha256,
+            "status": "running",
+            "manual_stability": manual_stability,
+            "reference_mutation": None,
+            "reference_coverage": None,
+            "runs": [],
+        }
 
+        if not manual_stability.get("consistent") or not manual_stability.get(
+            "all_passed"
+        ):
+            result["status"] = "invalid-reference-stability"
+            result["reason"] = (
+                "The manual reference suite must pass consistently before it can "
+                "serve as an experiment oracle."
+            )
+            _write_json(subject_dir / "subject_result.json", result)
+            return result
+
+        try:
+            reference_report = evaluate_mutations(
+                source_path=subject.source,
+                test_targets=subject.manual_tests,
+                project_root=self.config.repo_root,
+                timeout_seconds=self.config.mutation_timeout_seconds,
+                max_mutants=self.config.mutation_limit,
+            )
+        except BaselineFailure as error:
+            result["status"] = "invalid-reference-baseline"
+            result["reference_baseline_failure"] = asdict(error.result)
+            result["reason"] = (
+                "The manual reference suite must pass on the clean source before "
+                "fault-detection metrics are valid."
+            )
+            _write_json(subject_dir / "subject_result.json", result)
+            return result
+
+        reference_payload = reference_report.to_dict()
+        result["reference_mutation"] = reference_payload
+        _write_json(subject_dir / "reference_mutation.json", reference_payload)
+        reference_coverage = evaluate_coverage(
+            subject.source,
+            subject.manual_tests,
+            project_root=self.config.repo_root,
+            timeout_seconds=self.config.mutation_timeout_seconds,
+        )
+        result["reference_coverage"] = reference_coverage
+        _write_json(subject_dir / "reference_coverage.json", reference_coverage)
+        if not reference_coverage.get("valid") or not reference_coverage.get(
+            "tests_passed"
+        ):
+            result["status"] = "invalid-reference-coverage"
+            result["reason"] = (
+                "Reference coverage execution must be valid and pass on the clean source."
+            )
+            _write_json(subject_dir / "subject_result.json", result)
+            return result
+        killable_fault_ids = set(reference_report.killed_ids)
+
+        for run_index in range(1, self.config.runs + 1):
+            run_result = self._run_generated_suite(
+                subject=subject,
+                subject_dir=subject_dir,
+                run_index=run_index,
+                killable_fault_ids=killable_fault_ids,
+            )
+            result["runs"].append(run_result)
+
+        result["status"] = "completed"
+        result["summary"] = _summarize_subject(result)
+        _write_json(subject_dir / "subject_result.json", result)
+        return result
+
+    def _run_generated_suite(
+        self,
+        *,
+        subject: SubjectConfig,
+        subject_dir: Path,
+        run_index: int,
+        killable_fault_ids: set[str],
+    ) -> dict[str, Any]:
+        run_dir = subject_dir / f"run_{run_index:03d}"
+        run_dir.mkdir(parents=True, exist_ok=False)
+        generated_path = run_dir / "generated_tests.py"
+        pipeline_report_path = run_dir / "pipeline.json"
+        generated_relative = generated_path.relative_to(self.config.repo_root).as_posix()
+        report_relative = pipeline_report_path.relative_to(self.config.repo_root).as_posix()
+
+        command = [
+            sys.executable,
+            "main.py",
+            "--source",
+            subject.source,
+            "--test-output",
+            generated_relative,
+            "--report-output",
+            report_relative,
+            "--model",
+            self.config.model,
+            "--temperature",
+            str(self.config.temperature),
+            "--seed",
+            str(self.config.base_seed + run_index - 1),
+            "--max-heal-attempts",
+            str(self.config.max_heal_attempts),
+            "--stability-runs",
+            str(self.config.stability_runs),
+            "--minimum-target-coverage",
+            str(subject.minimum_target_coverage),
+            "--test-timeout",
+            str(self.config.mutation_timeout_seconds),
+        ]
+        if self.config.offline:
+            command.append("--offline")
+        if self.config.allow_uncontained_llm_tests:
+            command.append("--allow-uncontained-llm-tests")
+        process = _run_command(
+            command,
+            cwd=self.config.repo_root,
+            timeout_seconds=self.config.pipeline_timeout_seconds,
+        )
+        (run_dir / "pipeline.stdout.txt").write_text(
+            process["stdout"], encoding="utf-8"
+        )
+        (run_dir / "pipeline.stderr.txt").write_text(
+            process["stderr"], encoding="utf-8"
+        )
+
+        pipeline = _read_json(pipeline_report_path)
+        record: dict[str, Any] = {
+            "run": run_index,
+            "process": {
+                "return_code": process["return_code"],
+                "timed_out": process["timed_out"],
+                "duration_seconds": process["duration_seconds"],
+            },
+            "pipeline_report": report_relative,
+            "generated_test": generated_relative,
+            "pipeline_report_present": bool(pipeline),
+            "mutation": None,
+            "coverage": None,
+            "fault_detection": None,
+        }
+        if not pipeline:
+            record["status"] = "missing-pipeline-report"
+            _write_json(run_dir / "run_record.json", record)
+            return record
+
+        semantic_passed = pipeline.get("semantic_status") == "PASSED"
+        expected_exit = 0 if semantic_passed else int(
+            pipeline.get("test_run", {}).get("return_code", 1) or 1
+        )
+        record.update(
+            {
+                "semantic_status": pipeline.get("semantic_status"),
+                "exit_status_consistent": (
+                    (process["return_code"] == 0) == semantic_passed
+                ),
+                "validation": pipeline.get("validation", {}),
+                "stability": pipeline.get("stability", {}),
+                "generation_provenance": pipeline.get(
+                    "generation_provenance", {}
+                ),
+                "pipeline_duration_seconds": pipeline.get(
+                    "pipeline_duration_seconds"
+                ),
+                "test_execution_seconds": pipeline.get("test_run", {}).get(
+                    "duration_seconds"
+                ),
+                "expected_semantic_exit": expected_exit,
+            }
+        )
+        candidate_valid = bool(
+            semantic_passed
+            and pipeline.get("validation", {}).get("passed")
+            and pipeline.get("stability", {}).get("consistent")
+            and generated_path.is_file()
+        )
+        if not candidate_valid:
+            record["status"] = "invalid-generated-suite"
+            _write_json(run_dir / "run_record.json", record)
+            return record
+
+        try:
+            mutation_report = evaluate_mutations(
+                source_path=subject.source,
+                test_targets=[generated_relative],
+                project_root=self.config.repo_root,
+                timeout_seconds=self.config.mutation_timeout_seconds,
+                max_mutants=self.config.mutation_limit,
+            )
+        except BaselineFailure as error:
+            record["status"] = "generated-suite-isolation-baseline-failed"
+            record["mutation_baseline_failure"] = asdict(error.result)
+            _write_json(run_dir / "run_record.json", record)
+            return record
+
+        mutation_payload = mutation_report.to_dict()
+        mutation_path = run_dir / "mutation.json"
+        _write_json(mutation_path, mutation_payload)
+        killed_reference_faults = set(mutation_report.killed_ids) & killable_fault_ids
+        fault_metrics = fault_detection_metrics(
+            killed_reference_faults,
+            killable_fault_ids,
+        )
+        coverage_payload = evaluate_coverage(
+            subject.source,
+            [generated_relative],
+            project_root=self.config.repo_root,
+            timeout_seconds=self.config.mutation_timeout_seconds,
+        )
+        coverage_path = run_dir / "coverage.json"
+        _write_json(coverage_path, coverage_payload)
+        record.update(
+            {
+                "status": "valid",
+                "mutation": mutation_payload,
+                "coverage": coverage_payload,
+                "coverage_report": coverage_path.relative_to(
+                    self.config.repo_root
+                ).as_posix(),
+                "mutation_report": mutation_path.relative_to(
+                    self.config.repo_root
+                ).as_posix(),
+                "fault_detection": fault_metrics,
+            }
+        )
+        _write_json(run_dir / "run_record.json", record)
+        return record
+
+
+def load_subject_manifest(path: str | Path) -> tuple[SubjectConfig, ...]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if payload.get("schema_version") != 1:
+        raise ValueError("Subject manifest schema_version must be 1")
+    subjects = payload.get("subjects")
+    if not isinstance(subjects, list) or not subjects:
+        raise ValueError("Subject manifest must contain a non-empty subjects list")
+    return tuple(SubjectConfig.from_dict(item) for item in subjects)
+
+
+def _summarize_subject(subject_result: dict[str, Any]) -> dict[str, Any]:
+    runs = subject_result.get("runs", [])
+    valid_runs = [item for item in runs if item.get("status") == "valid"]
+    mutation_scores = [
+        float(item["mutation"]["mutation_score"]) for item in valid_runs
+    ]
+    fault_recalls = [
+        float(item["fault_detection"]["fault_recall"]) * 100.0
+        for item in valid_runs
+    ]
+    target_coverages = [
+        float(
+            item.get("validation", {})
+            .get("metrics", {})
+            .get("target_function_coverage_percent", 0.0)
+        )
+        for item in valid_runs
+    ]
+    execution_times = [
+        float(item["mutation"]["baseline"]["duration_seconds"])
+        for item in valid_runs
+    ]
+    pipeline_times = [
+        float(item.get("pipeline_duration_seconds", 0.0) or 0.0)
+        for item in valid_runs
+    ]
+    line_coverages = [
+        float(item.get("coverage", {}).get("line_coverage_percent", 0.0))
+        for item in valid_runs
+        if item.get("coverage", {}).get("valid")
+    ]
+    branch_coverages = [
+        float(item.get("coverage", {}).get("branch_coverage_percent", 0.0))
+        for item in valid_runs
+        if item.get("coverage", {}).get("valid")
+    ]
+    backends = Counter(
+        str(item.get("generation_provenance", {}).get("backend", "unknown"))
+        for item in runs
+    )
+    hashes = {
+        item.get("generation_provenance", {}).get("generated_test_sha256")
+        for item in runs
+        if item.get("generation_provenance", {}).get("generated_test_sha256")
+    }
+    return {
+        "requested_runs": len(runs),
+        "valid_runs": len(valid_runs),
+        "valid_generated_suite_rate": round(
+            len(valid_runs) / len(runs) if runs else 0.0, 4
+        ),
+        "generation_backends": dict(sorted(backends.items())),
+        "unique_source_hashes": len(hashes),
+        "mutation_score_percent": descriptive_statistics(mutation_scores),
+        "reference_fault_recall_percent": descriptive_statistics(fault_recalls),
+        "target_callable_coverage_percent": descriptive_statistics(target_coverages),
+        "line_coverage_percent": descriptive_statistics(line_coverages),
+        "branch_coverage_percent": descriptive_statistics(branch_coverages),
+        "isolated_test_execution_seconds": descriptive_statistics(execution_times),
+        "end_to_end_pipeline_seconds": descriptive_statistics(pipeline_times),
+    }
+
+
+def _summarize_experiment(
+    config: ExperimentConfig,
+    subject_results: list[dict[str, Any]],
+) -> dict[str, Any]:
+    completed = [
+        item for item in subject_results if item.get("status") == "completed"
+    ]
+    configured_study_subjects = [
+        subject for subject in config.subjects if subject.role == "study"
+    ]
+    study_subjects = [
+        item
+        for item in completed
+        if item.get("subject", {}).get("role", "study") == "study"
+    ]
+    killable_faults = {
+        f"{item.get('observed_source_sha256')}::{fault_id}"
+        for item in study_subjects
+        for fault_id in (
+            item.get("reference_mutation", {}).get("killed_mutant_ids", [])
+        )
+    }
+    fallback_runs = sum(
+        1
+        for item in study_subjects
+        for run in item.get("runs", [])
+        if run.get("generation_provenance", {}).get("backend") != "gemini"
+    )
+    invalid_runs = sum(
+        1
+        for item in study_subjects
+        for run in item.get("runs", [])
+        if run.get("status") != "valid"
+    )
+
+    reasons: list[str] = []
+    if len(study_subjects) < config.minimum_study_subjects:
+        reasons.append(
+            f"Only {len(study_subjects)} study subject(s); at least "
+            f"{config.minimum_study_subjects} are required by this protocol."
+        )
+    if len(killable_faults) < config.minimum_killable_faults:
+        reasons.append(
+            f"Only {len(killable_faults)} unique killable study mutants; at least "
+            f"{config.minimum_killable_faults} are required by this protocol."
+        )
+    if len(study_subjects) != len(configured_study_subjects):
+        reasons.append(
+            f"Only {len(study_subjects)} of {len(configured_study_subjects)} configured study subject(s) "
+            "had stable, passing, coverage-valid reference suites."
+        )
+    project_ids = {
+        item.get("subject", {}).get("project_id")
+        for item in study_subjects
+        if item.get("subject", {}).get("project_id")
+    }
+    if len(project_ids) < config.minimum_study_projects:
+        reasons.append(
+            f"Only {len(project_ids)} unique pinned study project(s); at least "
+            f"{config.minimum_study_projects} are required by this protocol."
+        )
+    source_hashes = [
+        str(item.get("observed_source_sha256")) for item in study_subjects
+    ]
+    if len(source_hashes) != len(set(source_hashes)):
+        reasons.append(
+            "Duplicate study source hashes were found; duplicated subjects cannot inflate evidence volume."
+        )
+    unpinned = [
+        str(item.get("subject", {}).get("subject_id"))
+        for item in study_subjects
+        if not item.get("subject", {}).get("project_id")
+        or not item.get("subject", {}).get("revision")
+        or not item.get("subject", {}).get("source_sha256")
+    ]
+    if unpinned:
+        reasons.append(
+            "Study subjects missing project_id, revision, or source_sha256: "
+            + ", ".join(sorted(unpinned))
+            + "."
+        )
+    mismatched_hashes = [
+        str(item.get("subject", {}).get("subject_id"))
+        for item in study_subjects
+        if item.get("subject", {}).get("source_sha256")
+        and str(item.get("subject", {}).get("source_sha256")).lower()
+        != str(item.get("observed_source_sha256")).lower()
+    ]
+    if mismatched_hashes:
+        reasons.append(
+            "Declared source_sha256 did not match observed content for: "
+            + ", ".join(sorted(mismatched_hashes))
+            + "."
+        )
+    if config.runs < config.minimum_generation_runs:
+        reasons.append(
+            f"Only {config.runs} generation run(s) per subject; at least "
+            f"{config.minimum_generation_runs} are required by this protocol."
+        )
+    if config.stability_runs < config.minimum_stability_runs:
+        reasons.append(
+            f"Only {config.stability_runs} stability run(s); at least "
+            f"{config.minimum_stability_runs} are required by this protocol."
+        )
+    if config.equivalent_mutant_protocol is None:
+        reasons.append(
+            "No versioned equivalent-mutant review protocol was supplied."
+        )
+    if fallback_runs:
+        reasons.append(
+            f"{fallback_runs} study run(s) used a non-LLM fallback and cannot support an LLM-effect claim."
+        )
+    if invalid_runs:
+        reasons.append(f"{invalid_runs} study run(s) failed the generated-suite quality gates.")
+    if not study_subjects:
+        reasons.append("The manifest contains only demo subjects, not thesis study subjects.")
+    if study_subjects and _git_output(config.repo_root, ["status", "--porcelain"]):
+        reasons.append(
+            "The study worktree is dirty; freeze each subject/change in an immutable clean revision."
+        )
+
+    proposed_by_subject: list[float] = []
+    reference_by_subject: list[float] = []
+    paired_subject_ids: list[str] = []
+    for item in study_subjects:
+        valid_scores = [
+            float(run["mutation"]["mutation_score"])
+            for run in item.get("runs", [])
+            if run.get("status") == "valid"
+        ]
+        reference = item.get("reference_mutation", {}).get("mutation_score")
+        if valid_scores and reference is not None:
+            proposed_by_subject.append(mean(valid_scores))
+            reference_by_subject.append(float(reference))
+            paired_subject_ids.append(item["subject"]["subject_id"])
+
+    paired = None
+    if proposed_by_subject:
+        paired = paired_comparison(
+            proposed_by_subject,
+            reference_by_subject,
+            higher_is_better=True,
+        )
+        paired["paired_subject_ids"] = paired_subject_ids
+
+    generation_evidence_readiness = {
+        "ready": not reasons,
+        "scope": "test-generation-and-fault-detection",
+        "reasons": reasons,
+        "note": (
+            "Evidence readiness checks protocol completeness and provenance; "
+            "it does not assert superiority."
+        ),
+    }
+    self_healing_evidence_readiness = {
+        "ready": False,
+        "scope": "self-healing",
+        "reasons": [
+            "No controlled, labeled self-healing scenarios are evaluated by this experiment."
+        ],
+        "note": "Use the dedicated healing experiment before making an effectiveness or safety claim.",
+    }
+    overall_reasons = list(reasons)
+    overall_reasons.extend(
+        [
+            "Selection evidence must be supplied by the separate selection experiment.",
+            *self_healing_evidence_readiness["reasons"],
+        ]
+    )
+
+    return {
+        "completed_subjects": len(completed),
+        "study_subjects": len(study_subjects),
+        "configured_study_subjects": len(configured_study_subjects),
+        "unique_study_projects": len(project_ids),
+        "unique_study_source_hashes": len(set(source_hashes)),
+        "unique_killable_study_mutants": len(killable_faults),
+        "fallback_study_runs": fallback_runs,
+        "invalid_study_runs": invalid_runs,
+        "mutation_score_paired_by_subject": paired,
+        "evidence_readiness": generation_evidence_readiness,
+        "claim_readiness": {
+            **generation_evidence_readiness,
+            "compatibility_note": (
+                "Legacy field name; this is evidence readiness for the stated scope, not claim support."
+            ),
+        },
+        "self_healing_evidence_readiness": self_healing_evidence_readiness,
+        "overall_framework_evidence_readiness": {
+            "ready": False,
+            "scope": "generation-selection-healing",
+            "reasons": overall_reasons,
+            "note": "Combine outcome-neutral readiness from all component experiments.",
+        },
+        "claim_support": {
+            "assessed": False,
+            "supports_superiority": None,
+            "reasons": [
+                "Apply preregistered effect and uncertainty criteria to an evidence-ready study before claiming superiority."
+            ],
+        },
+    }
+
+
+def _write_results_csv(path: Path, subject_results: list[dict[str, Any]]) -> None:
+    fields = [
+        "subject_id",
+        "subject_role",
+        "run",
+        "status",
+        "backend",
+        "semantic_status",
+        "validation_passed",
+        "flaky",
+        "target_callable_coverage_percent",
+        "assertion_count",
+        "line_coverage_percent",
+        "branch_coverage_percent",
+        "mutation_score_percent",
+        "reference_fault_recall_percent",
+        "isolated_execution_seconds",
+        "end_to_end_pipeline_seconds",
+        "pipeline_report",
+        "mutation_report",
+    ]
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        for subject in subject_results:
+            subject_payload = subject.get("subject", {})
+            for run in subject.get("runs", []):
+                metrics = run.get("validation", {}).get("metrics", {})
+                mutation = run.get("mutation") or {}
+                fault = run.get("fault_detection") or {}
+                coverage = run.get("coverage") or {}
+                writer.writerow(
+                    {
+                        "subject_id": subject_payload.get("subject_id"),
+                        "subject_role": subject_payload.get("role"),
+                        "run": run.get("run"),
+                        "status": run.get("status"),
+                        "backend": run.get("generation_provenance", {}).get("backend"),
+                        "semantic_status": run.get("semantic_status"),
+                        "validation_passed": run.get("validation", {}).get("passed"),
+                        "flaky": run.get("stability", {}).get("flaky"),
+                        "target_callable_coverage_percent": metrics.get(
+                            "target_function_coverage_percent"
+                        ),
+                        "assertion_count": metrics.get("assertion_count"),
+                        "line_coverage_percent": coverage.get("line_coverage_percent"),
+                        "branch_coverage_percent": coverage.get("branch_coverage_percent"),
+                        "mutation_score_percent": mutation.get("mutation_score"),
+                        "reference_fault_recall_percent": (
+                            float(fault["fault_recall"]) * 100.0
+                            if "fault_recall" in fault
+                            else None
+                        ),
+                        "isolated_execution_seconds": mutation.get("baseline", {}).get(
+                            "duration_seconds"
+                        ),
+                        "end_to_end_pipeline_seconds": run.get(
+                            "pipeline_duration_seconds"
+                        ),
+                        "pipeline_report": run.get("pipeline_report"),
+                        "mutation_report": run.get("mutation_report"),
+                    }
+                )
+
+
+def _write_markdown_report(path: Path, payload: dict[str, Any]) -> None:
+    summary = payload["summary"]
+    readiness = summary["evidence_readiness"]
+    lines = [
+        "# Research Experiment Report",
+        "",
+        f"Experiment ID: `{payload['experiment_id']}`",
+        "",
+        "## Evidence status",
+        "",
+        (
+            "This run meets the configured evidence-volume and provenance checks."
+            if readiness["ready"]
+            else "This run does **not** yet meet the configured thesis-evidence checks."
+        ),
+        "",
+    ]
+    if readiness["reasons"]:
+        lines.extend(f"- {reason}" for reason in readiness["reasons"])
+        lines.append("")
+
+    lines.extend(
+        [
+            "## Subject results",
+            "",
+            "| Subject | Role | Ref mutation | Gen mutation mean | Fault recall mean | Ref line/branch | Gen line/branch mean | Valid runs | Backend(s) |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---|",
+        ]
+    )
+    for item in payload["subjects"]:
+        subject = item.get("subject", {})
+        reference = item.get("reference_mutation") or {}
+        subject_summary = item.get("summary", {})
+        mutation_stats = subject_summary.get("mutation_score_percent", {})
+        recall_stats = subject_summary.get("reference_fault_recall_percent", {})
+        line_stats = subject_summary.get("line_coverage_percent", {})
+        branch_stats = subject_summary.get("branch_coverage_percent", {})
+        reference_coverage = item.get("reference_coverage") or {}
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(subject.get("subject_id", "")),
+                    str(subject.get("role", "")),
+                    _fmt(reference.get("mutation_score")),
+                    _fmt(mutation_stats.get("mean")),
+                    _fmt(recall_stats.get("mean")),
+                    f"{_fmt(reference_coverage.get('line_coverage_percent'))}/{_fmt(reference_coverage.get('branch_coverage_percent'))}",
+                    f"{_fmt(line_stats.get('mean'))}/{_fmt(branch_stats.get('mean'))}",
+                    str(subject_summary.get("valid_runs", 0)),
+                    ", ".join(subject_summary.get("generation_backends", {}).keys()),
+                ]
+            )
+            + " |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Metric definitions",
+            "",
+            "- Mutation score = killed valid mutants / (killed + survived valid mutants). Invalid and timed-out mutants are excluded and listed in raw artifacts.",
+            "- Reference-fault recall = unique mutants killed by the generated suite / unique mutants killed by the manual reference suite.",
+            "- Line and branch coverage use raw covered/total counts from coverage.py in an isolated project copy.",
+            "- A generated suite is valid only when static validation passes, the clean source passes, and repeated outcomes are consistent.",
+            "- End-to-end pipeline time and isolated pytest execution time are reported separately.",
+            "",
+            "## Statistical analysis",
+            "",
+            "Descriptive statistics include sample size, mean, median, standard deviation, range, and a deterministic bootstrap 95% confidence interval. Any paired comparison uses one aggregated observation per study subject; repeated runs are not misrepresented as independent projects.",
+            "",
+            "## Provenance and limitations",
+            "",
+            f"- Git commit: `{payload['provenance'].get('git_commit')}`",
+            f"- Git worktree dirty: `{payload['provenance'].get('git_dirty')}`",
+            f"- Python: `{payload['provenance'].get('python_version')}`",
+            f"- Platform: `{payload['provenance'].get('platform')}`",
+            "- Mutation operators can produce equivalent mutants; thesis-scale runs require manual review or an explicit equivalent-mutant protocol.",
+            "- The bundled calculator subject is a harness smoke test only. It must not be presented as real-world validation.",
+            "- This report intentionally provides no arbitrary weighted winner score.",
+            "",
+            f"Raw artifacts: `{payload['experiment_directory']}/raw`",
+        ]
+    )
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _collect_provenance(config: ExperimentConfig) -> dict[str, Any]:
+    commit = _git_output(config.repo_root, ["rev-parse", "HEAD"])
+    status = _git_output(config.repo_root, ["status", "--porcelain"])
+    dependencies: dict[str, str | None] = {}
+    for package in ("pytest", "coverage", "google-genai", "pandas", "matplotlib"):
+        try:
+            dependencies[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            dependencies[package] = None
+    return {
+        "captured_at_utc": datetime.now(timezone.utc).isoformat(),
+        "git_commit": commit or None,
+        "git_dirty": bool(status),
+        "git_status_sha256": hashlib.sha256(status.encode("utf-8")).hexdigest(),
+        "python_version": platform.python_version(),
+        "python_executable": sys.executable,
+        "platform": platform.platform(),
+        "processor": platform.processor(),
+        "dependencies": dependencies,
+        "model": config.model,
+        "temperature": config.temperature,
+        "base_seed": config.base_seed,
+        "offline_requested": config.offline,
+    }
+
+
+def _run_command(
+    command: list[str],
+    *,
+    cwd: Path,
+    timeout_seconds: float,
+) -> dict[str, Any]:
+    started = datetime.now(timezone.utc)
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=cwd,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+            env=os.environ.copy(),
+        )
+        return_code: int | None = completed.returncode
+        stdout = completed.stdout
+        stderr = completed.stderr
+        timed_out = False
+    except subprocess.TimeoutExpired as error:
+        return_code = None
+        stdout = _timeout_text(error.stdout)
+        stderr = _timeout_text(error.stderr)
+        timed_out = True
+    duration = (datetime.now(timezone.utc) - started).total_seconds()
+    return {
+        "command": command,
+        "return_code": return_code,
+        "timed_out": timed_out,
+        "duration_seconds": round(duration, 3),
+        "stdout": stdout,
+        "stderr": stderr,
+    }
+
+
+def _config_payload(config: ExperimentConfig) -> dict[str, Any]:
+    return {
+        "subjects": [asdict(subject) for subject in config.subjects],
+        "runs": config.runs,
+        "model": config.model,
+        "temperature": config.temperature,
+        "base_seed": config.base_seed,
+        "offline": config.offline,
+        "stability_runs": config.stability_runs,
+        "mutation_limit": config.mutation_limit,
+        "mutation_timeout_seconds": config.mutation_timeout_seconds,
+        "pipeline_timeout_seconds": config.pipeline_timeout_seconds,
+        "max_heal_attempts": config.max_heal_attempts,
+        "minimum_study_subjects": config.minimum_study_subjects,
+        "minimum_study_projects": config.minimum_study_projects,
+        "minimum_killable_faults": config.minimum_killable_faults,
+        "minimum_generation_runs": config.minimum_generation_runs,
+        "minimum_stability_runs": config.minimum_stability_runs,
+        "equivalent_mutant_protocol": (
+            _relative_or_absolute(config.equivalent_mutant_protocol, config.repo_root)
+            if config.equivalent_mutant_protocol
+            else None
+        ),
+        "allow_uncontained_llm_tests": config.allow_uncontained_llm_tests,
+    }
+
+
+def _resolve_output_directory(root: Path, output_root: Path, run_id: str) -> Path:
+    base = output_root if output_root.is_absolute() else root / output_root
+    resolved_base = base.resolve()
+    try:
+        resolved_base.relative_to(root)
+    except ValueError as error:
+        raise ValueError("Experiment output_root must remain inside the repository") from error
+    return resolved_base / _safe_name(run_id)
+
+
+def _require_relative_existing(root: Path, value: str, label: str) -> Path:
+    path = (root / value).resolve()
+    try:
+        path.relative_to(root)
+    except ValueError as error:
+        raise ValueError(f"{label} path must stay inside repository: {value}") from error
+    if not path.exists():
+        raise FileNotFoundError(f"{label} path not found: {value}")
+    return path
+
+
+def _safe_name(value: str) -> str:
+    cleaned = "".join(character if character.isalnum() or character in "-_" else "_" for character in value)
+    if not cleaned:
+        raise ValueError("Identifier must contain at least one safe character")
+    return cleaned
+
+
+def _git_output(root: Path, args: list[str]) -> str:
+    try:
+        completed = subprocess.run(
+            ["git", *args],
+            cwd=root,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    return completed.stdout.strip() if completed.returncode == 0 else ""
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _relative_or_absolute(path: Path, root: Path) -> str:
+    try:
+        return path.relative_to(root).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _timeout_text(value: str | bytes | None) -> str:
+    if value is None:
+        return ""
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value
+
+
+def _fmt(value: Any) -> str:
+    if value is None:
+        return "N/A"
+    if isinstance(value, float):
+        return f"{value:.2f}"
+    return str(value)
+
+
+__all__ = [
+    "ExperimentConfig",
+    "ExperimentRunner",
+    "SubjectConfig",
+    "load_subject_manifest",
+]
