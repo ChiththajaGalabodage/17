@@ -152,10 +152,9 @@ def run_pipeline(args: argparse.Namespace) -> int:
         getattr(args, "allow_uncontained_llm_tests", False)
     )
     execution_blocked_by_policy = (
-    live_llm_output and not uncontained_execution_allowed
-)
-
-if execution_blocked_by_policy:
+        live_llm_output and not uncontained_execution_allowed
+    )
+    if execution_blocked_by_policy:
         validation_result = dict(validation_result)
         validation_result["passed"] = False
         validation_result["issues"] = [
@@ -181,7 +180,11 @@ if execution_blocked_by_policy:
         for issue in validation_result["issues"]:
             print(f" - {issue}")
 
-       if generator.can_use_ai and not execution_blocked_by_policy:
+        # A generation repair can correct invalid test code, but it cannot
+        # override the execution-containment policy.  Without this guard, a
+        # repaired live-LLM candidate could become valid and be executed even
+        # though --allow-uncontained-llm-tests was not provided.
+        if generator.can_use_ai and not execution_blocked_by_policy:
             generation_repair_attempts += 1
             heal_bundle = heal_test_bundle(
                 current_test_code=test_code,
